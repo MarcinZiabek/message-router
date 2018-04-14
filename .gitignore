@@ -3,3 +3,8 @@
 ################################################################################
 
 /NetmqRouter/.vs
+/NetmqRouter/NetmqRouter.Tests/obj/Debug
+/NetmqRouter/NetmqRouter/bin/Debug/netstandard2.0
+/NetmqRouter/packages
+/NetmqRouter/NetmqRouter.Tests/bin/Debug
+/NetmqRouter/NetmqRouter/obj

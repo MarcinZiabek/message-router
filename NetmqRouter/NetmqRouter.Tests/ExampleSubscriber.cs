@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetmqRouter.Attributes;
 
 namespace NetmqRouter.Tests
 {
@@ -11,8 +12,7 @@ namespace NetmqRouter.Tests
         public int Data { get; set; }
     }
 
-    [Route("Example")]
-    class ExampleData
+    class ExampleSubscriber
     {
         public string CalledMethod { get; set; }
 
@@ -21,22 +21,29 @@ namespace NetmqRouter.Tests
             CalledMethod = nameof(NormalMethod);
         }
 
-        [Route("Event")]
-        public void EventSubscriber()
+        [AsyncRoute]
+        [Route("Void")]
+        [ResponseRoute("Response")]
+        public byte[] EventSubscriber()
         {
             CalledMethod = nameof(EventSubscriber);
+            return null;
         }
 
         [Route("Raw")]
-        public void RawSubscriber(byte[] data)
+        [ResponseRoute("Response")]
+        public string RawSubscriber(byte[] data)
         {
             CalledMethod = nameof(RawSubscriber);
+            return null;
         }
 
+        [AsyncRoute]
         [Route("Text")]
-        public void TextSubscriber(string text)
+        public object TextSubscriber(string text)
         {
             CalledMethod = nameof(TextSubscriber);
+            return null;
         }
 
         [Route("Object")]
@@ -45,4 +52,11 @@ namespace NetmqRouter.Tests
             CalledMethod = nameof(ObjectSubscriber);
         }
     }
+
+    [BaseRoute("Example")]
+    class ExampleSubscriberWithBaseRoute : ExampleSubscriber
+    {
+
+    }
 }
+

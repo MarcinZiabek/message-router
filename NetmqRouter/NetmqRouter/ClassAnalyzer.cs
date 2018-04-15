@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using NetmqRouter.Attributes;
 
 [assembly: InternalsVisibleTo("NetmqRouter.Tests")]
 
@@ -17,15 +18,15 @@ namespace NetmqRouter
             var routes = FindRoutesInClass(_object).ToList();
 
             if(baseRoute != null)
-                routes.ForEach(x => x.Name = $"{baseRoute}/{x.Name}");
+                routes.ForEach(x => x.IncomingRouteName = $"{baseRoute}/{x.IncomingRouteName}");
 
             return routes;
         }
 
         internal static string GetBaseRoute(Type type)
         {
-            var attribute = type.GetCustomAttributes(typeof(RouteAttribute)).SingleOrDefault();
-            return (attribute as RouteAttribute)?.Name;
+            var attribute = type.GetCustomAttributes(typeof(BaseRouteAttribute)).SingleOrDefault();
+            return (attribute as BaseRouteAttribute)?.Name;
         }
 
         internal static IEnumerable<Route> FindRoutesInClass(object _object)
@@ -39,36 +40,39 @@ namespace NetmqRouter
 
         internal static Route AnalyzeMethod(object _object, MethodInfo methodInfo)
         {
-            var attribute = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
+            var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
+            var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
+            var isAsync = Attribute.GetCustomAttribute(methodInfo, typeof(AsyncRouteAttribute)) != null;
 
-            if (attribute == null)
+            if (route == null)
                 return null;
 
             if (methodInfo.GetParameters().Length > 1)
                 throw new NetmqRouterException("Route method cannot have more than one argument");
 
             var agrumentType = methodInfo.GetParameters().FirstOrDefault()?.ParameterType;
+            var returnType = CovertTypeToRouteDataType(methodInfo.ReturnType);
             var routeDataType = CovertTypeToRouteDataType(agrumentType);
 
             return new Route()
             {
-                Name = attribute.Name,
-                Target = arg =>
-                {
-                    if(routeDataType == RouteDataType.Event)
-                        methodInfo.Invoke(_object, new object[0]);
+                Object = _object,
+                Method = methodInfo,
 
-                    else
-                        methodInfo.Invoke(_object, new[] {arg});
-                },
-                DataType = routeDataType
+                IsAsync = isAsync,
+
+                IncomingRouteName = route.Name,
+                IncomingDataType = routeDataType,
+                
+                OutcomingRouteName = responseRoute?.Name,
+                OutcomingDataType = returnType
             };
         }
 
         internal static RouteDataType CovertTypeToRouteDataType(Type type)
         {
-            if (type == null)
-                return RouteDataType.Event;
+            if (type == null || type == typeof(void))
+                return RouteDataType.Void;
 
             if (type == typeof(byte[]))
                 return RouteDataType.RawData;

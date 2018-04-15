@@ -38,7 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassAnalyzerTests.cs" />
-    <Compile Include="ExampleSubscriber.cs" />
+    <Compile Include="ExampleData.cs" />
+    <Compile Include="SocketExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

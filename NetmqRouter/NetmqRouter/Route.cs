@@ -18,7 +18,7 @@ namespace NetmqRouter
         public string OutcomingRouteName { get; set; }
         public RouteDataType OutcomingDataType { get; set; }
 
-        public void Call(object data)
+        public void Call(byte[] data)
         {
             if (IncomingDataType == RouteDataType.Void)
                 Method.Invoke(Object, new object[0]);

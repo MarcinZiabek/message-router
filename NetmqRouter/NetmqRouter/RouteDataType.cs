@@ -6,9 +6,9 @@ namespace NetmqRouter
 {
     public enum RouteDataType
     {
-        Void,
-        RawData,
-        Text,
-        Object
+        Void = 0,
+        RawData = 1,
+        Text = 2,
+        Object = 3
     }
 }

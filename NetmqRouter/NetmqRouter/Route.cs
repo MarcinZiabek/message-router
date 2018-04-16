@@ -18,13 +18,13 @@ namespace NetmqRouter
         public string OutcomingRouteName { get; set; }
         public RouteDataType OutcomingDataType { get; set; }
 
-        public void Call(byte[] data)
+        public object Call(byte[] data)
         {
             if (IncomingDataType == RouteDataType.Void)
-                Method.Invoke(Object, new object[0]);
+                return Method.Invoke(Object, new object[0]);
 
             else
-                Method.Invoke(Object, new[] { data });
+                return Method.Invoke(Object, new[] { data });
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetMQ;
 using NetMQ.Sockets;
+using Newtonsoft.Json;
 
 namespace NetmqRouter
 {
@@ -52,6 +53,34 @@ namespace NetmqRouter
             _registeredRoutes.AddRange(routes);
 
             return this;
+        }
+
+        public void SendMessage(string routeName)
+        {
+            SendMessage(new Message(routeName, RouteDataType.Void, null));
+        }
+
+        public void SendMessage(string routeName, byte[] data)
+        {
+            SendMessage(new Message(routeName, RouteDataType.RawData, null));
+        }
+
+        public void SendMessage(string routeName, string text)
+        {
+            var data = Encoding.ASCII.GetBytes(text);
+            SendMessage(new Message(routeName, RouteDataType.Text, data));
+        }
+
+        public void SendMessage(string routeName, object _object)
+        {
+            var json = JsonConvert.SerializeObject(_object);
+            var data = Encoding.ASCII.GetBytes(json);
+            SendMessage(new Message(routeName, RouteDataType.Object, data));
+        }
+
+        private void SendMessage(Message message)
+        {
+            _outcommingMessages.Enqueue(message);
         }
 
         private async void PublisherWorker()
@@ -136,7 +165,7 @@ namespace NetmqRouter
             _runningTasks.Add(task);
         }
 
-        public void StopRouting()
+        public IMessageRouter StopRouting()
         {
             _cancellationTokenSource.Cancel();
 
@@ -148,15 +177,19 @@ namespace NetmqRouter
             {
 
             }
+
+            return this;
         }
 
-        public void Disconnect()
+        public IMessageRouter Disconnect()
         {
             PublisherSocket?.Close();
             PublisherSocket?.Dispose();
 
             SubscriberSocket?.Close();
             SubscriberSocket?.Dispose();
+
+            return this;
         }
     }
 }

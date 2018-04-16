@@ -14,7 +14,7 @@ namespace NetmqRouter.Tests
         private const string Address = "tcp://localhost:50000";
 
         [Test]
-        public void IncomingRouteNameWithoutBaseRoute()
+        public async Task IncomingRouteNameWithoutBaseRoute()
         {
             var publisherSocket = new PublisherSocket();
             publisherSocket.Bind(Address);
@@ -22,11 +22,21 @@ namespace NetmqRouter.Tests
             var subscriberSocket = new SubscriberSocket();
             subscriberSocket.Connect(Address);
 
-            var router = new MessageRouter(publisherSocket, subscriberSocket)
-                .Subscribe(new ExampleSubscriber());
-                //.StartRouting();
+            var subscriber = new ExampleSubscriber();
 
-            router.Dispose();
+            var router = new MessageRouter(publisherSocket, subscriberSocket)
+                .Subscribe(subscriber)
+                .StartRouting();
+
+            router.SendMessage("Raw", "test");
+
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+            Assert.AreEqual(nameof(ExampleSubscriber.TextSubscriber), subscriber.CalledMethod);
+
+            router
+                .StopRouting()
+                .Disconnect();
         }
     }
 }

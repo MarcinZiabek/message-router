@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NetmqRouter
 {
-    internal struct Message
+    public struct Message
     {
         public string RouteName { get; set; }
         public RouteDataType DataType { get; set; }

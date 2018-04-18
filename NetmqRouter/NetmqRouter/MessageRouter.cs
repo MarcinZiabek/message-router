@@ -16,8 +16,7 @@ namespace NetmqRouter
         private readonly List<Route> _registeredRoutes  = new List<Route>();
         private Dictionary<string, List<Route>> _routing;
 
-        public PublisherSocket PublisherSocket { get; private set; }
-        public SubscriberSocket SubscriberSocket { get; private set; }
+        private IConnection Connection { get; set; }
 
         public int NumberOfWorkes { get; private set; } = 4;
 
@@ -37,8 +36,7 @@ namespace NetmqRouter
 
         public MessageRouter(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
         {
-            PublisherSocket = publisherSocket;
-            SubscriberSocket = subscriberSocket;
+            Connection = new PubSubConnection(publisherSocket, subscriberSocket);
         }
 
         public IMessageRouter WithWorkerPool(int numberOfWorkers)
@@ -58,7 +56,7 @@ namespace NetmqRouter
         private void SubscribeRoutingOnSocket()
         {
             _registeredRoutes
-                .ForEach(x => SubscriberSocket.Subscribe(x.IncomingRouteName));
+                .ForEach(x => Connection.SubscriberSocket.Subscribe(x.IncomingRouteName));
         }
 
         public void SendMessage(string routeName)
@@ -102,7 +100,7 @@ namespace NetmqRouter
                     continue;
                 }
 
-                PublisherSocket.SendMessage(message);
+                Connection.SendMessage(message);
             }
         }
 
@@ -113,7 +111,7 @@ namespace NetmqRouter
                 if (_cancellationToken.IsCancellationRequested)
                     return;
 
-                if (!SubscriberSocket.TryReceiveMessage(out var message))
+                if (!Connection.TryReceiveMessage(out var message))
                 {
                     await Task.Delay(TimeSpan.FromMilliseconds(1));
                     continue;
@@ -190,12 +188,7 @@ namespace NetmqRouter
 
         public IMessageRouter Disconnect()
         {
-            PublisherSocket?.Close();
-            PublisherSocket?.Dispose();
-
-            SubscriberSocket?.Close();
-            SubscriberSocket?.Dispose();
-
+            Connection.Disconnect();
             return this;
         }
     }

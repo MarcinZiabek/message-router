@@ -12,8 +12,6 @@ namespace NetmqRouter
         internal object Object { get; set; }
         internal MethodInfo Method { get; set; }
 
-        public bool IsAsync { get; set; }
-
         public string IncomingRouteName { get; set; }
         public RouteDataType IncomingDataType { get; set; }
 
@@ -26,13 +24,19 @@ namespace NetmqRouter
                 return Method.Invoke(Object, new object[0]);
 
             if (IncomingDataType == RouteDataType.Text)
-                return Method.Invoke(Object, new[] { Encoding.ASCII.GetString(data) } );
+                return Method.Invoke(Object, new[] { (data != null) ? Encoding.ASCII.GetString(data) : null } );
 
             if (IncomingDataType == RouteDataType.Object)
             {
-                var json = Encoding.ASCII.GetString(data);
-                var targetType = Method.GetParameters()[0].ParameterType;
-                var _object = JsonConvert.DeserializeObject(json, targetType);
+                object _object = null;
+
+                if (data != null)
+                {
+                    var json = Encoding.ASCII.GetString(data);
+                    var targetType = Method.GetParameters()[0].ParameterType;
+                    _object = JsonConvert.DeserializeObject(json, targetType);
+                }
+                
                 return Method.Invoke(Object, new[] { _object });
             }
 

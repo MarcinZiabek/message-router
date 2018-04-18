@@ -44,17 +44,6 @@ namespace NetmqRouter.Tests
             return routes.First(x => x.Method.Name == methodName).OutcomingRouteName;
         }
 
-        [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = true)]
-        [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = false)]
-        [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = true)]
-        [TestCase(nameof(ExampleSubscriber.ObjectSubscriber), ExpectedResult = false)]
-        public bool CheckingIfRouteIsAsync(string methodName)
-        {
-            var _object = new ExampleSubscriber();
-            var routes = ClassAnalyzer.AnalyzeClass(_object);
-            return routes.First(x => x.Method.Name == methodName).IsAsync;
-        }
-
         [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = RouteDataType.Void)]
         [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = RouteDataType.RawData)]
         [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = RouteDataType.Text)]

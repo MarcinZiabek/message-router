@@ -21,7 +21,6 @@ namespace NetmqRouter.Tests
             CalledMethod = nameof(NormalMethod);
         }
 
-        [AsyncRoute]
         [Route("Void")]
         [ResponseRoute("Response")]
         public byte[] EventSubscriber()
@@ -38,7 +37,6 @@ namespace NetmqRouter.Tests
             return null;
         }
 
-        [AsyncRoute]
         [Route("Text")]
         public object TextSubscriber(string text)
         {

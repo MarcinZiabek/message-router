@@ -30,7 +30,7 @@ namespace NetmqRouter.Tests
 
             router.SendMessage("Text", "test");
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
             Assert.AreEqual(nameof(ExampleSubscriber.TextSubscriber), subscriber.CalledMethod);
 

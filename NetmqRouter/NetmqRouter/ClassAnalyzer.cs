@@ -42,7 +42,6 @@ namespace NetmqRouter
         {
             var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
             var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
-            var isAsync = Attribute.GetCustomAttribute(methodInfo, typeof(AsyncRouteAttribute)) != null;
 
             if (route == null)
                 return null;
@@ -58,8 +57,6 @@ namespace NetmqRouter
             {
                 Object = _object,
                 Method = methodInfo,
-
-                IsAsync = isAsync,
 
                 IncomingRouteName = route.Name,
                 IncomingDataType = routeDataType,

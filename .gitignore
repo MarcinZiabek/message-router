@@ -8,3 +8,6 @@
 /NetmqRouter/packages
 /NetmqRouter/NetmqRouter.Tests/bin/Debug
 /NetmqRouter/NetmqRouter/obj
+/NetmqRouter/Playground/obj/Debug
+/NetmqRouter/Playground/bin/Debug
+/NetmqRouter/.idea/.idea.NetmqRouter

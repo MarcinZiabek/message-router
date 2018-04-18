@@ -7,12 +7,12 @@ using NetmqRouter.Attributes;
 
 namespace NetmqRouter.Tests
 {
-    class SimpleObject
+    public class SimpleObject
     {
         public int Data { get; set; }
     }
 
-    class ExampleSubscriber
+    public class ExampleSubscriber
     {
         public string CalledMethod { get; set; }
 

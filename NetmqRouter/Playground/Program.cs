@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using NetmqRouter;
+using NetmqRouter.Tests;
 using NetMQ.Sockets;
-using NUnit.Framework;
 
-namespace NetmqRouter.Tests
+namespace Playground
 {
-    [TestFixture]
-    public class MessagesRouterTests
+    class Program
     {
         private const string Address = "tcp://localhost:50000";
 
-        [Test]
-        public async Task IncomingRouteNameWithoutBaseRoute()
+        static void Main(string[] args)
         {
             var publisherSocket = new PublisherSocket();
             publisherSocket.Bind(Address);
@@ -30,13 +30,14 @@ namespace NetmqRouter.Tests
 
             router.SendMessage("Text", "test");
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            Assert.AreEqual(nameof(ExampleSubscriber.TextSubscriber), subscriber.CalledMethod);
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Console.WriteLine(subscriber.CalledMethod);
 
             router
                 .StopRouting()
                 .Disconnect();
+
+            Console.Read();
         }
     }
 }

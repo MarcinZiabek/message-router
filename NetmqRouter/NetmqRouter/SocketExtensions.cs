@@ -13,7 +13,7 @@ namespace NetmqRouter
             var mqMessage = new NetMQMessage();
             message = default(Message);
 
-            if (socket.TryReceiveMultipartMessage(ref mqMessage, 3))
+            if (!socket.TryReceiveMultipartMessage(ref mqMessage, 3))
                 return false;
 
             var route = mqMessage[0].ConvertToString();

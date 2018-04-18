@@ -55,6 +55,12 @@ namespace NetmqRouter
             return this;
         }
 
+        private void SubscribeRoutingOnSocket()
+        {
+            _registeredRoutes
+                .ForEach(x => SubscriberSocket.Subscribe(x.IncomingRouteName));
+        }
+
         public void SendMessage(string routeName)
         {
             SendMessage(new Message(routeName, RouteDataType.Void, null));
@@ -147,8 +153,9 @@ namespace NetmqRouter
                 .GroupBy(x => x.IncomingRouteName)
                 .ToDictionary(x => x.Key, x => x.ToList());
 
-            _cancellationToken = _cancellationTokenSource.Token;
+            SubscribeRoutingOnSocket();
 
+            _cancellationToken = _cancellationTokenSource.Token;
 
             RunTask(PublisherWorker);
             RunTask(SubscriberWorker);

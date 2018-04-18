@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NetmqRouter
 {
@@ -23,8 +25,18 @@ namespace NetmqRouter
             if (IncomingDataType == RouteDataType.Void)
                 return Method.Invoke(Object, new object[0]);
 
-            else
-                return Method.Invoke(Object, new[] { data });
+            if (IncomingDataType == RouteDataType.Text)
+                return Method.Invoke(Object, new[] { Encoding.ASCII.GetString(data) } );
+
+            if (IncomingDataType == RouteDataType.Object)
+            {
+                var json = Encoding.ASCII.GetString(data);
+                var targetType = Method.GetParameters()[0].ParameterType;
+                var _object = JsonConvert.DeserializeObject(json, targetType);
+                return Method.Invoke(Object, new[] { _object });
+            }
+
+            return Method.Invoke(Object, new[] { data });
         }
     }
 }

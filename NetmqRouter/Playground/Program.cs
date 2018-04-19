@@ -24,7 +24,8 @@ namespace Playground
 
             var subscriber = new ExampleSubscriber();
 
-            var router = new MessageRouter(publisherSocket, subscriberSocket)
+            var router = MessageRouter
+                .WithPubSubConnecton(publisherSocket, subscriberSocket)
                 .Subscribe(subscriber)
                 .StartRouting();
 

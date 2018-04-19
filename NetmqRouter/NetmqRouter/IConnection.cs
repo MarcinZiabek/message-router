@@ -1,13 +1,12 @@
-﻿using NetMQ.Sockets;
+﻿using System.Collections.Generic;
+using NetMQ;
+using NetMQ.Sockets;
 
 namespace NetmqRouter
 {
     public interface IConnection
     {
-        PublisherSocket PublisherSocket { get; }
-        SubscriberSocket SubscriberSocket { get; }
-
-        void Connect();
+        void Connect(IEnumerable<string> routeNames);
         void Disconnect();
         
         void SendMessage(Message message);

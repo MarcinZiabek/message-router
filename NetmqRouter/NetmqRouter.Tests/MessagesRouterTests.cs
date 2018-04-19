@@ -24,13 +24,14 @@ namespace NetmqRouter.Tests
 
             var subscriber = new ExampleSubscriber();
 
-            var router = new MessageRouter(publisherSocket, subscriberSocket)
+            var router = MessageRouter
+                .WithPubSubConnecton(publisherSocket, subscriberSocket)
                 .Subscribe(subscriber)
                 .StartRouting();
 
             router.SendMessage("Text", "test");
 
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
             Assert.AreEqual(nameof(ExampleSubscriber.TextSubscriber), subscriber.CalledMethod);
 

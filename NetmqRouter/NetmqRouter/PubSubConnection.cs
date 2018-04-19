@@ -1,11 +1,13 @@
-﻿using NetMQ.Sockets;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NetMQ.Sockets;
 
 namespace NetmqRouter
 {
     public class PubSubConnection : IConnection
     {
-        public PublisherSocket PublisherSocket { get; }
-        public SubscriberSocket SubscriberSocket { get; }
+        PublisherSocket PublisherSocket { get; }
+        SubscriberSocket SubscriberSocket { get; }
 
         public PubSubConnection(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
         {
@@ -17,9 +19,11 @@ namespace NetmqRouter
 
         public bool TryReceiveMessage(out Message message) => SubscriberSocket.TryReceiveMessage(out message);
 
-        public void Connect()
+        public void Connect(IEnumerable<string> routeNames)
         {
-            
+            routeNames
+                .ToList()
+                .ForEach(SubscriberSocket.Subscribe);
         }
         
         public void Disconnect()

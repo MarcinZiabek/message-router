@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace NetmqRouter
 {
-    public class MessageRouter : IMessageRouter, IDisposable
+    public partial class MessageRouter : IMessageRouter, IDisposable
     {
         private readonly List<Route> _registeredRoutes  = new List<Route>();
         private Dictionary<string, List<Route>> _routing;
@@ -34,9 +34,9 @@ namespace NetmqRouter
             Disconnect();
         }
 
-        public MessageRouter(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
+        private MessageRouter(IConnection connection)
         {
-            Connection = new PubSubConnection(publisherSocket, subscriberSocket);
+            Connection = connection;
         }
 
         public IMessageRouter WithWorkerPool(int numberOfWorkers)
@@ -51,12 +51,6 @@ namespace NetmqRouter
             _registeredRoutes.AddRange(routes);
 
             return this;
-        }
-
-        private void SubscribeRoutingOnSocket()
-        {
-            _registeredRoutes
-                .ForEach(x => Connection.SubscriberSocket.Subscribe(x.IncomingRouteName));
         }
 
         public void SendMessage(string routeName)
@@ -151,7 +145,7 @@ namespace NetmqRouter
                 .GroupBy(x => x.IncomingRouteName)
                 .ToDictionary(x => x.Key, x => x.ToList());
 
-            SubscribeRoutingOnSocket();
+            Connection.Connect(_routing.Select(x => x.Key));
 
             _cancellationToken = _cancellationTokenSource.Token;
 

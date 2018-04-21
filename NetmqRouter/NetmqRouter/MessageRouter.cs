@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NetmqRouter.Attributes;
 using NetMQ;
 using NetMQ.Sockets;
 using Newtonsoft.Json;
@@ -27,6 +28,9 @@ namespace NetmqRouter
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CancellationToken _cancellationToken;
+
+        private ITextSerializer _textSerializer = new BasicTextSerializer();
+        private IObjectSerializer _objectSerializer = new JsonObjectSerializer();
 
         public void Dispose()
         {
@@ -65,15 +69,12 @@ namespace NetmqRouter
 
         public void SendMessage(string routeName, string text)
         {
-            var data = Encoding.ASCII.GetBytes(text);
-            SendMessage(new Message(routeName, RouteDataType.Text, data));
+            SendMessage(new Message(routeName, RouteDataType.Text, _textSerializer.Serialize(text)));
         }
 
         public void SendMessage(string routeName, object _object)
         {
-            var json = JsonConvert.SerializeObject(_object);
-            var data = Encoding.ASCII.GetBytes(json);
-            SendMessage(new Message(routeName, RouteDataType.Object, data));
+            SendMessage(new Message(routeName, RouteDataType.Object, _objectSerializer.Serialize(_object)));
         }
 
         private void SendMessage(Message message)
@@ -135,7 +136,7 @@ namespace NetmqRouter
                     [message.RouteName]
                     .Where(x => x.IncomingDataType == message.DataType)
                     .ToList()
-                    .ForEach(x => x.Call(message.Buffer));
+                    .ForEach(x => x.Call(message.Buffer, _textSerializer, _objectSerializer));
             }
         }
 

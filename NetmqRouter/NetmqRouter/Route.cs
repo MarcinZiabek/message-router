@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using NetmqRouter.Attributes;
 using Newtonsoft.Json;
 
 namespace NetmqRouter
@@ -18,24 +19,20 @@ namespace NetmqRouter
         public string OutcomingRouteName { get; set; }
         public RouteDataType OutcomingDataType { get; set; }
 
-        public object Call(byte[] data)
+        public object Call(byte[] data, ITextSerializer textSerializer, IObjectSerializer objectSerializer)
         {
             if (IncomingDataType == RouteDataType.Void)
                 return Method.Invoke(Object, new object[0]);
 
             if (IncomingDataType == RouteDataType.Text)
-                return Method.Invoke(Object, new[] { (data != null) ? Encoding.ASCII.GetString(data) : null } );
+                return Method.Invoke(Object, new[] { (data != null) ? textSerializer.Desialize(data) : null } );
 
             if (IncomingDataType == RouteDataType.Object)
             {
                 object _object = null;
 
                 if (data != null)
-                {
-                    var json = Encoding.ASCII.GetString(data);
-                    var targetType = Method.GetParameters()[0].ParameterType;
-                    _object = JsonConvert.DeserializeObject(json, targetType);
-                }
+                    _object = objectSerializer.Desialize(data, typeof(object));
                 
                 return Method.Invoke(Object, new[] { _object });
             }

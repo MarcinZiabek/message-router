@@ -1,4 +1,4 @@
-﻿namespace NetmqRouter.Attributes
+﻿namespace NetmqRouter.Infrastructure
 {
     public interface ITextSerializer
     {

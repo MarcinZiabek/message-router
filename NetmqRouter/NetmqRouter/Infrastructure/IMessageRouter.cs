@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NetmqRouter
+namespace NetmqRouter.Infrastructure
 {
     public interface IMessageRouter : IDisposable
     {

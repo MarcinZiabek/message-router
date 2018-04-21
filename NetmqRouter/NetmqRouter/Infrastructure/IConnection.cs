@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using NetMQ;
-using NetMQ.Sockets;
 
-namespace NetmqRouter
+namespace NetmqRouter.Infrastructure
 {
     public interface IConnection
     {

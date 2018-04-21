@@ -1,4 +1,5 @@
-﻿using NetMQ.Sockets;
+﻿using NetmqRouter.Infrastructure;
+using NetMQ.Sockets;
 
 namespace NetmqRouter
 {

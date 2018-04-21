@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter
+namespace NetmqRouter.Infrastructure
 {
     public interface IObjectSerializer
     {

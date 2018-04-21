@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NetmqRouter.Attributes;
+using NetmqRouter.Infrastructure;
+using NetmqRouter.Workers;
 using NetMQ;
 using NetMQ.Sockets;
 using Newtonsoft.Json;
@@ -15,22 +17,15 @@ namespace NetmqRouter
     public partial class MessageRouter : IMessageRouter, IDisposable
     {
         private readonly List<Route> _registeredRoutes  = new List<Route>();
-        private Dictionary<string, List<Route>> _routing;
 
         private IConnection Connection { get; set; }
-
         public int NumberOfWorkes { get; private set; } = 4;
-
-        private readonly ConcurrentQueue<Message> _incomingMessages = new ConcurrentQueue<Message>();
-        private readonly ConcurrentQueue<Message> _outcommingMessages = new ConcurrentQueue<Message>();
-
-        private List<Task> _runningTasks = new List<Task>();
-
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private CancellationToken _cancellationToken;
 
         private ITextSerializer _textSerializer = new BasicTextSerializer();
         private IObjectSerializer _objectSerializer = new JsonObjectSerializer();
+
+        private MessageSender _messageSender;
+        private List<IWorkerTask> _workers = new List<IWorkerTask>();
 
         public void Dispose()
         {
@@ -79,105 +74,37 @@ namespace NetmqRouter
 
         private void SendMessage(Message message)
         {
-            _outcommingMessages.Enqueue(message);
-        }
-
-        private async void PublisherWorker()
-        {
-            while (true)
-            {
-                if (_cancellationToken.IsCancellationRequested)
-                    return;
-
-                if (!_outcommingMessages.TryDequeue(out var message))
-                {
-                    await Task.Delay(TimeSpan.FromMilliseconds(1));
-                    continue;
-                }
-
-                Connection.SendMessage(message);
-            }
-        }
-
-        private async void SubscriberWorker()
-        {
-            while (true)
-            {
-                if (_cancellationToken.IsCancellationRequested)
-                    return;
-
-                if (!Connection.TryReceiveMessage(out var message))
-                {
-                    await Task.Delay(TimeSpan.FromMilliseconds(1));
-                    continue;
-                }
-                    
-                _incomingMessages.Enqueue(message);
-            }
-        }
-
-        private async void MessageHandlerWorker()
-        {
-            while (true)
-            {
-                if (_cancellationToken.IsCancellationRequested)
-                    return;
-
-                if (!_incomingMessages.TryDequeue(out var message))
-                {
-                    await Task.Delay(TimeSpan.FromMilliseconds(1));
-                    continue;
-                }
-                    
-                if(!_routing.ContainsKey(message.RouteName))
-                    continue;
-
-                _routing
-                    [message.RouteName]
-                    .Where(x => x.IncomingDataType == message.DataType)
-                    .ToList()
-                    .ForEach(x => x.Call(message.Buffer, _textSerializer, _objectSerializer));
-            }
+            _messageSender.SendMessage(message);
         }
 
         public IMessageRouter StartRouting()
         {
-            _routing = _registeredRoutes
-                .GroupBy(x => x.IncomingRouteName)
-                .ToDictionary(x => x.Key, x => x.ToList());
+            Connection.Connect(_registeredRoutes.Select(x => x.IncomingRouteName).Distinct());
 
-            Connection.Connect(_routing.Select(x => x.Key));
+            var receiverWorker = new MessageReveiver(Connection);
+            _messageSender = new MessageSender(Connection);
 
-            _cancellationToken = _cancellationTokenSource.Token;
+            var handlerWorkers = Enumerable
+                .Range(0, NumberOfWorkes)
+                .Select(_ =>
+                {
+                    var handlerWorker = new MessageHandler(_registeredRoutes, _textSerializer, _objectSerializer);
+                    receiverWorker.OnNewMessage += handlerWorker.HandleMessage;
+                    return handlerWorker;
+                });
+            
+            _workers.AddRange(new IWorkerTask[] { receiverWorker, _messageSender });
+            _workers.AddRange(handlerWorkers);
 
-            RunTask(PublisherWorker);
-            RunTask(SubscriberWorker);
-
-            for (int i = 0; i < NumberOfWorkes; i++)
-                RunTask(MessageHandlerWorker);
-
+            _workers
+                .ForEach(x => x.Start());
+            
             return this;
-        }
-
-        private void RunTask(Action action)
-        {
-            var task = Task.Run(action, _cancellationToken);
-            _runningTasks.Add(task);
         }
 
         public IMessageRouter StopRouting()
         {
-            _cancellationTokenSource.Cancel();
-
-            try
-            {
-                Task.WaitAll(_runningTasks.ToArray());
-            }
-            catch
-            {
-
-            }
-
+            _workers.ForEach(x => x.Stop());
             return this;
         }
 

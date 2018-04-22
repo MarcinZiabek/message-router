@@ -25,6 +25,7 @@ namespace NetmqRouter
         internal ITextSerializer _textSerializer = new BasicTextSerializer();
         internal IObjectSerializer _objectSerializer = new JsonObjectSerializer();
 
+        private MessageSerializer _messageSerializer;
         private MessageSender _messageSender;
         private List<IWorkerTask> _workers = new List<IWorkerTask>();
 
@@ -67,7 +68,7 @@ namespace NetmqRouter
 
         public void SendMessage(Message message)
         {
-            _messageSender.SendMessage(message);
+            _messageSerializer.SerializeMessage(message);
         }
 
         public IMessageRouter StartRouting()
@@ -77,19 +78,23 @@ namespace NetmqRouter
             var typeContract = _registeredRoutes
                 .ToDictionary(x => x.IncomingRouteName, x => x.Method.GetParameters()[0].ParameterType);
             
-            var receiverWorker = new MessageReveiver(Connection, typeContract, _textSerializer, _objectSerializer);
-            _messageSender = new MessageSender(Connection, _textSerializer, _objectSerializer);
+            var receiverWorker = new MessageReveiver(Connection);
+            _messageSerializer = new MessageSerializer(_textSerializer, _objectSerializer);
+            var deserializerWorker = new MessageDeserializer(typeContract, _textSerializer, _objectSerializer);
+            _messageSender = new MessageSender(Connection);
+            
+            receiverWorker.OnNewMessage += deserializerWorker.DeserializeMessage;
 
             var handlerWorkers = Enumerable
                 .Range(0, NumberOfWorkes)
                 .Select(_ =>
                 {
                     var handlerWorker = new MessageHandler(_registeredRoutes);
-                    receiverWorker.OnNewMessage += handlerWorker.HandleMessage;
+                    deserializerWorker.OnNewMessage += handlerWorker.HandleMessage;
                     return handlerWorker;
                 });
             
-            _workers.AddRange(new IWorkerTask[] { receiverWorker, _messageSender });
+            _workers.AddRange(new IWorkerTask[] { receiverWorker, _messageSender, _messageSerializer, deserializerWorker });
             _workers.AddRange(handlerWorkers);
 
             _workers.ForEach(x => x.Start());

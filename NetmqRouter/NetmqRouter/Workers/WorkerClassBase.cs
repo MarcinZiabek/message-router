@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NetmqRouter.Infrastructure;
@@ -9,11 +10,13 @@ namespace NetmqRouter.Workers
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CancellationToken _cancellationToken;
-
-        public void Start()
+        
+        public void Start(int numberOfWorkers = 1)
         {
             _cancellationToken = _cancellationTokenSource.Token;
-            Task.Run(() => DoWorkTask(), _cancellationToken);
+            
+            for(var i=0; i<numberOfWorkers; i++)
+                Task.Run(() => DoWorkTask(), _cancellationToken);
         }
 
         public void Stop()

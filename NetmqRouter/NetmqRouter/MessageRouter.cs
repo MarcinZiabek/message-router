@@ -25,9 +25,11 @@ namespace NetmqRouter
         internal ITextSerializer _textSerializer = new BasicTextSerializer();
         internal IObjectSerializer _objectSerializer = new JsonObjectSerializer();
 
+        private MessageReveiver _messageReveiver;
+        private MessageDeserializer _messageDeserializer;
+        private MessageHandler _messageHandler;
         private MessageSerializer _messageSerializer;
         private MessageSender _messageSender;
-        private List<IWorkerTask> _workers = new List<IWorkerTask>();
 
         public void Dispose()
         {
@@ -78,32 +80,33 @@ namespace NetmqRouter
             var typeContract = _registeredRoutes
                 .ToDictionary(x => x.IncomingRouteName, x => x.Method.GetParameters()[0].ParameterType);
             
-            var receiverWorker = new MessageReveiver(Connection);
+            _messageReveiver = new MessageReveiver(Connection);
+            _messageDeserializer = new MessageDeserializer(typeContract, _textSerializer, _objectSerializer);
+            _messageHandler = new MessageHandler(_registeredRoutes);
             _messageSerializer = new MessageSerializer(_textSerializer, _objectSerializer);
-            var deserializerWorker = new MessageDeserializer(typeContract, _textSerializer, _objectSerializer);
             _messageSender = new MessageSender(Connection);
             
-            receiverWorker.OnNewMessage += deserializerWorker.DeserializeMessage;
-
-            var handlerWorkers = Enumerable
-                .Range(0, NumberOfWorkes)
-                .Select(_ =>
-                {
-                    var handlerWorker = new MessageHandler(_registeredRoutes);
-                    deserializerWorker.OnNewMessage += handlerWorker.HandleMessage;
-                    return handlerWorker;
-                });
+            _messageReveiver.OnNewMessage += _messageDeserializer.DeserializeMessage;
+            _messageDeserializer.OnNewMessage += _messageHandler.HandleMessage;
+            _messageSerializer.OnNewMessage += _messageSender.SendMessage;
             
-            _workers.AddRange(new IWorkerTask[] { receiverWorker, _messageSender, _messageSerializer, deserializerWorker });
-            _workers.AddRange(handlerWorkers);
-
-            _workers.ForEach(x => x.Start());
+            _messageReveiver.Start();
+            _messageDeserializer.Start();
+            _messageHandler.Start(NumberOfWorkes);
+            _messageSerializer.Start();
+            _messageSender.Start();
+            
             return this;
         }
 
         public IMessageRouter StopRouting()
         {
-            _workers.ForEach(x => x.Stop());
+            _messageReveiver.Stop();
+            _messageDeserializer.Stop();
+            _messageHandler.Stop();
+            _messageSerializer.Stop();
+            _messageSender.Stop();
+            
             return this;
         }
 

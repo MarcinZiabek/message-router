@@ -2,7 +2,7 @@
 {
     internal interface IWorkerTask
     {
-        void Start();
+        void Start(int numberOfWorkers = 1);
         void Stop();
     }
 }

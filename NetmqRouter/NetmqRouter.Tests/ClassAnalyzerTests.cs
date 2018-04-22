@@ -32,7 +32,6 @@ namespace NetmqRouter.Tests
             return routes.First(x => x.Method.Name == methodName).IncomingRouteName;
         }
 
-
         [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = "Response")]
         [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = "Response")]
         [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = null)]
@@ -44,22 +43,22 @@ namespace NetmqRouter.Tests
             return routes.First(x => x.Method.Name == methodName).OutcomingRouteName;
         }
 
-        [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = RouteDataType.Void)]
-        [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = RouteDataType.RawData)]
-        [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = RouteDataType.Text)]
-        [TestCase(nameof(ExampleSubscriber.ObjectSubscriber), ExpectedResult = RouteDataType.Object)]
-        public RouteDataType IncomingRouteDataType(string methodName)
+        [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = null)]
+        [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = typeof(byte[]))]
+        [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = typeof(string))]
+        [TestCase(nameof(ExampleSubscriber.ObjectSubscriber), ExpectedResult = typeof(SimpleObject))]
+        public Type IncomingRouteDataType(string methodName)
         {
             var _object = new ExampleSubscriber();
             var routes = ClassAnalyzer.AnalyzeClass(_object);
             return routes.First(x => x.Method.Name == methodName).IncomingDataType;
         }
 
-        [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = RouteDataType.RawData)]
-        [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = RouteDataType.Text)]
-        [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = RouteDataType.Object)]
-        [TestCase(nameof(ExampleSubscriber.ObjectSubscriber), ExpectedResult = RouteDataType.Void)]
-        public RouteDataType OutcomingRouteDataType(string methodName)
+        [TestCase(nameof(ExampleSubscriber.EventSubscriber), ExpectedResult = typeof(byte[]))]
+        [TestCase(nameof(ExampleSubscriber.RawSubscriber), ExpectedResult = typeof(string))]
+        [TestCase(nameof(ExampleSubscriber.TextSubscriber), ExpectedResult = typeof(SimpleObject))]
+        [TestCase(nameof(ExampleSubscriber.ObjectSubscriber), ExpectedResult = null)]
+        public Type OutcomingRouteDataType(string methodName)
         {
             var _object = new ExampleSubscriber();
             var routes = ClassAnalyzer.AnalyzeClass(_object);
@@ -81,16 +80,6 @@ namespace NetmqRouter.Tests
 
             // assert
             return _object.CalledMethod;
-        }
-
-        [TestCase(null, ExpectedResult = RouteDataType.Void)]
-        [TestCase(typeof(void), ExpectedResult = RouteDataType.Void)]
-        [TestCase(typeof(byte[]), ExpectedResult = RouteDataType.RawData)]
-        [TestCase(typeof(string), ExpectedResult = RouteDataType.Text)]
-        [TestCase(typeof(SimpleObject), ExpectedResult = RouteDataType.Object)]
-        public RouteDataType CovertTypeToRouteDataType(Type type)
-        {
-            return ClassAnalyzer.CovertTypeToRouteDataType(type);
         }
     }
 }

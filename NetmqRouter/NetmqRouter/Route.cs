@@ -15,14 +15,14 @@ namespace NetmqRouter
         internal MethodInfo Method { get; set; }
 
         public string IncomingRouteName { get; set; }
-        public RouteDataType IncomingDataType { get; set; }
+        public Type IncomingDataType { get; set; }
 
         public string OutcomingRouteName { get; set; }
-        public RouteDataType OutcomingDataType { get; set; }
+        public Type OutcomingDataType { get; set; }
 
         public object Call(object data)
         {
-            var arguments = (IncomingDataType == RouteDataType.Void) ? new object[0] : new[] {data};
+            var arguments = (IncomingDataType == null) ? new object[0] : new[] {data};
             return Method.Invoke(Object,  arguments);
         }
     }

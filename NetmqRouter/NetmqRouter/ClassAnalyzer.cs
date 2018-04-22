@@ -50,8 +50,6 @@ namespace NetmqRouter
                 throw new NetmqRouterException("Route method cannot have more than one argument");
 
             var agrumentType = methodInfo.GetParameters().FirstOrDefault()?.ParameterType;
-            var returnType = CovertTypeToRouteDataType(methodInfo.ReturnType);
-            var routeDataType = CovertTypeToRouteDataType(agrumentType);
 
             return new Route()
             {
@@ -59,25 +57,11 @@ namespace NetmqRouter
                 Method = methodInfo,
 
                 IncomingRouteName = route.Name,
-                IncomingDataType = routeDataType,
+                IncomingDataType = agrumentType,
                 
                 OutcomingRouteName = responseRoute?.Name,
-                OutcomingDataType = returnType
+                OutcomingDataType = methodInfo.ReturnType
             };
-        }
-
-        internal static RouteDataType CovertTypeToRouteDataType(Type type)
-        {
-            if (type == null || type == typeof(void))
-                return RouteDataType.Void;
-
-            if (type == typeof(byte[]))
-                return RouteDataType.RawData;
-
-            if (type == typeof(string))
-                return RouteDataType.Text;
-
-            return RouteDataType.Object;
         }
     }
 }

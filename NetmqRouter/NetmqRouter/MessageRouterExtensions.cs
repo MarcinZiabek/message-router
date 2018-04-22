@@ -25,5 +25,10 @@ namespace NetmqRouter
         {
             router.SendMessage(new Message(routeName, _object));
         }
+        
+        public static void RegisterSerializerForType<T>(this MessageRouter router, ISerializer serializer)
+        {
+            router._dataSerializationContract.Add(typeof(T), serializer);
+        }
     }
 }

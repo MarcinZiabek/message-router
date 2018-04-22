@@ -2,9 +2,9 @@
 
 namespace NetmqRouter.Infrastructure
 {
-    public interface IObjectSerializer
+    public interface ISerializer
     {
         byte[] Serialize(object _object);
-        object Desialize(byte[] data, Type targetType);
+        object Deserialize(byte[] data, Type targetType);
     }
 }

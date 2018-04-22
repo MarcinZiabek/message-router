@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetmqRouter
 {
-    public class JsonObjectSerializer : IObjectSerializer
+    public class JsonObjectSerializer : ISerializer
     {
         private Encoding _encoding;
         
@@ -25,7 +25,7 @@ namespace NetmqRouter
             return _encoding.GetBytes(json);
         }
 
-        public object Desialize(byte[] data, Type targetType)
+        public object Deserialize(byte[] data, Type targetType)
         {
             var json = _encoding.GetString(data);
             return JsonConvert.DeserializeObject(json, targetType);

@@ -1,10 +1,11 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using NetmqRouter.Attributes;
 using NetmqRouter.Infrastructure;
 
 namespace NetmqRouter
 {
-    public class BasicTextSerializer : ITextSerializer
+    public class BasicTextSerializer : ISerializer
     {
         private Encoding _encoding;
         
@@ -18,12 +19,12 @@ namespace NetmqRouter
             
         }
         
-        public byte[] Serialize(string text)
+        public byte[] Serialize(object _object)
         {
-            return _encoding.GetBytes(text);
+            return _encoding.GetBytes((string)_object);
         }
 
-        public string Desialize(byte[] data)
+        public object Deserialize(byte[] data, Type targetType)
         {
             return _encoding.GetString(data);
         }

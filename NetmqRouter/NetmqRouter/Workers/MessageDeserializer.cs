@@ -12,16 +12,12 @@ namespace NetmqRouter.Workers
         public event Action<Message> OnNewMessage;
         
         private readonly Dictionary<string, Type> _typeContract;
-        
-        private readonly ITextSerializer _textSerializer;
-        private readonly IObjectSerializer _objectSerializer;
-        
-        public MessageDeserializer(Dictionary<string, Type> typeContract, ITextSerializer textSerializer, IObjectSerializer objectSerializer)
+        private readonly Dictionary<Type, ISerializer> _dataSerializationContract;
+
+        public MessageDeserializer(Dictionary<string, Type> typeContract, Dictionary<Type, ISerializer> dataSerializationContract)
         {
             _typeContract = typeContract;
-            
-            _textSerializer = textSerializer;
-            _objectSerializer = objectSerializer;
+            _dataSerializationContract = dataSerializationContract;
         }
         
         public void DeserializeMessage(SerializedMessage message) => _messageQueue.Enqueue(message);
@@ -34,17 +30,11 @@ namespace NetmqRouter.Workers
             var targetType = _typeContract[serializedMessage.RouteName];
             object _object = null;
             
-            if (targetType == null)
-                _object = null;
-            
-            else if (targetType == typeof(string))
-                _object = _textSerializer.Desialize(serializedMessage.Data);
-            
-            else if (targetType == typeof(byte[]))
-                _object = serializedMessage.Data;
-            
-            else
-                _object = _objectSerializer.Desialize(serializedMessage.Data, targetType);
+            if (targetType != null && serializedMessage.Data != null)
+            {
+                var serializer = _dataSerializationContract[targetType];
+                _object = serializer.Deserialize(serializedMessage.Data, targetType);
+            }
 
             OnNewMessage?.Invoke(new Message(serializedMessage.RouteName, _object));
             return true;

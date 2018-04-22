@@ -22,9 +22,8 @@ namespace NetmqRouter
         private IConnection Connection { get; set; }
         public int NumberOfWorkes { get; private set; } = 4;
 
-        internal ITextSerializer _textSerializer = new BasicTextSerializer();
-        internal IObjectSerializer _objectSerializer = new JsonObjectSerializer();
-
+        internal readonly Dictionary<Type, ISerializer> _dataSerializationContract = new Dictionary<Type, ISerializer>();
+        
         private MessageReveiver _messageReveiver;
         private MessageDeserializer _messageDeserializer;
         private MessageHandler _messageHandler;
@@ -81,9 +80,9 @@ namespace NetmqRouter
                 .ToDictionary(x => x.IncomingRouteName, x => x.Method.GetParameters()[0].ParameterType);
             
             _messageReveiver = new MessageReveiver(Connection);
-            _messageDeserializer = new MessageDeserializer(typeContract, _textSerializer, _objectSerializer);
+            _messageDeserializer = new MessageDeserializer(typeContract, _dataSerializationContract);
             _messageHandler = new MessageHandler(_registeredRoutes);
-            _messageSerializer = new MessageSerializer(_textSerializer, _objectSerializer);
+            _messageSerializer = new MessageSerializer(_dataSerializationContract);
             _messageSender = new MessageSender(Connection);
             
             _messageReveiver.OnNewMessage += _messageDeserializer.DeserializeMessage;

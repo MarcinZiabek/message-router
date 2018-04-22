@@ -11,7 +11,5 @@ namespace NetmqRouter.Infrastructure
         IMessageRouter StartRouting();
         IMessageRouter StopRouting();
         IMessageRouter Disconnect();
-
-        void SendMessage(Message message);
     }
 }

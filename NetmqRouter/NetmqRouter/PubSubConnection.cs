@@ -6,7 +6,7 @@ using NetMQ.Sockets;
 
 namespace NetmqRouter
 {
-    public class PubSubConnection : IConnection
+    internal class PubSubConnection : IConnection
     {
         PublisherSocket PublisherSocket { get; }
         SubscriberSocket SubscriberSocket { get; }

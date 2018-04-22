@@ -6,22 +6,22 @@ namespace NetmqRouter
 {
     public static class MessageRouterExtensions
     {
-        public static void SendMessage(this IMessageRouter router, string routeName)
+        public static void SendMessage(this MessageRouter router, string routeName)
         {
             router.SendMessage(new Message(routeName, null));
         }
 
-        public static void SendMessage(this IMessageRouter router, string routeName, byte[] data)
+        public static void SendMessage(this MessageRouter router, string routeName, byte[] data)
         {
             router.SendMessage(new Message(routeName, data));
         }
 
-        public static void SendMessage(this IMessageRouter router, string routeName, string text)
+        public static void SendMessage(this MessageRouter router, string routeName, string text)
         {
             router.SendMessage(new Message(routeName, text));
         }
         
-        public static void SendMessage(this IMessageRouter router, string routeName, object _object)
+        public static void SendMessage(this MessageRouter router, string routeName, object _object)
         {
             router.SendMessage(new Message(routeName, _object));
         }

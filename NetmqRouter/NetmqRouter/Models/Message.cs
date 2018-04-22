@@ -1,6 +1,6 @@
 ﻿namespace NetmqRouter.Models
 {
-    public struct Message
+    internal struct Message
     {
         public readonly string RouteName;
         public readonly object Payload;

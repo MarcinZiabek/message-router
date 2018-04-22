@@ -10,7 +10,7 @@ using NetmqRouter.Attributes;
 
 namespace NetmqRouter
 {
-    public class ClassAnalyzer
+    internal class ClassAnalyzer
     {
         internal static List<Route> AnalyzeClass(object _object)
         {

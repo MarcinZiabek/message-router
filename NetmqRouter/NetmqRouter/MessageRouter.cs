@@ -67,7 +67,7 @@ namespace NetmqRouter
             return new MessageRouter(connection);
         }
 
-        public void SendMessage(Message message)
+        internal void SendMessage(Message message)
         {
             _messageSerializer.SerializeMessage(message);
         }

@@ -27,7 +27,8 @@ namespace NetmqRouter.Tests
             var router = MessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
                 .Subscribe(subscriber)
-                .StartRouting();
+                .StartRouting()
+                as MessageRouter;
 
             router.SendMessage("Text", "test");
 

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace NetmqRouter
 {
-    public class Route
+    internal class Route
     {
         internal object Object { get; set; }
         internal MethodInfo Method { get; set; }

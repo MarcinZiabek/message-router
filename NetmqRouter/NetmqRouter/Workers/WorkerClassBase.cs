@@ -6,7 +6,7 @@ using NetmqRouter.Infrastructure;
 
 namespace NetmqRouter.Workers
 {
-    public abstract class WorkerClassBase : IWorkerTask
+    internal abstract class WorkerClassBase : IWorkerTask
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CancellationToken _cancellationToken;

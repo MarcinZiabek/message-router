@@ -5,9 +5,10 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Workers
 {
-    public class MessageReveiver : WorkerClassBase
+    internal class MessageReveiver : WorkerClassBase
     {
         private readonly IConnection _connection;
+        
         internal event Action<SerializedMessage> OnNewMessage;
         
         public MessageReveiver(IConnection connection)

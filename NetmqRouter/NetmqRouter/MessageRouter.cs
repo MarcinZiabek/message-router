@@ -17,13 +17,11 @@ namespace NetmqRouter
 {
     public partial class MessageRouter : IMessageRouter, IDisposable
     {
-        private readonly List<Route> _registeredRoutes  = new List<Route>();
+        internal readonly DataContract _dataContract = new DataContract();
 
         private IConnection Connection { get; set; }
         public int NumberOfWorkes { get; private set; } = 4;
 
-        internal readonly Dictionary<Type, ISerializer> _dataSerializationContract = new Dictionary<Type, ISerializer>();
-        
         private MessageReveiver _messageReveiver;
         private MessageDeserializer _messageDeserializer;
         private MessageHandler _messageHandler;
@@ -49,8 +47,10 @@ namespace NetmqRouter
 
         public IMessageRouter Subscribe<T>(T subscriber)
         {
-            var routes = ClassAnalyzer.AnalyzeClass(subscriber);
-            _registeredRoutes.AddRange(routes);
+            ClassAnalyzer
+                .AnalyzeClass(subscriber)
+                .ToList()
+                .ForEach(_dataContract.RegisterRoute);
 
             return this;
         }
@@ -74,15 +74,12 @@ namespace NetmqRouter
 
         public IMessageRouter StartRouting()
         {
-            Connection.Connect(_registeredRoutes.Select(x => x.IncomingRouteName).Distinct());
+            Connection.Connect(_dataContract.Routes.Select(x => x.IncomingRouteName).Distinct());
 
-            var typeContract = _registeredRoutes
-                .ToDictionary(x => x.IncomingRouteName, x => x.Method.GetParameters()[0].ParameterType);
-            
             _messageReveiver = new MessageReveiver(Connection);
-            _messageDeserializer = new MessageDeserializer(typeContract, _dataSerializationContract);
-            _messageHandler = new MessageHandler(_registeredRoutes);
-            _messageSerializer = new MessageSerializer(_dataSerializationContract);
+            _messageDeserializer = new MessageDeserializer(_dataContract);
+            _messageHandler = new MessageHandler(_dataContract);
+            _messageSerializer = new MessageSerializer(_dataContract);
             _messageSender = new MessageSender(Connection);
             
             _messageReveiver.OnNewMessage += _messageDeserializer.DeserializeMessage;

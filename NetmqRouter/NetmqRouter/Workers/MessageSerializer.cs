@@ -6,16 +6,16 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Workers
 {
-    public class MessageSerializer : WorkerClassBase
+    internal class MessageSerializer : WorkerClassBase
     {
+        private readonly DataContract _dataContract;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
-        private readonly Dictionary<Type, ISerializer> _dataSerializationContract;
-        
+
         public event Action<SerializedMessage> OnNewMessage;
 
-        public MessageSerializer(Dictionary<Type, ISerializer> dataSerializationContract)
+        public MessageSerializer(DataContract dataContract)
         {
-            _dataSerializationContract = dataSerializationContract;
+            _dataContract = dataContract;
         }
         
         public void SerializeMessage(Message message) => _messageQueue.Enqueue(message);
@@ -30,7 +30,7 @@ namespace NetmqRouter.Workers
             
             if (targetType != null && message.Payload != null)
             {
-                var serializer = _dataSerializationContract[targetType];
+                var serializer = _dataContract.Serialization[targetType];
                 dataBuffer = serializer.Serialize(message.Payload);
             }
             

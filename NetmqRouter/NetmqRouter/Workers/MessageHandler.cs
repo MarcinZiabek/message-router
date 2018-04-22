@@ -6,14 +6,14 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Workers
 {
-    public class MessageHandler : WorkerClassBase
+    internal class MessageHandler : WorkerClassBase
     {
-        private readonly List<Route> _routing;
+        private readonly DataContract _dataContract;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
 
-        public MessageHandler(IEnumerable<Route> routing)
+        public MessageHandler(DataContract dataContract)
         {
-            _routing = routing.ToList();
+            _dataContract = dataContract;
         }
 
         public void HandleMessage(Message message) => _messageQueue.Enqueue(message);
@@ -23,7 +23,8 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
 
-            _routing
+            _dataContract
+                .Routes
                 .Where(x => x.IncomingRouteName == message.RouteName)
                 .ToList()
                 .ForEach(x => x.Call(message.Payload));

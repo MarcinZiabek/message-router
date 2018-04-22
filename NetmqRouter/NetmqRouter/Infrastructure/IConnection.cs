@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NetmqRouter.Models;
 
 namespace NetmqRouter.Infrastructure
 {
@@ -7,7 +8,7 @@ namespace NetmqRouter.Infrastructure
         void Connect(IEnumerable<string> routeNames);
         void Disconnect();
         
-        void SendMessage(Message message);
-        bool TryReceiveMessage(out Message message);
+        void SendMessage(SerializedMessage message);
+        bool TryReceiveMessage(out SerializedMessage message);
     }
 }

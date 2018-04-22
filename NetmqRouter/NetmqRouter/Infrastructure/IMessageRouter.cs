@@ -1,4 +1,5 @@
 ﻿using System;
+using NetmqRouter.Models;
 
 namespace NetmqRouter.Infrastructure
 {
@@ -11,9 +12,6 @@ namespace NetmqRouter.Infrastructure
         IMessageRouter StopRouting();
         IMessageRouter Disconnect();
 
-        void SendMessage(string routeName);
-        void SendMessage(string routeName, byte[] data);
-        void SendMessage(string routeName, string text);
-        void SendMessage(string routeName, object _object);
+        void SendMessage(Message message);
     }
 }

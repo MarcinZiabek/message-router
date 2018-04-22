@@ -20,25 +20,10 @@ namespace NetmqRouter
         public string OutcomingRouteName { get; set; }
         public RouteDataType OutcomingDataType { get; set; }
 
-        public object Call(byte[] data, ITextSerializer textSerializer, IObjectSerializer objectSerializer)
+        public object Call(object data)
         {
-            if (IncomingDataType == RouteDataType.Void)
-                return Method.Invoke(Object, new object[0]);
-
-            if (IncomingDataType == RouteDataType.Text)
-                return Method.Invoke(Object, new[] { (data != null) ? textSerializer.Desialize(data) : null } );
-
-            if (IncomingDataType == RouteDataType.Object)
-            {
-                object _object = null;
-
-                if (data != null)
-                    _object = objectSerializer.Desialize(data, typeof(object));
-                
-                return Method.Invoke(Object, new[] { _object });
-            }
-
-            return Method.Invoke(Object, new[] { data });
+            var arguments = (IncomingDataType == RouteDataType.Void) ? new object[0] : new[] {data};
+            return Method.Invoke(Object,  arguments);
         }
     }
 }

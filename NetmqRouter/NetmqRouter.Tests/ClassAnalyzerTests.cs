@@ -77,7 +77,7 @@ namespace NetmqRouter.Tests
             var routes = ClassAnalyzer.AnalyzeClass(_object);
 
             // act
-            routes.First(x => x.Method.Name == methodName).Call(null, null, null);
+            routes.First(x => x.Method.Name == methodName).Call(null);
 
             // assert
             return _object.CalledMethod;

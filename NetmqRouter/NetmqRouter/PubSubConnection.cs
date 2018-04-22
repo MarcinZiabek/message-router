@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NetmqRouter.Infrastructure;
+using NetmqRouter.Models;
 using NetMQ.Sockets;
 
 namespace NetmqRouter
@@ -16,9 +17,9 @@ namespace NetmqRouter
             SubscriberSocket = subscriberSocket;
         }
 
-        public void SendMessage(Message message) => PublisherSocket.SendMessage(message);
+        public void SendMessage(SerializedMessage message) => PublisherSocket.SendMessage(message);
 
-        public bool TryReceiveMessage(out Message message) => SubscriberSocket.TryReceiveMessage(out message);
+        public bool TryReceiveMessage(out SerializedMessage message) => SubscriberSocket.TryReceiveMessage(out message);
 
         public void Connect(IEnumerable<string> routeNames)
         {

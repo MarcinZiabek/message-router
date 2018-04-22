@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetmqRouter.Attributes;
 using NetmqRouter.Infrastructure;
+using NetmqRouter.Models;
 using NetmqRouter.Workers;
 using NetMQ;
 using NetMQ.Sockets;
@@ -21,8 +22,8 @@ namespace NetmqRouter
         private IConnection Connection { get; set; }
         public int NumberOfWorkes { get; private set; } = 4;
 
-        private ITextSerializer _textSerializer = new BasicTextSerializer();
-        private IObjectSerializer _objectSerializer = new JsonObjectSerializer();
+        internal ITextSerializer _textSerializer = new BasicTextSerializer();
+        internal IObjectSerializer _objectSerializer = new JsonObjectSerializer();
 
         private MessageSender _messageSender;
         private List<IWorkerTask> _workers = new List<IWorkerTask>();
@@ -51,28 +52,20 @@ namespace NetmqRouter
 
             return this;
         }
-
-        public void SendMessage(string routeName)
+        
+        public static IMessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
         {
-            SendMessage(new Message(routeName, RouteDataType.Void, null));
+            var connection = new PubSubConnection(publisherSocket, subscriberSocket);
+            return new MessageRouter(connection);
+        }
+        
+        public static IMessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
+        {
+            var connection = new PubSubConnection(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
+            return new MessageRouter(connection);
         }
 
-        public void SendMessage(string routeName, byte[] data)
-        {
-            SendMessage(new Message(routeName, RouteDataType.RawData, null));
-        }
-
-        public void SendMessage(string routeName, string text)
-        {
-            SendMessage(new Message(routeName, RouteDataType.Text, _textSerializer.Serialize(text)));
-        }
-
-        public void SendMessage(string routeName, object _object)
-        {
-            SendMessage(new Message(routeName, RouteDataType.Object, _objectSerializer.Serialize(_object)));
-        }
-
-        private void SendMessage(Message message)
+        public void SendMessage(Message message)
         {
             _messageSender.SendMessage(message);
         }
@@ -81,14 +74,17 @@ namespace NetmqRouter
         {
             Connection.Connect(_registeredRoutes.Select(x => x.IncomingRouteName).Distinct());
 
-            var receiverWorker = new MessageReveiver(Connection);
-            _messageSender = new MessageSender(Connection);
+            var typeContract = _registeredRoutes
+                .ToDictionary(x => x.IncomingRouteName, x => x.Method.GetParameters()[0].ParameterType);
+            
+            var receiverWorker = new MessageReveiver(Connection, typeContract, _textSerializer, _objectSerializer);
+            _messageSender = new MessageSender(Connection, _textSerializer, _objectSerializer);
 
             var handlerWorkers = Enumerable
                 .Range(0, NumberOfWorkes)
                 .Select(_ =>
                 {
-                    var handlerWorker = new MessageHandler(_registeredRoutes, _textSerializer, _objectSerializer);
+                    var handlerWorker = new MessageHandler(_registeredRoutes);
                     receiverWorker.OnNewMessage += handlerWorker.HandleMessage;
                     return handlerWorker;
                 });
@@ -96,9 +92,7 @@ namespace NetmqRouter
             _workers.AddRange(new IWorkerTask[] { receiverWorker, _messageSender });
             _workers.AddRange(handlerWorkers);
 
-            _workers
-                .ForEach(x => x.Start());
-            
+            _workers.ForEach(x => x.Start());
             return this;
         }
 

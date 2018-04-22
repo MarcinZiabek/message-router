@@ -1,20 +1,29 @@
-﻿using NetmqRouter.Infrastructure;
-using NetMQ.Sockets;
+﻿
+using NetmqRouter.Infrastructure;
+using NetmqRouter.Models;
 
 namespace NetmqRouter
 {
-    public partial class MessageRouter
+    public static class MessageRouterExtensions
     {
-        public static IMessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
+        public static void SendMessage(this IMessageRouter router, string routeName)
         {
-            var connection = new PubSubConnection(publisherSocket, subscriberSocket);
-            return new MessageRouter(connection);
+            router.SendMessage(new Message(routeName, null));
+        }
+
+        public static void SendMessage(this IMessageRouter router, string routeName, byte[] data)
+        {
+            router.SendMessage(new Message(routeName, data));
+        }
+
+        public static void SendMessage(this IMessageRouter router, string routeName, string text)
+        {
+            router.SendMessage(new Message(routeName, text));
         }
         
-        public static IMessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
+        public static void SendMessage(this IMessageRouter router, string routeName, object _object)
         {
-            var connection = new PubSubConnection(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
-            return new MessageRouter(connection);
+            router.SendMessage(new Message(routeName, _object));
         }
     }
 }

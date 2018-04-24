@@ -5,10 +5,14 @@ using NetmqRouter.Infrastructure;
 
 namespace NetmqRouter
 {
+    /// <summary>
+    /// This class can be used for text serialization.
+    /// </summary>
     public class BasicTextSerializer : ISerializer
     {
         private Encoding _encoding;
         
+        /// <param name="encoding">Encoding that will be used for text serialization.</param>
         public BasicTextSerializer(Encoding encoding)
         {
             _encoding = encoding;

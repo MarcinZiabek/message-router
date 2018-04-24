@@ -5,10 +5,15 @@ using Newtonsoft.Json;
 
 namespace NetmqRouter
 {
+    /// <summary>
+    /// This class can be used for serialization of any object to the JSON format.
+    /// It used the Newtonsoft.Json library.
+    /// </summary>
     public class JsonObjectSerializer : ISerializer
     {
         private Encoding _encoding;
         
+        /// <param name="encoding">Encoding that will be used for text serialization.</param>
         public JsonObjectSerializer(Encoding encoding)
         {
             _encoding = encoding;

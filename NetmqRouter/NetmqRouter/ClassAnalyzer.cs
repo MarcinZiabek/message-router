@@ -12,13 +12,13 @@ namespace NetmqRouter
 {
     internal class ClassAnalyzer
     {
-        internal static List<Route> AnalyzeClass(object _object)
+        internal static List<RouteSubsriber> AnalyzeClass(object _object)
         {
             var baseRoute = GetBaseRoute(_object.GetType());
             var routes = FindRoutesInClass(_object).ToList();
 
             if(baseRoute != null)
-                routes.ForEach(x => x.IncomingRouteName = $"{baseRoute}/{x.IncomingRouteName}");
+                routes.ForEach(x => x.Incoming.Name = $"{baseRoute}/{x.Incoming.Name}");
 
             return routes;
         }
@@ -29,7 +29,7 @@ namespace NetmqRouter
             return (attribute as BaseRouteAttribute)?.Name;
         }
 
-        internal static IEnumerable<Route> FindRoutesInClass(object _object)
+        internal static IEnumerable<RouteSubsriber> FindRoutesInClass(object _object)
         {
             return _object
                 .GetType()
@@ -38,7 +38,7 @@ namespace NetmqRouter
                 .Where(x => x != null);
         }
 
-        internal static Route AnalyzeMethod(object _object, MethodInfo methodInfo)
+        internal static RouteSubsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
         {
             var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
             var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
@@ -47,20 +47,16 @@ namespace NetmqRouter
                 return null;
 
             if (methodInfo.GetParameters().Length > 1)
-                throw new NetmqRouterException("Route method cannot have more than one argument");
+                throw new NetmqRouterException("RouteSubsriber method cannot have more than one argument");
 
             var agrumentType = methodInfo.GetParameters().FirstOrDefault()?.ParameterType;
 
-            return new Route()
+            return new RouteSubsriber()
             {
-                Object = _object,
-                Method = methodInfo,
-
-                IncomingRouteName = route.Name,
-                IncomingDataType = agrumentType,
+                Incoming = new Route(route.Name, agrumentType),
+                Outcoming = new Route(responseRoute?.Name, methodInfo.ReturnType),
                 
-                OutcomingRouteName = responseRoute?.Name,
-                OutcomingDataType = methodInfo.ReturnType
+                Method = payload => methodInfo?.Invoke(_object, new[] { payload })
             };
         }
     }

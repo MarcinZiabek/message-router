@@ -29,11 +29,9 @@ namespace NetmqRouter.Workers
 
             var targetType = _dataContract
                 .Routes
-                .First(x => x.IncomingRouteName == serializedMessage.RouteName)
-                .Method
-                .GetParameters()
-                ?[0]
-                ?.ParameterType;
+                .First(x => x.Incoming.Name == serializedMessage.RouteName)
+                .Incoming
+                .DataType;
             
             object _object = null;
             

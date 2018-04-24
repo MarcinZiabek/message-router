@@ -25,9 +25,9 @@ namespace NetmqRouter.Workers
 
             _dataContract
                 .Routes
-                .Where(x => x.IncomingRouteName == message.RouteName)
+                .Where(x => x.Incoming.Name == message.RouteName)
                 .ToList()
-                .ForEach(x => x.Call(message.Payload));
+                .ForEach(x => x.Method(message.Payload));
 
             return true;
         }

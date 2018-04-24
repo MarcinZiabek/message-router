@@ -74,7 +74,12 @@ namespace NetmqRouter
 
         public IMessageRouter StartRouting()
         {
-            Connection.Connect(_dataContract.Routes.Select(x => x.IncomingRouteName).Distinct());
+            var routeNames = _dataContract
+                .Routes
+                .SelectMany(x => new[] { x.Incoming.Name, x.Outcoming.Name })
+                .Distinct();
+                
+            Connection.Connect(routeNames);
 
             _messageReveiver = new MessageReveiver(Connection);
             _messageDeserializer = new MessageDeserializer(_dataContract);

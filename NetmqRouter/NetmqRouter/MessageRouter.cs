@@ -50,7 +50,7 @@ namespace NetmqRouter
             ClassAnalyzer
                 .AnalyzeClass(subscriber)
                 .ToList()
-                .ForEach(_dataContract.RegisterRoute);
+                .ForEach(_dataContract.RegisterSubscriber);
 
             return this;
         }
@@ -75,7 +75,7 @@ namespace NetmqRouter
         public IMessageRouter StartRouting()
         {
             var routeNames = _dataContract
-                .Routes
+                .Subscribers
                 .SelectMany(x => new[] { x.Incoming.Name, x.Outcoming.Name })
                 .Distinct();
                 

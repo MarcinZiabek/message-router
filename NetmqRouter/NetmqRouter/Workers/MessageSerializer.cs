@@ -25,16 +25,7 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
             
-            byte[] dataBuffer = null;
-            var targetType = message.Payload?.GetType();
-            
-            if (targetType != null && message.Payload != null)
-            {
-                var serializer = _dataContract.Serialization[targetType];
-                dataBuffer = serializer.Serialize(message.Payload);
-            }
-            
-            var serializedMessage = new SerializedMessage(message.RouteName, dataBuffer);
+            var serializedMessage = _dataContract.Serialize(message);
             OnNewMessage?.Invoke(serializedMessage);
 
             return true;

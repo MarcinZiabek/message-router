@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using NetmqRouter.Infrastructure;
@@ -10,6 +11,8 @@ namespace NetmqRouter.Workers
     {
         private readonly DataContract _dataContract;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
+        
+        public event Action<Message> OnNewMessage;
 
         public MessageHandler(DataContract dataContract)
         {
@@ -24,10 +27,9 @@ namespace NetmqRouter.Workers
                 return false;
 
             _dataContract
-                .Routes
-                .Where(x => x.Incoming.Name == message.RouteName)
+                .CallRoute(message)
                 .ToList()
-                .ForEach(x => x.Method(message.Payload));
+                .ForEach(x => OnNewMessage?.Invoke(x));
 
             return true;
         }

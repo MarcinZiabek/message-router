@@ -27,21 +27,9 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var serializedMessage))
                 return false;
 
-            var targetType = _dataContract
-                .Routes
-                .First(x => x.Incoming.Name == serializedMessage.RouteName)
-                .Incoming
-                .DataType;
+            var message = _dataContract.Deserialize(serializedMessage);
+            OnNewMessage?.Invoke(message);
             
-            object _object = null;
-            
-            if (targetType != null && serializedMessage.Data != null)
-            {
-                var serializer = _dataContract.Serialization[targetType];
-                _object = serializer.Deserialize(serializedMessage.Data, targetType);
-            }
-
-            OnNewMessage?.Invoke(new Message(serializedMessage.RouteName, _object));
             return true;
         }
     }

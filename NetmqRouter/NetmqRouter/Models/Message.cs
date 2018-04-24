@@ -1,4 +1,8 @@
-﻿namespace NetmqRouter.Models
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("NetmqRouter.Tests")]
+
+namespace NetmqRouter.Models
 {
     internal struct Message
     {

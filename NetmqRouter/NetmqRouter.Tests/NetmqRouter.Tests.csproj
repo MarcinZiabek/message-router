@@ -15,6 +15,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -75,6 +76,11 @@
     <Compile Include="Serialization\BasicTextSerializerTests.cs" />
     <Compile Include="Serialization\JsonObjectSerializerTests.cs" />
     <Compile Include="Serialization\RawDataSerializerTests.cs" />
+    <Compile Include="Workers\MessageDeserializerTests.cs" />
+    <Compile Include="Workers\MessageHandlerTests.cs" />
+    <Compile Include="Workers\MessageReceiverTests.cs" />
+    <Compile Include="Workers\MessageSenderTests.cs" />
+    <Compile Include="Workers\MessageSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetmqRouter\NetmqRouter.csproj">
@@ -87,9 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Workers" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

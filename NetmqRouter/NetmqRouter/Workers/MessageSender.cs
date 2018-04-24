@@ -16,7 +16,7 @@ namespace NetmqRouter.Workers
 
         public void SendMessage(SerializedMessage message) => _messageQueue.Enqueue(message);
         
-        protected override bool DoWork()
+        internal override bool DoWork()
         {
             if (!_messageQueue.TryDequeue(out var message))
                 return false;

@@ -16,7 +16,7 @@ namespace NetmqRouter.Workers
             _connection = connection;
         }
         
-        protected override bool DoWork()
+        internal override bool DoWork()
         {
             if (!_connection.TryReceiveMessage(out var serializedMessage))
                 return false;

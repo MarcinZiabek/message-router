@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -21,7 +22,7 @@ namespace NetmqRouter.Workers
         
         public void DeserializeMessage(SerializedMessage message) => _messageQueue.Enqueue(message);
         
-        protected override bool DoWork()
+        internal override bool DoWork()
         {
             if (!_messageQueue.TryDequeue(out var serializedMessage))
                 return false;

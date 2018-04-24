@@ -36,6 +36,6 @@ namespace NetmqRouter.Workers
             }
         }
 
-        protected abstract bool DoWork();
+        internal abstract bool DoWork();
     }
 }

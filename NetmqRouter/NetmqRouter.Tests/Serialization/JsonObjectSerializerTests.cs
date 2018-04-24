@@ -6,7 +6,10 @@ namespace NetmqRouter.Tests.Serialization
     [TestFixture]
     public class JsonObjectSerializerTests
     {
-        class SimpleObject
+        /// <summary>
+        /// This class is used only for testing purposes.
+        /// </summary>
+        private class SimpleObject
         {
             public string Value { get; set; }
 

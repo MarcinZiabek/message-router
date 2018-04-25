@@ -5,7 +5,6 @@ namespace NetmqRouter.Infrastructure
 {
     public interface IMessageRouter : IDisposable
     {
-        IMessageRouter WithWorkerPool(int numberOfWorkers);
         IMessageRouter Subscribe<T>(T subscriber);
 
         IMessageRouter StartRouting();

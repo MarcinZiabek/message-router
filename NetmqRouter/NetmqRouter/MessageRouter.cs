@@ -18,16 +18,12 @@ namespace NetmqRouter
     public partial class MessageRouter : IMessageRouter, IDisposable
     {
         internal readonly DataContract _dataContract = new DataContract();
-
-        private IConnection Connection { get; set; }
-        public int NumberOfWorkes { get; private set; } = 4;
-
-        private MessageReveiver _messageReveiver;
-        private MessageDeserializer _messageDeserializer;
-        private MessageHandler _messageHandler;
-        private MessageSerializer _messageSerializer;
-        private MessageSender _messageSender;
-
+        internal readonly IConnection _connection;
+        internal readonly DataFlowManager _dataFlowManager = new DataFlowManager();
+        
+        internal int _numberOfSerializationWorkes = 1;
+        internal int _numberOfHandlingWorkes = 4;
+        
         public void Dispose()
         {
             StopRouting();
@@ -36,13 +32,7 @@ namespace NetmqRouter
 
         private MessageRouter(IConnection connection)
         {
-            Connection = connection;
-        }
-
-        public IMessageRouter WithWorkerPool(int numberOfWorkers)
-        {
-            NumberOfWorkes = numberOfWorkers;
-            return this;
+            _connection = connection;
         }
 
         public IMessageRouter Subscribe<T>(T subscriber)
@@ -67,10 +57,7 @@ namespace NetmqRouter
             return new MessageRouter(connection);
         }
 
-        internal void SendMessage(Message message)
-        {
-            _messageSerializer.SerializeMessage(message);
-        }
+        internal void SendMessage(Message message) => _dataFlowManager.SendMessage(message);
 
         public IMessageRouter StartRouting()
         {
@@ -79,41 +66,25 @@ namespace NetmqRouter
                 .SelectMany(x => new[] { x.Incoming.Name, x.Outcoming.Name })
                 .Distinct();
                 
-            Connection.Connect(routeNames);
+            _connection.Connect(routeNames);
 
-            _messageReveiver = new MessageReveiver(Connection);
-            _messageDeserializer = new MessageDeserializer(_dataContract);
-            _messageHandler = new MessageHandler(_dataContract);
-            _messageSerializer = new MessageSerializer(_dataContract);
-            _messageSender = new MessageSender(Connection);
-            
-            _messageReveiver.OnNewMessage += _messageDeserializer.DeserializeMessage;
-            _messageDeserializer.OnNewMessage += _messageHandler.HandleMessage;
-            _messageSerializer.OnNewMessage += _messageSender.SendMessage;
-            
-            _messageReveiver.Start();
-            _messageDeserializer.Start();
-            _messageHandler.Start(NumberOfWorkes);
-            _messageSerializer.Start();
-            _messageSender.Start();
+            _dataFlowManager.CreateWorkers(_connection, _dataContract);
+            _dataFlowManager.RegisterDataFlow();
+            _dataFlowManager.StartRouting(_numberOfSerializationWorkes, _numberOfHandlingWorkes);
             
             return this;
         }
 
         public IMessageRouter StopRouting()
         {
-            _messageReveiver.Stop();
-            _messageDeserializer.Stop();
-            _messageHandler.Stop();
-            _messageSerializer.Stop();
-            _messageSender.Stop();
+            _dataFlowManager.StopRouting();
             
             return this;
         }
 
         public IMessageRouter Disconnect()
         {
-            Connection.Disconnect();
+            _connection.Disconnect();
             return this;
         }
     }

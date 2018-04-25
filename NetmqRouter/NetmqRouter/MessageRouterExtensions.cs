@@ -7,6 +7,14 @@ namespace NetmqRouter
 {
     public static class MessageRouterExtensions
     {
+        public static MessageRouter WithWorkerPool(this MessageRouter router, int numberOfSerializationWorkes, int numberOfHandlingWorkes)
+        {
+            router._numberOfSerializationWorkes = numberOfSerializationWorkes;
+            router._numberOfHandlingWorkes = numberOfHandlingWorkes;
+            
+            return router;
+        }
+        
         public static void SendMessage(this MessageRouter router, string routeName)
         {
             router.SendMessage(new Message(routeName, null));

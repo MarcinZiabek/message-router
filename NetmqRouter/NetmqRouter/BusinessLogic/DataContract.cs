@@ -31,7 +31,10 @@ namespace NetmqRouter.BusinessLogic
         public void RegisterSubscriber(RouteSubsriber routeSubsriber)
         {
             if(!Routes.Contains(routeSubsriber.Incoming))
-                throw new NetmqRouterException($"Subscriber refers to not existing route type and thereferore can not be registered.");
+                throw new NetmqRouterException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
+            
+            if(routeSubsriber.Outcoming != null && !Routes.Contains(routeSubsriber.Outcoming))
+                throw new NetmqRouterException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
             
             Subscribers.Add(routeSubsriber);
         }

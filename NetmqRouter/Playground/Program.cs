@@ -17,7 +17,7 @@ namespace Playground
 
         static void Main(string[] args)
         {
-            var publisherSocket = new PublisherSocket();
+            /*var publisherSocket = new PublisherSocket();
             publisherSocket.Bind(Address);
 
             var subscriberSocket = new SubscriberSocket();
@@ -40,7 +40,7 @@ namespace Playground
                 .StopRouting()
                 .Disconnect();
 
-            Console.Read();
+            Console.Read();*/
         }
     }
 }

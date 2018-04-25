@@ -43,11 +43,14 @@ namespace NetmqRouter.BusinessLogic
             var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
             var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
 
+            if(responseRoute != null && route == null)
+                throw new NetmqRouterException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assgined.");
+            
             if (route == null)
                 return null;
 
             if (methodInfo.GetParameters().Length > 1)
-                throw new NetmqRouterException("RouteSubsriber method cannot have more than one argument");
+                throw new NetmqRouterException($"Method {methodInfo.Name} cannot have more than one argument");
 
             var agrumentType = methodInfo
                 .GetParameters()
@@ -58,7 +61,7 @@ namespace NetmqRouter.BusinessLogic
             return new RouteSubsriber()
             {
                 Incoming = new Route(route.Name, agrumentType),
-                Outcoming = new Route(responseRoute?.Name, methodInfo.ReturnType),
+                Outcoming = (responseRoute == null) ? null : new Route(responseRoute?.Name, methodInfo.ReturnType),
                 
                 Method = payload => methodInfo?.Invoke(_object, new[] { payload })
             };

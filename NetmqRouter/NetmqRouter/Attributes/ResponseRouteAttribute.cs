@@ -9,6 +9,9 @@ namespace NetmqRouter.Attributes
 
         public ResponseRouteAttribute(string name)
         {
+            if(string.IsNullOrEmpty(name))
+                throw new NetmqRouterException("Name of the route shouldn't be empty or null.");
+            
             Name = name;
         }
     }

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using NetmqRouter.Serialization;
+using NUnit.Framework;
 
 namespace NetmqRouter.Tests.Serialization
 {

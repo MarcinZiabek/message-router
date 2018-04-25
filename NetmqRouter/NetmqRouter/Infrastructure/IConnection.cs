@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NetmqRouter.Models;
+
+[assembly: InternalsVisibleTo("NetmqRouter.Tests")]
 
 namespace NetmqRouter.Infrastructure
 {

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using NetmqRouter.Serialization;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.Serialization

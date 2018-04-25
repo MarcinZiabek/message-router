@@ -29,7 +29,7 @@ namespace NetmqRouter.Tests.Workers
             Assert.IsFalse(messageProcessed);
             Assert.IsFalse(eventWasInvoked);
             
-            connection.Verify(x => x.TryReceiveMessage(out message), Times.Exactly(1));
+            connection.Verify(x => x.TryReceiveMessage(out message), Times.Once);
         }
         
         [Test]

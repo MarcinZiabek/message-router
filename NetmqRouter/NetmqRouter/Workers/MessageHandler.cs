@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using NetmqRouter.BusinessLogic;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -9,12 +10,12 @@ namespace NetmqRouter.Workers
 {
     internal class MessageHandler : WorkerClassBase
     {
-        private readonly DataContract _dataContract;
+        private readonly IDataContract _dataContract;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
         
         public event Action<Message> OnNewMessage;
 
-        public MessageHandler(DataContract dataContract)
+        public MessageHandler(IDataContract dataContract)
         {
             _dataContract = dataContract;
         }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Text;
-using NetmqRouter.Attributes;
 using NetmqRouter.Infrastructure;
 
-namespace NetmqRouter
+namespace NetmqRouter.Serialization
 {
     /// <summary>
     /// This class can be used for text serialization.

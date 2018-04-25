@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetmqRouter.BusinessLogic;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -10,12 +11,12 @@ namespace NetmqRouter.Workers
 {
     internal class MessageDeserializer : WorkerClassBase
     {
-        private readonly DataContract _dataContract;
+        private readonly IDataContract _dataContract;
         private readonly ConcurrentQueue<SerializedMessage> _messageQueue = new ConcurrentQueue<SerializedMessage>();
         
         public event Action<Message> OnNewMessage;
 
-        public MessageDeserializer(DataContract dataContract)
+        public MessageDeserializer(IDataContract dataContract)
         {
             _dataContract = dataContract;
         }

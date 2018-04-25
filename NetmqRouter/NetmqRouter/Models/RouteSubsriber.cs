@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
-using NetmqRouter.Attributes;
-using NetmqRouter.Infrastructure;
-using Newtonsoft.Json;
 
-namespace NetmqRouter
+namespace NetmqRouter.Models
 {
     internal class RouteSubsriber
     {

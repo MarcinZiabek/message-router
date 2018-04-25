@@ -1,7 +1,7 @@
 ﻿using System;
 using NetmqRouter.Infrastructure;
 
-namespace NetmqRouter
+namespace NetmqRouter.Serialization
 {
     /// <summary>
     /// Basic serializer that pass byte arrays "as is".

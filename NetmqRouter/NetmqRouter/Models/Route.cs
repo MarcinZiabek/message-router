@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter
+namespace NetmqRouter.Models
 {
     internal class Route
     {

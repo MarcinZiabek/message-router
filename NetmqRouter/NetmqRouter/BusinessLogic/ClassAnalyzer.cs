@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using NetmqRouter.Attributes;
+using NetmqRouter.Models;
 
 [assembly: InternalsVisibleTo("NetmqRouter.Tests")]
 
-namespace NetmqRouter
+namespace NetmqRouter.BusinessLogic
 {
     internal class ClassAnalyzer
     {

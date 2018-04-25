@@ -2,7 +2,7 @@
 using NetmqRouter.Models;
 using NetmqRouter.Workers;
 
-namespace NetmqRouter
+namespace NetmqRouter.BusinessLogic
 {
     internal class DataFlowManager
     {

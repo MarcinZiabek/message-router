@@ -4,9 +4,9 @@ using System.Linq;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
-namespace NetmqRouter
+namespace NetmqRouter.BusinessLogic
 {
-    internal class DataContract
+    internal class DataContract : IDataContract
     {
         internal List<Route> Routes = new List<Route>();
         internal List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
@@ -21,6 +21,13 @@ namespace NetmqRouter
             Serialization.Add(targetType, serializer);
         }
 
+        public IEnumerable<string> GetIncomingRouteNames()
+        {
+            return Subscribers
+                .Select(x => x.Incoming.Name)
+                .Distinct();
+        }
+        
         public bool IsIncomingRouteAllowed(string routeName)
         {
             return Subscribers

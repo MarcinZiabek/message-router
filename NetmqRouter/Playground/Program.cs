@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NetmqRouter;
+using NetmqRouter.BusinessLogic;
 using NetmqRouter.Tests;
 using NetMQ.Sockets;
 

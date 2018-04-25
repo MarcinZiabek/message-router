@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using NetmqRouter.Attributes;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
-using NetmqRouter.Workers;
-using NetMQ;
 using NetMQ.Sockets;
-using Newtonsoft.Json;
 
-namespace NetmqRouter
+namespace NetmqRouter.BusinessLogic
 {
     public partial class MessageRouter : IMessageRouter, IDisposable
     {
@@ -61,11 +52,7 @@ namespace NetmqRouter
 
         public IMessageRouter StartRouting()
         {
-            var routeNames = _dataContract
-                .Subscribers
-                .SelectMany(x => new[] { x.Incoming.Name, x.Outcoming.Name })
-                .Distinct();
-                
+            var routeNames = _dataContract.GetIncomingRouteNames();
             _connection.Connect(routeNames);
 
             _dataFlowManager.CreateWorkers(_connection, _dataContract);

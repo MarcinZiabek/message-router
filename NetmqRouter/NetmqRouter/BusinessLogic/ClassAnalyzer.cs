@@ -49,7 +49,11 @@ namespace NetmqRouter.BusinessLogic
             if (methodInfo.GetParameters().Length > 1)
                 throw new NetmqRouterException("RouteSubsriber method cannot have more than one argument");
 
-            var agrumentType = methodInfo.GetParameters().FirstOrDefault()?.ParameterType;
+            var agrumentType = methodInfo
+                .GetParameters()
+                .FirstOrDefault()
+                ?.ParameterType 
+                ?? typeof(void);
 
             return new RouteSubsriber()
             {

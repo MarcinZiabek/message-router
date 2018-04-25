@@ -12,9 +12,15 @@ namespace NetmqRouter.BusinessLogic
         internal List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
         internal Dictionary<Type, ISerializer> Serialization { get; } = new Dictionary<Type, ISerializer>();
 
-        public void RegisterRoute(Route route) => Routes.Add(route);
-        
-        public void RegisterSubscriber(RouteSubsriber routeSubsriber) => Subscribers.Add(routeSubsriber);
+        public void RegisterRoute(Route route)
+        {
+            Routes.Add(route);
+        }
+
+        public void RegisterSubscriber(RouteSubsriber routeSubsriber)
+        {
+            Subscribers.Add(routeSubsriber);
+        }
 
         public void RegisterSerializer(Type targetType, ISerializer serializer)
         {

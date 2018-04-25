@@ -29,7 +29,7 @@ namespace NetmqRouter.BusinessLogic
             _messageSerializer.OnNewMessage += _messageSender.SendMessage;
         }
 
-        public void StartRouting(int numberOfSerializationWorkers, int numberOfHandlingWorkers)
+        public void StartWorkers(int numberOfSerializationWorkers, int numberOfHandlingWorkers)
         {
             _messageReveiver.Start();
             _messageDeserializer.Start(numberOfSerializationWorkers);
@@ -38,7 +38,7 @@ namespace NetmqRouter.BusinessLogic
             _messageSender.Start();
         }
 
-        public void StopRouting()
+        public void StopWorkers()
         {
             _messageReveiver.Stop();
             _messageDeserializer.Stop();

@@ -52,20 +52,18 @@ namespace NetmqRouter.BusinessLogic
 
         public IMessageRouter StartRouting()
         {
-            var routeNames = _dataContract.GetIncomingRouteNames();
-            _connection.Connect(routeNames);
+            _connection.Connect(_dataContract.GetIncomingRouteNames());
 
             _dataFlowManager.CreateWorkers(_connection, _dataContract);
             _dataFlowManager.RegisterDataFlow();
-            _dataFlowManager.StartRouting(_numberOfSerializationWorkes, _numberOfHandlingWorkes);
+            _dataFlowManager.StartWorkers(_numberOfSerializationWorkes, _numberOfHandlingWorkes);
             
             return this;
         }
 
         public IMessageRouter StopRouting()
         {
-            _dataFlowManager.StopRouting();
-            
+            _dataFlowManager.StopWorkers();
             return this;
         }
 

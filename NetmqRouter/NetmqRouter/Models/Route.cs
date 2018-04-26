@@ -12,5 +12,12 @@ namespace NetmqRouter.Models
             Name = name;
             DataType = dataType;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Route r &&
+                   r.Name == Name &&
+                   r.DataType == DataType;
+        }
     }
 }

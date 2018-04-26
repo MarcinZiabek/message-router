@@ -8,25 +8,34 @@ namespace NetmqRouter.BusinessLogic
 {
     internal class DataContract : IDataContract
     {
-        internal List<Route> Routes = new List<Route>();
-        internal List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
-        internal Dictionary<Type, ISerializer> Serialization { get; } = new Dictionary<Type, ISerializer>();
+        private List<Route> Routes = new List<Route>();
+        private List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
+        private Dictionary<Type, ISerializer> Serializers { get; } = new Dictionary<Type, ISerializer>();
 
+        public void RegisterSerializer(Type targetType, ISerializer serializer)
+        {
+            if(Serializers.ContainsKey(targetType))
+                throw new NetmqRouterException($"Serializer for type {targetType} is already registered!");
+            
+            Serializers.Add(targetType, serializer);
+        }
+        
         public void RegisterRoute(Route route)
         {
+            if(!Serializers.ContainsKey(route.DataType))
+                throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no reserialize for it.");
+            
             Routes.Add(route);
         }
 
         public void RegisterSubscriber(RouteSubsriber routeSubsriber)
         {
+            if(!Routes.Contains(routeSubsriber.Incoming))
+                throw new NetmqRouterException($"Subscriber refers to not existing route type and thereferore can not be registered.");
+            
             Subscribers.Add(routeSubsriber);
         }
-
-        public void RegisterSerializer(Type targetType, ISerializer serializer)
-        {
-            Serialization.Add(targetType, serializer);
-        }
-
+        
         public IEnumerable<string> GetIncomingRouteNames()
         {
             return Subscribers
@@ -58,7 +67,7 @@ namespace NetmqRouter.BusinessLogic
                 .First(x => x.Name == message.RouteName)
                 .DataType;
 
-            var data = Serialization[targetType].Serialize(message.Payload);
+            var data = Serializers[targetType].Serialize(message.Payload);
             return new SerializedMessage(message.RouteName, data);
         }
         
@@ -68,7 +77,7 @@ namespace NetmqRouter.BusinessLogic
                 .First(x => x.Name == message.RouteName)
                 .DataType;
             
-            var payload = Serialization[targetType].Deserialize(message.Data, targetType);
+            var payload = Serializers[targetType].Deserialize(message.Data, targetType);
             return new Message(message.RouteName, payload);
         }
     }

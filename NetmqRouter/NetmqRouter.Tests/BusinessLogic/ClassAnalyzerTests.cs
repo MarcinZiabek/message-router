@@ -14,20 +14,49 @@ namespace NetmqRouter.Tests
     [TestFixture]
     public class ClassAnalyzerTests
     {
-        #region test classes
-
+        #region Helper classes
+        
         public class ExampleObject
         {
             public int Data { get; set; }
         }
-
+        
+        #endregion
+        
+        #region HandleRoutesWithNameSetToNullOrEmpty
+        
+        public class ExampleSubscriberWithEmptyIncomingRoute
+        {
+            [Route("")]
+            public void IncomingEmpty() { }
+        }
+        
         public class ExampleSubscriberWithNullIncomingRoute
         {
             [Route(null)]
             public void IncomingNull() { }
-            
-            [Route("")]
-            public void IncomingEmpty() { }
+        }
+        
+        [TestCase(typeof(ExampleSubscriberWithEmptyIncomingRoute))]
+        [TestCase(typeof(ExampleSubscriberWithNullIncomingRoute))]
+        public void HandleRoutesWithNameSetToNullOrEmpty(Type subscriberType)
+        {
+            Assert.Throws<NetmqRouterException>(() =>
+            {
+                var subscriber = Activator.CreateInstance(subscriberType);
+                ClassAnalyzer.AnalyzeClass(subscriber);
+            });
+        }
+
+        #endregion
+        
+        #region HandleResponseRoutesWithNameSetToNullOrEmpty
+        
+        public class ExampleSubscriberWithEmptyOutcomingRoute
+        {
+            [Route("BasicRoute")]
+            [ResponseRoute("")]
+            public void OutcomingEmpty() { }
         }
         
         public class ExampleSubscriberWithNullOutcomingRoute
@@ -35,19 +64,39 @@ namespace NetmqRouter.Tests
             [Route("BasicRoute")]
             [ResponseRoute(null)]
             public void OutcomingNull() { }
-            
-            [Route("BasicRoute")]
-            [ResponseRoute("")]
-            public void OutcomingEmpty() { }
         }
         
+        [TestCase(typeof(ExampleSubscriberWithEmptyOutcomingRoute))]
+        [TestCase(typeof(ExampleSubscriberWithNullOutcomingRoute))]
+        public void HandleResponseRoutesWithNameSetToNullOrEmpty(Type subscriberType)
+        {
+            Assert.Throws<NetmqRouterException>(() =>
+            {
+                var subscriber = Activator.CreateInstance(subscriberType);
+                ClassAnalyzer.AnalyzeClass(subscriber);
+            });
+        }
+        
+        #endregion
+
+        #region HandleMethodWithRouteResponseAttributeButwithoutBasicRoute
+
         public class ExampleSubscriberWithOutcomingRouteButWithoutIcoming
         {
-            public void NormalMethod() { }
-            
             [ResponseRoute("SomeRoute")]
             public void Outcomingnull() { }
         }
+        
+        [Test]
+        public void HandleMethodWithRouteResponseAttributeButwithoutBasicRoute()
+        {
+            var subscriber = new ExampleSubscriberWithOutcomingRouteButWithoutIcoming();
+            Assert.Throws<NetmqRouterException>(() => { ClassAnalyzer.AnalyzeClass(subscriber); });
+        }
+
+        #endregion
+        
+        #region Route attribute analysis
         
         public class ExampleSubscriberWithIncommingRoutes
         {
@@ -65,6 +114,44 @@ namespace NetmqRouter.Tests
             [Route("GetObject")]
             public void ObjectSubscriber(ExampleObject _object) { }
         }
+        
+        [Test]
+        public void DiscoverOnlyMethodsWithRouteAttribute()
+        {
+            var subscriber = new ExampleSubscriberWithIncommingRoutes();
+            var incomingRouteNames = ClassAnalyzer
+                .AnalyzeClass(subscriber)
+                .Select(x => x.Incoming.Name);
+            
+            var expected = new[]
+            {
+                "GetEvent", 
+                "GetRaw", 
+                "GetText", 
+                "GetObject"
+            };
+    
+            Assert.AreEqual(expected, incomingRouteNames);
+        }
+        
+        [TestCase("GetEvent", ExpectedResult = typeof(void))]
+        [TestCase("GetRaw", ExpectedResult = typeof(byte[]))]
+        [TestCase("GetText", ExpectedResult = typeof(string))]
+        [TestCase("GetObject", ExpectedResult = typeof(ExampleObject))]
+        public Type CorrectlyDiscoverIncomingDataType(string methodName)
+        {
+            var subscriber = new ExampleSubscriberWithIncommingRoutes();
+            
+            return ClassAnalyzer
+                .AnalyzeClass(subscriber)
+                .First(x => x.Incoming.Name == methodName)
+                .Incoming
+                .DataType;
+        }
+        
+        #endregion
+        
+        #region ResponseRoute attribute analysis
         
         public class ExampleSubscriberWithOutcomingRoutes
         {
@@ -87,6 +174,44 @@ namespace NetmqRouter.Tests
             public ExampleObject ObjectSource() => new ExampleObject();
         }
         
+        [Test]
+        public void DiscoverOnlyMethodsWithRouteResponseAttribute()
+        {
+            var subscriber = new ExampleSubscriberWithOutcomingRoutes();
+            var outcomingRouteNames = ClassAnalyzer
+                .AnalyzeClass(subscriber)
+                .Select(x => x.Outcoming.Name)
+                .ToList();
+            
+            var expected = new[]
+            {
+                "ResponseEvent", 
+                "ResponseRaw", 
+                "ResponseText", 
+                "ResponseObject"
+            };
+            
+            Assert.AreEqual(expected, outcomingRouteNames);
+        }
+
+        [TestCase("ResponseEvent", ExpectedResult = typeof(void))]
+        [TestCase("ResponseRaw", ExpectedResult = typeof(byte[]))]
+        [TestCase("ResponseText", ExpectedResult = typeof(string))]
+        [TestCase("ResponseObject", ExpectedResult = typeof(ExampleObject))]
+        public Type CorrectlyDiscoverOutcomingDataType(string methodName)
+        {
+            var subscriber = new ExampleSubscriberWithOutcomingRoutes();
+            return ClassAnalyzer
+                .AnalyzeClass(subscriber)
+                .First(x => x.Outcoming.Name == methodName)
+                .Outcoming
+                .DataType;
+        }
+        
+        #endregion
+        
+        #region CorrectlyHandleRoutesWithoutRouteResponseAttribute
+        
         public class ExampleSubscriberWithVariousResponseConfiguration
         {
             public void NormalMethod() { }
@@ -98,7 +223,24 @@ namespace NetmqRouter.Tests
             [ResponseRoute("TargetRoute")]
             public void RouteWithResponse(byte[] data) { }
         }
-    
+        
+        [TestCase("RouteWithoutResponse", ExpectedResult = null)]
+        [TestCase("RouteWithResponse", ExpectedResult = "TargetRoute")]
+        public string CorrectlyHandleRoutesWithoutRouteResponseAttribute(string incomingROuteName)
+        {
+            var subscriber = new ExampleSubscriberWithVariousResponseConfiguration();
+            
+            return ClassAnalyzer
+                .AnalyzeClass(subscriber)
+                .First(x => x.Incoming.Name == incomingROuteName)
+                .Outcoming
+                ?.Name;
+        }
+        
+        #endregion
+        
+        #region Method calling
+        
         public class ExampleSubscriberWithCallHandler
         {
             public string PassedValue { get; set; }
@@ -109,105 +251,14 @@ namespace NetmqRouter.Tests
             [Route("RouteB")]
             public void MethodB(string value) => PassedValue = value;
         }
-
-        #endregion
         
-        [TestCase(typeof(ExampleSubscriberWithNullIncomingRoute))]
-        [TestCase(typeof(ExampleSubscriberWithNullOutcomingRoute))]
-        public void HandleRoutesWithNameSetToNull(Type subscriberType)
-        {
-            Assert.Throws<NetmqRouterException>(() =>
-            {
-                var subscriber = Activator.CreateInstance(subscriberType);
-                ClassAnalyzer.AnalyzeClass(subscriber);
-            });
-        }
-
-        [Test]
-        public void HandleMethodWithRouteResponseAttributeButwithoutBasicRoute()
-        {
-            var subscriber = new ExampleSubscriberWithOutcomingRouteButWithoutIcoming();
-            
-            Assert.Throws<NetmqRouterException>(() => { ClassAnalyzer.AnalyzeClass(subscriber); });
-        }
-        
-        [TestCase("NormalMethod", ExpectedResult = false)]
-        [TestCase("GetEvent", ExpectedResult = true)]
-        [TestCase("GetRaw", ExpectedResult = true)]
-        [TestCase("GetText", ExpectedResult = true)]
-        [TestCase("GetObject", ExpectedResult = true)]
-        public bool DiscoverOnlyMethodsWithRouteAttribute(string routeName)
-        {
-            var _object = new ExampleSubscriberWithIncommingRoutes();
-            
-            return ClassAnalyzer
-                .AnalyzeClass(_object)
-                .Any(x => x.Incoming.Name == routeName);
-        }
-        
-        [TestCase("GetEvent", ExpectedResult = typeof(void))]
-        [TestCase("GetRaw", ExpectedResult = typeof(byte[]))]
-        [TestCase("GetText", ExpectedResult = typeof(string))]
-        [TestCase("GetObject", ExpectedResult = typeof(ExampleObject))]
-        public Type CorrectlyDiscoverIncomingDataType(string methodName)
-        {
-            var _object = new ExampleSubscriberWithIncommingRoutes();
-            
-            return ClassAnalyzer
-                .AnalyzeClass(_object)
-                .First(x => x.Incoming.Name == methodName)
-                .Incoming
-                .DataType;
-        }
-        
-        [TestCase("RouteWithoutResponse", ExpectedResult = null)]
-        [TestCase("RouteWithResponse", ExpectedResult = "TargetRoute")]
-        public string CorrectlyHandleRoutesWithoutRouteResponseAttribute(string incomingROuteName)
-        {
-            var _object = new ExampleSubscriberWithVariousResponseConfiguration();
-            
-            return ClassAnalyzer
-                .AnalyzeClass(_object)
-                .First(x => x.Incoming.Name == incomingROuteName)
-                .Outcoming
-                ?.Name;
-        }
-
-        [TestCase("NormalMethod", ExpectedResult = false)]
-        [TestCase("ResponseEvent", ExpectedResult = true)]
-        [TestCase("ResponseRaw", ExpectedResult = true)]
-        [TestCase("ResponseText", ExpectedResult = true)]
-        [TestCase("ResponseObject", ExpectedResult = true)]
-        public bool DiscoverOnlyMethodsWithRouteResponseAttribute(string methodName)
-        {
-            var _object = new ExampleSubscriberWithOutcomingRoutes();
-            
-            return ClassAnalyzer
-                .AnalyzeClass(_object)
-                .Any(x => x.Outcoming.Name == methodName);
-        }
-
-        [TestCase("ResponseEvent", ExpectedResult = typeof(void))]
-        [TestCase("ResponseRaw", ExpectedResult = typeof(byte[]))]
-        [TestCase("ResponseText", ExpectedResult = typeof(string))]
-        [TestCase("ResponseObject", ExpectedResult = typeof(ExampleObject))]
-        public Type CorrectlyDiscoverOutcomingDataType(string methodName)
-        {
-            var _object = new ExampleSubscriberWithOutcomingRoutes();
-            return ClassAnalyzer
-                .AnalyzeClass(_object)
-                .First(x => x.Outcoming.Name == methodName)
-                .Outcoming
-                .DataType;
-        }
-
         [TestCase("RouteA", "MessageA")]
         [TestCase("RouteB", "MessageB")]
         public void CorrectlyCallRoute(string routeName, string value)
         {
             // arrange
-            var _object = new ExampleSubscriberWithCallHandler();
-            var routes = ClassAnalyzer.AnalyzeClass(_object);
+            var subscriber = new ExampleSubscriberWithCallHandler();
+            var routes = ClassAnalyzer.AnalyzeClass(subscriber);
 
             // act
             routes
@@ -215,7 +266,9 @@ namespace NetmqRouter.Tests
                 .Method(value);
 
             // assert
-            Assert.AreEqual(value, _object.PassedValue);
+            Assert.AreEqual(value, subscriber.PassedValue);
         }
+        
+        #endregion
     }
 }

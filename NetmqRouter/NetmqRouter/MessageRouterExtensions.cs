@@ -36,14 +36,16 @@ namespace NetmqRouter
             router.SendMessage(new Message(routeName, _object));
         }
 
-        public static void RegisterRouter(this MessageRouter router, string routeName, Type dataType)
+        public static MessageRouter RegisterRoute(this MessageRouter router, string routeName, Type dataType)
         {
             router._dataContract.RegisterRoute(new Route(routeName, dataType));
+            return router;
         }
         
-        public static void RegisterSerializerForType<T>(this MessageRouter router, ISerializer serializer)
+        public static MessageRouter RegisterSerializerForType<T>(this MessageRouter router, ISerializer serializer)
         {
             router._dataContract.RegisterSerializer(typeof(T), serializer);
+            return router;
         }
     }
 }

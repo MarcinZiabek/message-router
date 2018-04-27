@@ -26,14 +26,21 @@ namespace NetmqRouter.Workers
 
         private async void DoWorkTask()
         {
-            while (true)
+            try
             {
-                if (_cancellationToken.IsCancellationRequested)
-                    return;
-                
-                if(!DoWork())
-                    await Task.Delay(TimeSpan.FromMilliseconds(1), _cancellationToken);
+                while (true)
+                {
+                    _cancellationToken.ThrowIfCancellationRequested();
+
+                    if (!DoWork())
+                        await Task.Delay(TimeSpan.FromMilliseconds(1), _cancellationToken);
+                }
             }
+            catch (Exception e)
+            {
+                
+            }
+            
         }
 
         internal abstract bool DoWork();

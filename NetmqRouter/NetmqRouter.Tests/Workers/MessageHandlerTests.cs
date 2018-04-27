@@ -38,7 +38,7 @@ namespace NetmqRouter.Tests.Workers
             // arrange
             var incomingMessage = new Message("IncomingRoute", "IncomingPayload");
             var outcomingMessage = new Message("OutcomingRoute", "OutcomingPayload");
-            Message? messageFromEvent = null;
+            Message messageFromEvent = null;
             
             var dataContract = new Mock<IDataContract>();
             dataContract.Setup(x => x.CallRoute(incomingMessage)).Returns(new[] {outcomingMessage});

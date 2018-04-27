@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetmqRouter.Attributes;
 using NetmqRouter.BusinessLogic;
+using NetmqRouter.Serialization;
 using NetMQ.Sockets;
 using NUnit.Framework;
 
@@ -12,12 +14,23 @@ namespace NetmqRouter.Tests
     [TestFixture]
     public class MessagesRouterTests
     {
-        private const string Address = "tcp://localhost:50000";
+        private const string Address = "tcp://localhost:50003";
 
+        class ExampleSubscriber
+        {
+            public string PassedValue = "";
+            
+            [Route("TestRoute")]
+            public void Test(string value)
+            {
+                PassedValue = value;
+            }
+        }
+        
         [Test]
         public async Task IncomingRouteNameWithoutBaseRoute()
         {
-            /*var publisherSocket = new PublisherSocket();
+            var publisherSocket = new PublisherSocket();
             publisherSocket.Bind(Address);
 
             var subscriberSocket = new SubscriberSocket();
@@ -27,19 +40,20 @@ namespace NetmqRouter.Tests
 
             var router = MessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
+                .RegisterSerializerForType<string>(new BasicTextSerializer())
+                .RegisterRoute("TestRoute", typeof(string))
                 .Subscribe(subscriber)
-                .StartRouting()
-                as MessageRouter;
+                .StartRouting();
 
-            router.SendMessage("Text", "test");
+            router.SendMessage("TestRoute", "test");
 
             await Task.Delay(TimeSpan.FromSeconds(2));
 
-            Assert.AreEqual(nameof(ExampleSubscriber.TextSubscriber), subscriber.PassedValue);
+            Assert.AreEqual("test", subscriber.PassedValue);
 
             router
                 .StopRouting()
-                .Disconnect();*/
+                .Disconnect();
         }
     }
 }

@@ -214,7 +214,5 @@ namespace NetmqRouter.Tests
         }
 
         #endregion
-        
-        
     }
 }

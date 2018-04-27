@@ -27,10 +27,12 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
 
-            _dataContract
+            var re = _dataContract
                 .CallRoute(message)
-                .ToList()
-                .ForEach(x => OnNewMessage?.Invoke(x));
+                .ToList();
+
+
+            re.ForEach(x => OnNewMessage?.Invoke(x));
 
             return true;
         }

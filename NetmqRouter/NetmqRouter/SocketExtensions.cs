@@ -18,7 +18,7 @@ namespace NetmqRouter
                 return false;
 
             var route = mqMessage[0].ConvertToString();
-            var value = mqMessage[2].Buffer;
+            var value = mqMessage[1].Buffer;
 
             message = new SerializedMessage(route, value);
             return true;

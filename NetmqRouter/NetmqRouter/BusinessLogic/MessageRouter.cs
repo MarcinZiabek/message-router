@@ -6,7 +6,7 @@ using NetMQ.Sockets;
 
 namespace NetmqRouter.BusinessLogic
 {
-    public partial class MessageRouter : IMessageRouter, IDisposable
+    public partial class MessageRouter : IDisposable
     {
         internal readonly IDataContract _dataContract = new DataContract();
         internal readonly IConnection _connection;
@@ -26,7 +26,7 @@ namespace NetmqRouter.BusinessLogic
             _connection = connection;
         }
 
-        public IMessageRouter Subscribe<T>(T subscriber)
+        public MessageRouter Subscribe<T>(T subscriber)
         {
             ClassAnalyzer
                 .AnalyzeClass(subscriber)
@@ -36,13 +36,13 @@ namespace NetmqRouter.BusinessLogic
             return this;
         }
         
-        public static IMessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
+        public static MessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
         {
             var connection = new PubSubConnection(publisherSocket, subscriberSocket);
             return new MessageRouter(connection);
         }
         
-        public static IMessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
+        public static MessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
         {
             var connection = new PubSubConnection(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
             return new MessageRouter(connection);
@@ -50,7 +50,7 @@ namespace NetmqRouter.BusinessLogic
 
         internal void SendMessage(Message message) => _dataFlowManager.SendMessage(message);
 
-        public IMessageRouter StartRouting()
+        public MessageRouter StartRouting()
         {
             _connection.Connect(_dataContract.GetIncomingRouteNames());
 
@@ -61,13 +61,13 @@ namespace NetmqRouter.BusinessLogic
             return this;
         }
 
-        public IMessageRouter StopRouting()
+        public MessageRouter StopRouting()
         {
             _dataFlowManager.StopWorkers();
             return this;
         }
 
-        public IMessageRouter Disconnect()
+        public MessageRouter Disconnect()
         {
             _connection.Disconnect();
             return this;

@@ -8,9 +8,9 @@ namespace NetmqRouter.BusinessLogic
 {
     internal class DataContract : IDataContract
     {
-        private List<Route> Routes = new List<Route>();
-        private List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
-        private Dictionary<Type, ISerializer> Serializers { get; } = new Dictionary<Type, ISerializer>();
+        internal List<Route> Routes = new List<Route>();
+        internal List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
+        internal Dictionary<Type, ISerializer> Serializers { get; } = new Dictionary<Type, ISerializer>();
 
         public void RegisterSerializer(Type targetType, ISerializer serializer)
         {
@@ -55,9 +55,10 @@ namespace NetmqRouter.BusinessLogic
                 .Where(x => x.Incoming.Name == message.RouteName)
                 .Select(x =>
                 {
-                    var response = x.Method(message);
-                    return new Message(x.Outcoming.Name, response);
-                });
+                    var response = x.Method(message.Payload);
+                    return (x.Outcoming == null) ? null : new Message(x.Outcoming.Name, response);
+                })
+                .Where(x => x != null);
         }
         
         public SerializedMessage Serialize(Message message)

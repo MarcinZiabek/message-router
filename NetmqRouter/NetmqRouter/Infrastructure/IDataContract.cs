@@ -14,8 +14,7 @@ namespace NetmqRouter.Infrastructure
         void RegisterSerializer(Type targetType, ISerializer serializer);
         
         IEnumerable<string> GetIncomingRouteNames();
-        bool IsIncomingRouteAllowed(string routeName);
-        
+
         IEnumerable<Message> CallRoute(Message message);
         SerializedMessage Serialize(Message message);
         Message Deserialize(SerializedMessage message);

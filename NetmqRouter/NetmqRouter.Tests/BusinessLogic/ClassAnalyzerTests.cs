@@ -96,7 +96,7 @@ namespace NetmqRouter.Tests
 
         #endregion
         
-        #region Route attribute analysis
+        #region Route Attribute Analysis
         
         public class ExampleSubscriberWithIncommingRoutes
         {
@@ -237,6 +237,28 @@ namespace NetmqRouter.Tests
                 ?.Name;
         }
         
+        #endregion
+
+        #region Check If Subscriber Gets Only Single Argument
+
+        public class ExampleSubscriberRouteWithMoreThanOneArgument
+        {
+            [Route("RouteWithResponse")]
+            [ResponseRoute("TargetRoute")]
+            public void RouteWithResponse(byte[] data, string otherData) { }
+        }
+        
+        [Test]
+        public void HandleRouteWithMoreThanOneArgument()
+        {
+            var subscriber = new ExampleSubscriberRouteWithMoreThanOneArgument();
+            
+            Assert.Throws<NetmqRouterException>(() =>
+            {
+                ClassAnalyzer.AnalyzeClass(subscriber);
+            });
+        }
+
         #endregion
         
         #region Method calling

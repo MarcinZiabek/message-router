@@ -25,6 +25,9 @@ namespace NetmqRouter.BusinessLogic
             if(!Serializers.ContainsKey(route.DataType))
                 throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no reserialize for it.");
             
+            if(Routes.Any(x => x.Name == route.Name))
+                throw new NetmqRouterException($"Route with name {route.Name} is already registered.");
+            
             Routes.Add(route);
         }
 
@@ -44,13 +47,6 @@ namespace NetmqRouter.BusinessLogic
             return Subscribers
                 .Select(x => x.Incoming.Name)
                 .Distinct();
-        }
-        
-        public bool IsIncomingRouteAllowed(string routeName)
-        {
-            return Subscribers
-                .Select(x => x.Incoming.Name)
-                .Contains(routeName);
         }
 
         public IEnumerable<Message> CallRoute(Message message)

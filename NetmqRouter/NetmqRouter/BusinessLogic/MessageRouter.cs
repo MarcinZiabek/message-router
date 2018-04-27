@@ -8,7 +8,7 @@ namespace NetmqRouter.BusinessLogic
 {
     public partial class MessageRouter : IMessageRouter, IDisposable
     {
-        internal readonly DataContract _dataContract = new DataContract();
+        internal readonly IDataContract _dataContract = new DataContract();
         internal readonly IConnection _connection;
         internal readonly DataFlowManager _dataFlowManager = new DataFlowManager();
         

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Linq;
+using Moq;
 using NetmqRouter.BusinessLogic;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
@@ -10,7 +11,7 @@ namespace NetmqRouter.Tests
     [TestFixture]
     public class DataContractTests
     {
-        private readonly IDataContract _dataContract = new DataContract();
+        #region Registering Serializer
         
         [Test]
         public void RegisterSerializerForNewDataType()
@@ -43,6 +44,10 @@ namespace NetmqRouter.Tests
             });
         }
 
+        #endregion
+        
+        #region Registering Route
+        
         [Test]
         public void RegisterRouteWithSupportedTypeSerializer()
         {
@@ -73,6 +78,27 @@ namespace NetmqRouter.Tests
                 dataContract.RegisterRoute(route);
             });
         }
+
+        [Test]
+        public void RegisterTwoRoutesWithTheSameName()
+        {
+            // arrange
+            var dataContract = new DataContract();
+            dataContract.RegisterSerializer(typeof(string), new Mock<ISerializer>().Object);
+            dataContract.RegisterSerializer(typeof(int), new Mock<ISerializer>().Object);
+
+            // act
+            dataContract.RegisterRoute(new Route("BasicRoute", typeof(string)));
+            
+            Assert.Throws<NetmqRouterException>(() =>
+            {
+                dataContract.RegisterRoute(new Route("BasicRoute", typeof(int)));
+            });
+        }
+        
+        #endregion
+        
+        #region Registering Subscriber
         
         [Test]
         public void RegisterSubscriberWithSupportedIncomingRoute()
@@ -151,5 +177,44 @@ namespace NetmqRouter.Tests
                 dataContract.RegisterSubscriber(subscriber);
             });
         }
+        
+        #endregion
+
+        #region GetIncomingRouteNames
+
+        [Test]
+        public void GetIncomingRouteNamesFromSubscribers()
+        {
+            // arrange
+            var dataContract = new DataContract();
+            var serializer = new Mock<ISerializer>();
+            dataContract.RegisterSerializer(typeof(string), serializer.Object);
+
+            var routeA = new Route("RouteA", typeof(string));
+            var routeB = new Route("RouteB", typeof(string));
+            var routeC = new Route("RouteC", typeof(string));
+            var routeD = new Route("RouteD", typeof(string));
+
+            dataContract.RegisterRoute(routeA);
+            dataContract.RegisterRoute(routeB);
+            dataContract.RegisterRoute(routeC);
+            dataContract.RegisterRoute(routeD);
+            
+            // act
+            dataContract.RegisterSubscriber(new  RouteSubsriber(routeA, routeB, _ => null));
+            dataContract.RegisterSubscriber(new  RouteSubsriber(routeC, routeD, _ => null));
+
+            // assert
+            var routeNames = dataContract
+                .GetIncomingRouteNames()
+                .ToArray();
+
+            var exptectedRouteNames = new[] { routeA.Name, routeC.Name };
+            Assert.AreEqual(exptectedRouteNames, routeNames);
+        }
+
+        #endregion
+        
+        
     }
 }

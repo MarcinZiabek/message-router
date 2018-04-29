@@ -6,52 +6,63 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.BusinessLogic
 {
+    public class TypeComparer : IComparer<Type>
+    {
+        public int Compare(Type typeA, Type typeB)
+        {
+            if (typeA == typeB)
+                return 0;
+
+            return typeA.IsSubclassOf(typeB) ? 1 : -1;
+        }
+    }
+
     internal class DataContract : IDataContract
     {
-        internal List<Route> Routes = new List<Route>();
-        internal List<RouteSubsriber> Subscribers { get; } = new List<RouteSubsriber>();
-        internal Dictionary<Type, ISerializer> Serializers { get; } = new Dictionary<Type, ISerializer>();
+        private readonly List<Route> _routes = new List<Route>();
+        private readonly List<RouteSubsriber> _subscribers = new List<RouteSubsriber>();
+        private readonly SortedList<Type, ISerializer> _serializers  = new SortedList<Type, ISerializer>(new TypeComparer());
 
         public void RegisterSerializer(Type targetType, ISerializer serializer)
         {
-            if(Serializers.ContainsKey(targetType))
+            if(_serializers.ContainsKey(targetType))
                 throw new NetmqRouterException($"Serializer for type {targetType} is already registered!");
-            
-            Serializers.Add(targetType, serializer);
+
+            _serializers.Add(targetType, serializer);
         }
-        
+
         public void RegisterRoute(Route route)
         {
-            if(!Serializers.ContainsKey(route.DataType))
-                throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no reserialize for it.");
-            
-            if(Routes.Any(x => x.Name == route.Name))
+            if(!_serializers.ContainsKey(route.DataType))
+                throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no serializer for it.");
+
+            if(_routes.Any(x => x.Name == route.Name))
                 throw new NetmqRouterException($"Route with name {route.Name} is already registered.");
-            
-            Routes.Add(route);
+
+            _routes.Add(route);
         }
 
         public void RegisterSubscriber(RouteSubsriber routeSubsriber)
         {
-            if(!Routes.Contains(routeSubsriber.Incoming))
+            if(!_routes.Contains(routeSubsriber.Incoming))
                 throw new NetmqRouterException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
-            
-            if(routeSubsriber.Outcoming != null && !Routes.Contains(routeSubsriber.Outcoming))
+
+            if(routeSubsriber.Outcoming != null && !_routes.Contains(routeSubsriber.Outcoming))
                 throw new NetmqRouterException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
-            
-            Subscribers.Add(routeSubsriber);
+
+            _subscribers.Add(routeSubsriber);
         }
-        
+
         public IEnumerable<string> GetIncomingRouteNames()
         {
-            return Subscribers
+            return _subscribers
                 .Select(x => x.Incoming.Name)
                 .Distinct();
         }
 
         public IEnumerable<Message> CallRoute(Message message)
         {
-            return Subscribers
+            return _subscribers
                 .Where(x => x.Incoming.Name == message.RouteName)
                 .Select(x =>
                 {
@@ -60,24 +71,34 @@ namespace NetmqRouter.BusinessLogic
                 })
                 .Where(x => x != null);
         }
-        
-        public SerializedMessage Serialize(Message message)
+
+        internal ISerializer FindSerializer(Type targetType)
         {
-            var targetType = Routes
-                .First(x => x.Name == message.RouteName)
+            return _serializers
+                .FirstOrDefault(x => x.Key == targetType || targetType.IsSubclassOf(x.Key))
+                .Value;
+        }
+
+        internal (ISerializer serializer, Type targetType) FindSerializer(string routeName)
+        {
+            var targetType = _routes
+                .First(x => x.Name == routeName)
                 .DataType;
 
-            var data = Serializers[targetType].Serialize(message.Payload);
+            return (FindSerializer(targetType), targetType);
+        }
+
+        public SerializedMessage Serialize(Message message)
+        {
+            var (serializer, _) = FindSerializer(message.RouteName);
+            var data = serializer.Serialize(message.Payload);
             return new SerializedMessage(message.RouteName, data);
         }
-        
+
         public Message Deserialize(SerializedMessage message)
         {
-            var targetType = Routes
-                .First(x => x.Name == message.RouteName)
-                .DataType;
-            
-            var payload = Serializers[targetType].Deserialize(message.Data, targetType);
+            var (serializer, targetType) = FindSerializer(message.RouteName);
+            var payload = serializer.Deserialize(message.Data, targetType);
             return new Message(message.RouteName, payload);
         }
     }

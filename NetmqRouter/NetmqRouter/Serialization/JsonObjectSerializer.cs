@@ -11,7 +11,7 @@ namespace NetmqRouter.Serialization
     /// </summary>
     public class JsonObjectSerializer : ISerializer
     {
-        private Encoding _encoding;
+        private readonly Encoding _encoding;
         
         /// <param name="encoding">Encoding that will be used for text serialization.</param>
         public JsonObjectSerializer(Encoding encoding)

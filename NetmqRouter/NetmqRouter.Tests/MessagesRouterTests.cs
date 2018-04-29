@@ -19,14 +19,14 @@ namespace NetmqRouter.Tests
         class ExampleSubscriber
         {
             public string PassedValue = "";
-            
+
             [Route("TestRoute")]
             public void Test(string value)
             {
                 PassedValue = value;
             }
         }
-        
+
         [Test]
         public async Task IncomingRouteNameWithoutBaseRoute()
         {

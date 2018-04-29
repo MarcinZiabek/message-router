@@ -10,8 +10,8 @@ namespace NetmqRouter
     {
         public static MessageRouter WithWorkerPool(this MessageRouter router, int numberOfSerializationWorkes, int numberOfHandlingWorkes)
         {
-            router._numberOfSerializationWorkes = numberOfSerializationWorkes;
-            router._numberOfHandlingWorkes = numberOfHandlingWorkes;
+            router.NumberOfSerializationWorkes = numberOfSerializationWorkes;
+            router.NumberOfHandlingWorkes = numberOfHandlingWorkes;
             
             return router;
         }
@@ -38,13 +38,13 @@ namespace NetmqRouter
 
         public static MessageRouter RegisterRoute(this MessageRouter router, string routeName, Type dataType)
         {
-            router._dataContract.RegisterRoute(new Route(routeName, dataType));
+            router.DataContract.RegisterRoute(new Route(routeName, dataType));
             return router;
         }
         
         public static MessageRouter RegisterSerializerForType<T>(this MessageRouter router, ISerializer serializer)
         {
-            router._dataContract.RegisterSerializer(typeof(T), serializer);
+            router.DataContract.RegisterSerializer(typeof(T), serializer);
             return router;
         }
     }

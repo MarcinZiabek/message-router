@@ -8,12 +8,12 @@ namespace NetmqRouter.BusinessLogic
 {
     public partial class MessageRouter : IDisposable
     {
-        internal readonly IDataContract _dataContract = new DataContract();
-        internal readonly IConnection _connection;
-        internal readonly DataFlowManager _dataFlowManager = new DataFlowManager();
+        internal readonly IDataContract DataContract = new DataContract();
+        internal readonly IConnection Connection;
+        internal readonly DataFlowManager DataFlowManager = new DataFlowManager();
         
-        internal int _numberOfSerializationWorkes = 1;
-        internal int _numberOfHandlingWorkes = 4;
+        internal int NumberOfSerializationWorkes = 1;
+        internal int NumberOfHandlingWorkes = 4;
         
         public void Dispose()
         {
@@ -23,7 +23,7 @@ namespace NetmqRouter.BusinessLogic
 
         private MessageRouter(IConnection connection)
         {
-            _connection = connection;
+            Connection = connection;
         }
 
         public MessageRouter Subscribe<T>(T subscriber)
@@ -31,7 +31,7 @@ namespace NetmqRouter.BusinessLogic
             ClassAnalyzer
                 .AnalyzeClass(subscriber)
                 .ToList()
-                .ForEach(_dataContract.RegisterSubscriber);
+                .ForEach(DataContract.RegisterSubscriber);
 
             return this;
         }
@@ -48,28 +48,28 @@ namespace NetmqRouter.BusinessLogic
             return new MessageRouter(connection);
         }
 
-        internal void SendMessage(Message message) => _dataFlowManager.SendMessage(message);
+        internal void SendMessage(Message message) => DataFlowManager.SendMessage(message);
 
         public MessageRouter StartRouting()
         {
-            _connection.Connect(_dataContract.GetIncomingRouteNames());
+            Connection.Connect(DataContract.GetIncomingRouteNames());
 
-            _dataFlowManager.CreateWorkers(_connection, _dataContract);
-            _dataFlowManager.RegisterDataFlow();
-            _dataFlowManager.StartWorkers(_numberOfSerializationWorkes, _numberOfHandlingWorkes);
+            DataFlowManager.CreateWorkers(Connection, DataContract);
+            DataFlowManager.RegisterDataFlow();
+            DataFlowManager.StartWorkers(NumberOfSerializationWorkes, NumberOfHandlingWorkes);
             
             return this;
         }
 
         public MessageRouter StopRouting()
         {
-            _dataFlowManager.StopWorkers();
+            DataFlowManager.StopWorkers();
             return this;
         }
 
         public MessageRouter Disconnect()
         {
-            _connection.Disconnect();
+            Connection.Disconnect();
             return this;
         }
     }

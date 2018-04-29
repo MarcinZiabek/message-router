@@ -7,15 +7,12 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Infrastructure
 {
-    internal interface IDataContract
+    internal interface IDataContractOperations
     {
-        void RegisterRoute(Route route);
-        void RegisterSubscriber(RouteSubsriber routeSubsriber);
-        void RegisterSerializer(Type targetType, ISerializer serializer);
-        
         IEnumerable<string> GetIncomingRouteNames();
 
         IEnumerable<Message> CallRoute(Message message);
+
         SerializedMessage Serialize(Message message);
         Message Deserialize(SerializedMessage message);
     }

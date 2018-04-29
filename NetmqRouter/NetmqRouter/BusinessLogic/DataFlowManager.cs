@@ -12,12 +12,12 @@ namespace NetmqRouter.BusinessLogic
         private MessageSerializer _messageSerializer;
         private MessageSender _messageSender;
 
-        public void CreateWorkers(IConnection connection, IDataContract dataContract)
+        public void CreateWorkers(IConnection connection, IDataContractOperations dataContractOperations)
         {
             _messageReveiver = new MessageReveiver(connection);
-            _messageDeserializer = new MessageDeserializer(dataContract);
-            _messageHandler = new MessageHandler(dataContract);
-            _messageSerializer = new MessageSerializer(dataContract);
+            _messageDeserializer = new MessageDeserializer(dataContractOperations);
+            _messageHandler = new MessageHandler(dataContractOperations);
+            _messageSerializer = new MessageSerializer(dataContractOperations);
             _messageSender = new MessageSender(connection);
         }
 

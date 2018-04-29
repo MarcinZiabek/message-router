@@ -16,7 +16,7 @@ namespace NetmqRouter.Tests.Workers
             // arrange
             var eventWasInvoked = false;
             
-            var dataContract = new Mock<IDataContract>();
+            var dataContract = new Mock<IDataContractOperations>();
             dataContract.Setup(x => x.CallRoute(It.IsAny<Message>())).Returns(new Message[0]);
             
             var worker = new MessageHandler(dataContract.Object);
@@ -40,7 +40,7 @@ namespace NetmqRouter.Tests.Workers
             var outcomingMessage = new Message("OutcomingRoute", "OutcomingPayload");
             Message messageFromEvent = null;
             
-            var dataContract = new Mock<IDataContract>();
+            var dataContract = new Mock<IDataContractOperations>();
             dataContract.Setup(x => x.CallRoute(incomingMessage)).Returns(new[] {outcomingMessage});
             
             var worker = new MessageHandler(dataContract.Object);

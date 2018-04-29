@@ -15,7 +15,7 @@ namespace NetmqRouter.Tests.Workers
             // arrange
             var eventWasInvoked = false;
             
-            var dataContract = new Mock<IDataContract>();
+            var dataContract = new Mock<IDataContractOperations>();
             dataContract.Setup(x => x.Serialize(It.IsAny<Message>())).Returns(null);
             
             var worker = new MessageSerializer(dataContract.Object);
@@ -39,7 +39,7 @@ namespace NetmqRouter.Tests.Workers
             var serializedMessage = new SerializedMessage("OutcomingRoute", new byte[4]);
             SerializedMessage? messageFromEvent = null;
             
-            var dataContract = new Mock<IDataContract>();
+            var dataContract = new Mock<IDataContractOperations>();
             dataContract.Setup(x => x.Serialize(message)).Returns(serializedMessage);
             
             var worker = new MessageSerializer(dataContract.Object);

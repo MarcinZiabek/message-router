@@ -1,42 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
 using NetmqRouter.Attributes;
 using NetmqRouter.BusinessLogic;
 using NUnit.Framework;
 
-namespace NetmqRouter.Tests
+namespace NetmqRouter.Tests.BusinessLogic
 {
     [TestFixture]
     public class ClassAnalyzerTests
     {
         #region Helper classes
-        
+
         public class ExampleObject
         {
             public int Data { get; set; }
         }
-        
+
         #endregion
-        
+
         #region HandleRoutesWithNameSetToNullOrEmpty
-        
+
         public class ExampleSubscriberWithEmptyIncomingRoute
         {
             [Route("")]
             public void IncomingEmpty() { }
         }
-        
+
         public class ExampleSubscriberWithNullIncomingRoute
         {
             [Route(null)]
             public void IncomingNull() { }
         }
-        
+
         [TestCase(typeof(ExampleSubscriberWithEmptyIncomingRoute))]
         [TestCase(typeof(ExampleSubscriberWithNullIncomingRoute))]
         public void HandleRoutesWithNameSetToNullOrEmpty(Type subscriberType)
@@ -49,23 +44,23 @@ namespace NetmqRouter.Tests
         }
 
         #endregion
-        
+
         #region HandleResponseRoutesWithNameSetToNullOrEmpty
-        
+
         public class ExampleSubscriberWithEmptyOutcomingRoute
         {
             [Route("BasicRoute")]
             [ResponseRoute("")]
             public void OutcomingEmpty() { }
         }
-        
+
         public class ExampleSubscriberWithNullOutcomingRoute
         {
             [Route("BasicRoute")]
             [ResponseRoute(null)]
             public void OutcomingNull() { }
         }
-        
+
         [TestCase(typeof(ExampleSubscriberWithEmptyOutcomingRoute))]
         [TestCase(typeof(ExampleSubscriberWithNullOutcomingRoute))]
         public void HandleResponseRoutesWithNameSetToNullOrEmpty(Type subscriberType)
@@ -76,7 +71,7 @@ namespace NetmqRouter.Tests
                 ClassAnalyzer.AnalyzeClass(subscriber);
             });
         }
-        
+
         #endregion
 
         #region HandleMethodWithRouteResponseAttributeButwithoutBasicRoute
@@ -86,7 +81,7 @@ namespace NetmqRouter.Tests
             [ResponseRoute("SomeRoute")]
             public void Outcomingnull() { }
         }
-        
+
         [Test]
         public void HandleMethodWithRouteResponseAttributeButwithoutBasicRoute()
         {
@@ -95,26 +90,26 @@ namespace NetmqRouter.Tests
         }
 
         #endregion
-        
+
         #region Route Attribute Analysis
-        
+
         public class ExampleSubscriberWithIncommingRoutes
         {
             public void NormalMethod() { }
-            
+
             [Route("GetEvent")]
             public void EventSubscriber() { }
 
             [Route("GetRaw")]
             public void RawSubscriber(byte[] data) { }
-            
+
             [Route("GetText")]
             public void TextSubscriber(string text) { }
 
             [Route("GetObject")]
             public void ObjectSubscriber(ExampleObject _object) { }
         }
-        
+
         [Test]
         public void DiscoverOnlyMethodsWithRouteAttribute()
         {
@@ -122,18 +117,18 @@ namespace NetmqRouter.Tests
             var incomingRouteNames = ClassAnalyzer
                 .AnalyzeClass(subscriber)
                 .Select(x => x.Incoming.Name);
-            
+
             var expected = new[]
             {
-                "GetEvent", 
-                "GetRaw", 
-                "GetText", 
+                "GetEvent",
+                "GetRaw",
+                "GetText",
                 "GetObject"
             };
-    
+
             Assert.AreEqual(expected, incomingRouteNames);
         }
-        
+
         [TestCase("GetEvent", ExpectedResult = typeof(void))]
         [TestCase("GetRaw", ExpectedResult = typeof(byte[]))]
         [TestCase("GetText", ExpectedResult = typeof(string))]
@@ -141,22 +136,22 @@ namespace NetmqRouter.Tests
         public Type CorrectlyDiscoverIncomingDataType(string methodName)
         {
             var subscriber = new ExampleSubscriberWithIncommingRoutes();
-            
+
             return ClassAnalyzer
                 .AnalyzeClass(subscriber)
                 .First(x => x.Incoming.Name == methodName)
                 .Incoming
                 .DataType;
         }
-        
+
         #endregion
-        
+
         #region ResponseRoute attribute analysis
-        
+
         public class ExampleSubscriberWithOutcomingRoutes
         {
             public void NormalMethod() { }
-            
+
             [Route("RouteA")]
             [ResponseRoute("ResponseEvent")]
             public void EventSource() { }
@@ -173,7 +168,7 @@ namespace NetmqRouter.Tests
             [ResponseRoute("ResponseObject")]
             public ExampleObject ObjectSource() => new ExampleObject();
         }
-        
+
         [Test]
         public void DiscoverOnlyMethodsWithRouteResponseAttribute()
         {
@@ -182,15 +177,15 @@ namespace NetmqRouter.Tests
                 .AnalyzeClass(subscriber)
                 .Select(x => x.Outcoming.Name)
                 .ToList();
-            
+
             var expected = new[]
             {
-                "ResponseEvent", 
-                "ResponseRaw", 
-                "ResponseText", 
+                "ResponseEvent",
+                "ResponseRaw",
+                "ResponseText",
                 "ResponseObject"
             };
-            
+
             Assert.AreEqual(expected, outcomingRouteNames);
         }
 
@@ -207,15 +202,15 @@ namespace NetmqRouter.Tests
                 .Outcoming
                 .DataType;
         }
-        
+
         #endregion
-        
+
         #region CorrectlyHandleRoutesWithoutRouteResponseAttribute
-        
+
         public class ExampleSubscriberWithVariousResponseConfiguration
         {
             public void NormalMethod() { }
-            
+
             [Route("RouteWithoutResponse")]
             public void RouteWithoutResponse() { }
 
@@ -223,20 +218,20 @@ namespace NetmqRouter.Tests
             [ResponseRoute("TargetRoute")]
             public void RouteWithResponse(byte[] data) { }
         }
-        
+
         [TestCase("RouteWithoutResponse", ExpectedResult = null)]
         [TestCase("RouteWithResponse", ExpectedResult = "TargetRoute")]
         public string CorrectlyHandleRoutesWithoutRouteResponseAttribute(string incomingROuteName)
         {
             var subscriber = new ExampleSubscriberWithVariousResponseConfiguration();
-            
+
             return ClassAnalyzer
                 .AnalyzeClass(subscriber)
                 .First(x => x.Incoming.Name == incomingROuteName)
                 .Outcoming
                 ?.Name;
         }
-        
+
         #endregion
 
         #region Check If Subscriber Gets Only Single Argument
@@ -247,12 +242,12 @@ namespace NetmqRouter.Tests
             [ResponseRoute("TargetRoute")]
             public void RouteWithResponse(byte[] data, string otherData) { }
         }
-        
+
         [Test]
         public void HandleRouteWithMoreThanOneArgument()
         {
             var subscriber = new ExampleSubscriberRouteWithMoreThanOneArgument();
-            
+
             Assert.Throws<NetmqRouterException>(() =>
             {
                 ClassAnalyzer.AnalyzeClass(subscriber);
@@ -260,9 +255,9 @@ namespace NetmqRouter.Tests
         }
 
         #endregion
-        
+
         #region Method calling
-        
+
         public class ExampleSubscriberWithCallHandler
         {
             public string PassedValue { get; set; }
@@ -273,7 +268,7 @@ namespace NetmqRouter.Tests
             [Route("RouteB")]
             public void MethodB(string value) => PassedValue = value;
         }
-        
+
         [TestCase("RouteA", "MessageA")]
         [TestCase("RouteB", "MessageB")]
         public void CorrectlyCallRoute(string routeName, string value)
@@ -290,7 +285,7 @@ namespace NetmqRouter.Tests
             // assert
             Assert.AreEqual(value, subscriber.PassedValue);
         }
-        
+
         #endregion
     }
 }

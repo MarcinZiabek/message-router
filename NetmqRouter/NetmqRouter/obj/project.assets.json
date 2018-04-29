@@ -5586,25 +5586,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Marcin\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\mz064548\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\netmq-router\\NetmqRouter\\NetmqRouter\\NetmqRouter.csproj",
+      "projectUniqueName": "C:\\repositories\\netmq-router\\NetmqRouter\\NetmqRouter\\NetmqRouter.csproj",
       "projectName": "NetmqRouter",
-      "projectPath": "E:\\netmq-router\\NetmqRouter\\NetmqRouter\\NetmqRouter.csproj",
-      "packagesPath": "C:\\Users\\Marcin\\.nuget\\packages\\",
-      "outputPath": "E:\\netmq-router\\NetmqRouter\\NetmqRouter\\obj\\",
+      "projectPath": "C:\\repositories\\netmq-router\\NetmqRouter\\NetmqRouter\\NetmqRouter.csproj",
+      "packagesPath": "C:\\Users\\mz064548\\.nuget\\packages\\",
+      "outputPath": "C:\\repositories\\netmq-router\\NetmqRouter\\NetmqRouter\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Marcin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\mz064548\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
@@ -5613,6 +5613,9 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\TFS\\ODOT\\Main\\packages": {},
+        "C:\\Users\\mz064548\\AppData\\Local\\Esri\\NuGet": {},
+        "http://nuget.ch2m.com/nugetprivate/nuget": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

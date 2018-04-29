@@ -10,14 +10,14 @@ namespace NetmqRouter.Workers
 {
     internal class MessageHandler : WorkerClassBase
     {
-        private readonly IDataContract _dataContract;
+        private readonly IDataContractOperations _dataContractOperations;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
         
         public event Action<Message> OnNewMessage;
 
-        public MessageHandler(IDataContract dataContract)
+        public MessageHandler(IDataContractOperations dataContractOperations)
         {
-            _dataContract = dataContract;
+            _dataContractOperations = dataContractOperations;
         }
 
         public void HandleMessage(Message message) => _messageQueue.Enqueue(message);
@@ -27,7 +27,7 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
 
-            var re = _dataContract
+            var re = _dataContractOperations
                 .CallRoute(message)
                 .ToList();
 

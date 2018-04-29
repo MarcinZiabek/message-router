@@ -9,14 +9,14 @@ namespace NetmqRouter.Workers
 {
     internal class MessageSerializer : WorkerClassBase
     {
-        private readonly IDataContract _dataContract;
+        private readonly IDataContractOperations _dataContractOperations;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
 
         public event Action<SerializedMessage> OnNewMessage;
 
-        public MessageSerializer(IDataContract dataContract)
+        public MessageSerializer(IDataContractOperations dataContractOperations)
         {
-            _dataContract = dataContract;
+            _dataContractOperations = dataContractOperations;
         }
         
         public void SerializeMessage(Message message) => _messageQueue.Enqueue(message);
@@ -26,7 +26,7 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
             
-            var serializedMessage = _dataContract.Serialize(message);
+            var serializedMessage = _dataContractOperations.Serialize(message);
             OnNewMessage?.Invoke(serializedMessage);
 
             return true;

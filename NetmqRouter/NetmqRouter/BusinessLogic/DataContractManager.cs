@@ -38,35 +38,29 @@ namespace NetmqRouter.BusinessLogic
                 .Where(x => x != null);
         }
 
-        internal ISerializer FindSerializer(Type targetType)
-        {
-            return _dataContract
-                .Serializers
-                .FirstOrDefault(x => x.Key == targetType || targetType.IsSubclassOf(x.Key))
-                .Value;
-        }
-
-        internal (ISerializer serializer, Type targetType) FindSerializer(string routeName)
+        internal Serializer FindSerializer(string routeName)
         {
             var targetType = _dataContract
                 .Routes
                 .First(x => x.Name == routeName)
                 .DataType;
 
-            return (FindSerializer(targetType), targetType);
+            return _dataContract
+                .Serializers
+                .FirstOrDefault(x => x.TargetType.IsSubclassOf(targetType));
         }
 
         public SerializedMessage Serialize(Message message)
         {
-            var (serializer, _) = FindSerializer(message.RouteName);
+            var serializer = FindSerializer(message.RouteName);
             var data = serializer.Serialize(message.Payload);
             return new SerializedMessage(message.RouteName, data);
         }
 
         public Message Deserialize(SerializedMessage message)
         {
-            var (serializer, targetType) = FindSerializer(message.RouteName);
-            var payload = serializer.Deserialize(message.Data, targetType);
+            var serializer = FindSerializer(message.RouteName);
+            var payload = serializer.Deserialize(message.Data);
             return new Message(message.RouteName, payload);
         }
     }

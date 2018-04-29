@@ -8,6 +8,7 @@ namespace NetmqRouter.Infrastructure
     {
         void RegisterRoute(Route route);
         void RegisterSubscriber(RouteSubsriber routeSubsriber);
-        void RegisterSerializer(Type targetType, ISerializer serializer);
+        void RegisterSerializer<T>(ISerializer<T> serializer);
+        void RegisterGeneralSerializer(Type targetType, IGeneralSerializer serializer);
     }
 }

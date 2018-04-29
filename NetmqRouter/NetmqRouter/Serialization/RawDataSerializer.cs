@@ -6,16 +6,10 @@ namespace NetmqRouter.Serialization
     /// <summary>
     /// Basic serializer that pass byte arrays "as is".
     /// </summary>
-    public class RawDataSerializer : ISerializer
+    public class RawDataSerializer : ISerializer<byte[]>
     {
-        public byte[] Serialize(object _object)
-        {
-            return (byte[])_object;
-        }
+        public byte[] Serialize(byte[] _object) => _object;
 
-        public object Deserialize(byte[] data, Type targetType)
-        {
-            return data;
-        }
+        public byte[] Deserialize(byte[] data) => data;
     }
 }

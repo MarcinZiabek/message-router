@@ -8,6 +8,6 @@ namespace NetmqRouter.Infrastructure
     {
         IReadOnlyList<Route> Routes { get; }
         IReadOnlyList<RouteSubsriber> Subscribers { get; }
-        IReadOnlyDictionary<Type, ISerializer> Serializers { get; }
+        IReadOnlyList<Serializer> Serializers { get; }
     }
 }

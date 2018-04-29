@@ -11,23 +11,35 @@ namespace NetmqRouter.BusinessLogic
     {
         private readonly List<Route> _routes = new List<Route>();
         private readonly List<RouteSubsriber> _subscribers = new List<RouteSubsriber>();
-        private readonly Dictionary<Type, ISerializer> _serializers  = new Dictionary<Type, ISerializer>();
+        private readonly List<Serializer> _serializers  = new List<Serializer>();
 
         public IReadOnlyList<Route> Routes => _routes;
         public IReadOnlyList<RouteSubsriber> Subscribers => _subscribers;
-        public IReadOnlyDictionary<Type, ISerializer> Serializers => _serializers;
+        public IReadOnlyList<Serializer> Serializers => _serializers;
 
-        public void RegisterSerializer(Type targetType, ISerializer serializer)
+        public void RegisterSerializer<T>(ISerializer<T> serializer)
         {
-            if(_serializers.ContainsKey(targetType))
-                throw new NetmqRouterException($"Serializer for type {targetType} is already registered!");
+            var resultSerializer = Serializer.FromTypeSerializer(serializer);
+            RegisterSerializer(resultSerializer);
+        }
 
-            _serializers.Add(targetType, serializer);
+        public void RegisterGeneralSerializer(Type targetType, IGeneralSerializer serializer)
+        {
+            var resultSerializer = Serializer.FromGeneralSerializer(targetType, serializer);
+            RegisterSerializer(resultSerializer);
+        }
+
+        private void RegisterSerializer(Serializer serializer)
+        {
+            if(_serializers.Any(x => x.TargetType == serializer.TargetType))
+                throw new NetmqRouterException($"Serializer for type {serializer.TargetType} is already registered!");
+
+            _serializers.Add(serializer);
         }
 
         public void RegisterRoute(Route route)
         {
-            if(!_serializers.ContainsKey(route.DataType))
+            if(!_serializers.Any(x => route.DataType.IsSameOrSubclass(x.TargetType)))
                 throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no serializer for it.");
 
             if(_routes.Any(x => x.Name == route.Name))

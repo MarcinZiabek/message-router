@@ -12,24 +12,24 @@ namespace NetmqRouter.Tests.Serialization
             // arrange
             var serializer = new RawDataSerializer();
             var data = new byte[] {1, 2, 3};
-            
+
             // act
             var serializedData = serializer.Serialize(data);
-            
+
             // assert
             Assert.AreEqual(data, serializedData);
         }
-        
+
         [Test]
         public void Deserialize()
         {
             // arrange
             var serializer = new RawDataSerializer();
             var serializedData = new byte[] {1, 2, 3};
-            
+
             // act
-            var data = serializer.Deserialize(serializedData, typeof(byte[]));
-            
+            var data = serializer.Deserialize(serializedData);
+
             // assert
             Assert.AreEqual(serializedData, data);
         }

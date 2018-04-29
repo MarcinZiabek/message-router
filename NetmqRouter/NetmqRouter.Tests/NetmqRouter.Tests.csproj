@@ -73,7 +73,6 @@
     <Compile Include="BusinessLogic\DataContractBuilderTests.cs" />
     <Compile Include="BusinessLogic\DataContractOperationsTests.cs" />
     <Compile Include="ExampleData.cs" />
-    <Compile Include="Helpers\TypeComparerTests.cs" />
     <Compile Include="Helpers\TypeExtensionsTests.cs" />
     <Compile Include="MessagesRouterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

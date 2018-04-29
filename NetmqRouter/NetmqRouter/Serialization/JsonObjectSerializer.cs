@@ -9,21 +9,21 @@ namespace NetmqRouter.Serialization
     /// This class can be used for serialization of any object to the JSON format.
     /// It used the Newtonsoft.Json library.
     /// </summary>
-    public class JsonObjectSerializer : ISerializer
+    public class JsonObjectSerializer : IGeneralSerializer
     {
         private readonly Encoding _encoding;
-        
+
         /// <param name="encoding">Encoding that will be used for text serialization.</param>
         public JsonObjectSerializer(Encoding encoding)
         {
             _encoding = encoding;
         }
-        
+
         public JsonObjectSerializer() : this(Encoding.UTF8)
         {
-            
+
         }
-        
+
         public byte[] Serialize(object _object)
         {
             var json = JsonConvert.SerializeObject(_object);

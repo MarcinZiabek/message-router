@@ -27,8 +27,8 @@ namespace NetmqRouter.Tests.BusinessLogic
             // arrange
             var builder = new DataContractBuilder();
 
-            var serializer = new Mock<ISerializer>();
-            builder.RegisterSerializer(typeof(string), serializer.Object);
+            var serializer = new Mock<ISerializer<string>>();
+            builder.RegisterSerializer(serializer.Object);
 
             var routeA = new Route("RouteA", typeof(string));
             var routeB = new Route("RouteB", typeof(string));

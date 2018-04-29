@@ -17,12 +17,12 @@ namespace NetmqRouter.Tests.BusinessLogic
         {
             // arrange
             var dataContract = new DataContractBuilder();
-            var serializer = new Mock<ISerializer>();
+            var serializer = new Mock<ISerializer<byte[]>>();
 
             // act
             Assert.DoesNotThrow(() =>
             {
-                dataContract.RegisterSerializer(typeof(byte[]), serializer.Object);
+                dataContract.RegisterSerializer(serializer.Object);
             });
         }
 
@@ -31,15 +31,15 @@ namespace NetmqRouter.Tests.BusinessLogic
         {
             // arrange
             var dataContract = new DataContractBuilder();
-            var serializer = new Mock<ISerializer>();
-            var serializer2 = new Mock<ISerializer>();
+            var serializer = new Mock<ISerializer<string>>();
+            var serializer2 = new Mock<ISerializer<string>>();
 
-            dataContract.RegisterSerializer(typeof(byte[]), serializer.Object);
+            dataContract.RegisterSerializer(serializer.Object);
 
             // act
             Assert.Throws<NetmqRouterException>(() =>
             {
-                dataContract.RegisterSerializer(typeof(byte[]), serializer2.Object);
+                dataContract.RegisterSerializer(serializer2.Object);
             });
         }
 
@@ -52,10 +52,10 @@ namespace NetmqRouter.Tests.BusinessLogic
         {
             // arrange
             var dataContract = new DataContractBuilder();
-            var serializer = new Mock<ISerializer>();
+            var serializer = new Mock<ISerializer<string>>();
             var route = new Route("BasicRoute", typeof(string));
 
-            dataContract.RegisterSerializer(typeof(string), serializer.Object);
+            dataContract.RegisterSerializer(serializer.Object);
 
             // act
             Assert.DoesNotThrow(() =>
@@ -83,8 +83,8 @@ namespace NetmqRouter.Tests.BusinessLogic
         {
             // arrange
             var dataContract = new DataContractBuilder();
-            dataContract.RegisterSerializer(typeof(string), new Mock<ISerializer>().Object);
-            dataContract.RegisterSerializer(typeof(int), new Mock<ISerializer>().Object);
+            dataContract.RegisterSerializer(new Mock<ISerializer<string>>().Object);
+            dataContract.RegisterSerializer(new Mock<ISerializer<int>>().Object);
 
             // act
             dataContract.RegisterRoute(new Route("BasicRoute", typeof(string)));
@@ -105,11 +105,11 @@ namespace NetmqRouter.Tests.BusinessLogic
             // arrange
             var dataContract = new DataContractBuilder();
 
-            var serializer = new Mock<ISerializer>();
+            var serializer = new Mock<ISerializer<string>>();
             var route = new Route("RouteA", typeof(string));
             var subscriber = new RouteSubsriber(route, null, _ => null);
 
-            dataContract.RegisterSerializer(typeof(string), serializer.Object);
+            dataContract.RegisterSerializer(serializer.Object);
             dataContract.RegisterRoute(route);
 
             // act
@@ -125,12 +125,12 @@ namespace NetmqRouter.Tests.BusinessLogic
             // arrange
             var dataContract = new DataContractBuilder();
 
-            var serializer = new Mock<ISerializer>();
+            var serializer = new Mock<ISerializer<string>>();
             var incomingRoute = new Route("IncomingRoute", typeof(string));
             var outcomingRoute = new Route("OutcomingRoute", typeof(string));
             var subscriber = new RouteSubsriber(incomingRoute, outcomingRoute, _ => null);
 
-            dataContract.RegisterSerializer(typeof(string), serializer.Object);
+            dataContract.RegisterSerializer(serializer.Object);
             dataContract.RegisterRoute(incomingRoute);
             dataContract.RegisterRoute(outcomingRoute);
 
@@ -162,12 +162,12 @@ namespace NetmqRouter.Tests.BusinessLogic
             // arrange
             var dataContract = new DataContractBuilder();
 
-            var serializer = new Mock<ISerializer>();
+            var serializer = new Mock<ISerializer<string>>();
             var incomingRoute = new Route("IncomingRoute", typeof(string));
             var outcomingRoute = new Route("OutcomingRoute", typeof(string));
             var subscriber = new RouteSubsriber(incomingRoute, outcomingRoute, _ => null);
 
-            dataContract.RegisterSerializer(typeof(string), serializer.Object);
+            dataContract.RegisterSerializer(serializer.Object);
             dataContract.RegisterRoute(incomingRoute);
 
             // act

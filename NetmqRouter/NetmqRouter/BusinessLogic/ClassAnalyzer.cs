@@ -12,7 +12,7 @@ namespace NetmqRouter.BusinessLogic
 {
     internal class ClassAnalyzer
     {
-        internal static List<RouteSubsriber> AnalyzeClass(object _object)
+        internal static List<Subsriber> AnalyzeClass(object _object)
         {
             var baseRoute = GetBaseRoute(_object.GetType());
             var routes = FindRoutesInClass(_object).ToList();
@@ -29,7 +29,7 @@ namespace NetmqRouter.BusinessLogic
             return (attribute as BaseRouteAttribute)?.Name;
         }
 
-        internal static IEnumerable<RouteSubsriber> FindRoutesInClass(object _object)
+        internal static IEnumerable<Subsriber> FindRoutesInClass(object _object)
         {
             return _object
                 .GetType()
@@ -38,7 +38,7 @@ namespace NetmqRouter.BusinessLogic
                 .Where(x => x != null);
         }
 
-        internal static RouteSubsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
+        internal static Subsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
         {
             var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
             var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
@@ -58,7 +58,7 @@ namespace NetmqRouter.BusinessLogic
                 ?.ParameterType 
                 ?? typeof(void);
 
-            return new RouteSubsriber()
+            return new Subsriber()
             {
                 Incoming = new Route(route.Name, agrumentType),
                 Outcoming = (responseRoute == null) ? null : new Route(responseRoute?.Name, methodInfo.ReturnType),

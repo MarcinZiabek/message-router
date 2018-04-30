@@ -3,36 +3,50 @@ using NetmqRouter.Infrastructure;
 
 namespace NetmqRouter.Models
 {
-    internal class Serializer : ISerializer<object>
+    internal class Serializer
     {
         public Type TargetType { get; private set; }
-        public bool IsGeneric { get; private set; }
+        public bool IsGeneral { get; private set; }
 
         private Func<object, byte[]> SerializeFunction { get; set; }
-        private Func<byte[], object> DeserializeFunction { get; set; }
+        private Func<byte[], Type, object> DeserializeFunction { get; set; }
 
         public byte[] Serialize(object _object) => SerializeFunction(_object);
-        public object Deserialize(byte[] data) => DeserializeFunction(data);
+        public object Deserialize(byte[] data) => DeserializeFunction(data, TargetType);
 
         public static Serializer FromTypeSerializer<T>(ISerializer<T> serializer)
         {
             return new Serializer()
             {
                 TargetType = typeof(T),
-                IsGeneric = false,
+                IsGeneral = false,
                 SerializeFunction = obj => serializer.Serialize((T)obj),
-                DeserializeFunction = data => serializer.Deserialize(data)
+                DeserializeFunction = (data, _) => serializer.Deserialize(data)
             };
         }
 
-        public static Serializer FromGeneralSerializer(Type targetType, IGeneralSerializer serializer)
+        public static Serializer FromGeneralSerializer<T>(IGeneralSerializer<T> serializer)
         {
             return new Serializer()
             {
-                TargetType = targetType,
-                IsGeneric = true,
+                TargetType = typeof(T),
+                IsGeneral = true,
                 SerializeFunction = serializer.Serialize,
-                DeserializeFunction = data => serializer.Deserialize(data, targetType)
+                DeserializeFunction = serializer.Deserialize
+            };
+        }
+
+        public Serializer ToTypeSerializer(Type targetType)
+        {
+            if(!IsGeneral)
+                throw new Exception("Only general serializers can be replaced to type ones.");
+
+            return new Serializer()
+            {
+                TargetType = targetType,
+                IsGeneral = false,
+                SerializeFunction = Serialize,
+                DeserializeFunction = (data, _) => Deserialize(data)
             };
         }
     }

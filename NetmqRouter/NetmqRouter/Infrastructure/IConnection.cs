@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using NetmqRouter.Models;
 
 [assembly: InternalsVisibleTo("NetmqRouter.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace NetmqRouter.Infrastructure
 {
@@ -10,7 +11,7 @@ namespace NetmqRouter.Infrastructure
     {
         void Connect(IEnumerable<string> routeNames);
         void Disconnect();
-        
+
         void SendMessage(SerializedMessage message);
         bool TryReceiveMessage(out SerializedMessage message);
     }

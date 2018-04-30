@@ -7,7 +7,7 @@ namespace NetmqRouter.Infrastructure
     internal interface IDataContractAccess
     {
         IReadOnlyList<Route> Routes { get; }
-        IReadOnlyList<RouteSubsriber> Subscribers { get; }
+        IReadOnlyList<Subsriber> Subscribers { get; }
         IReadOnlyList<Serializer> Serializers { get; }
     }
 }

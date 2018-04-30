@@ -9,7 +9,7 @@ namespace NetmqRouter.Serialization
     /// This class can be used for serialization of any object to the JSON format.
     /// It used the Newtonsoft.Json library.
     /// </summary>
-    public class JsonObjectSerializer : IGeneralSerializer
+    public class JsonObjectSerializer : IGeneralSerializer<object>
     {
         private readonly Encoding _encoding;
 

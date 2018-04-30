@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace NetmqRouter.Infrastructure
 {
     /// <summary>
     /// This interface should be used for the creation of custom data serializers.
     /// </summary>
-    public interface IGeneralSerializer
+    public interface IGeneralSerializer<T>
     {
         /// <summary>
         /// Serialize a specified object to byte array.

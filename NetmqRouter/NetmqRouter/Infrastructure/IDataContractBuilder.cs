@@ -7,8 +7,10 @@ namespace NetmqRouter.Infrastructure
     internal interface IDataContractBuilder : IDataContractAccess
     {
         void RegisterRoute(Route route);
-        void RegisterSubscriber(RouteSubsriber routeSubsriber);
+
+        void RegisterSubscriber(Subsriber subsriber);
+
         void RegisterSerializer<T>(ISerializer<T> serializer);
-        void RegisterGeneralSerializer(Type targetType, IGeneralSerializer serializer);
+        void RegisterGeneralSerializer<T>(IGeneralSerializer<T> serializer);
     }
 }

@@ -48,9 +48,9 @@ namespace NetmqRouter
             return router;
         }
 
-        public static MessageRouter RegisterGeneralSerializerFor<T>(this MessageRouter router, IGeneralSerializer serializer)
+        public static MessageRouter RegisterGeneralSerializerFor<T>(this MessageRouter router, IGeneralSerializer<T> serializer)
         {
-            router.DataContractBuilder.RegisterGeneralSerializer(typeof(T), serializer);
+            router.DataContractBuilder.RegisterGeneralSerializer(serializer);
             return router;
         }
     }

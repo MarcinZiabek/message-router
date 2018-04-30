@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NetmqRouter.Helpers;
@@ -10,11 +11,11 @@ namespace NetmqRouter.BusinessLogic
     internal class DataContractBuilder : IDataContractBuilder, IDataContractAccess
     {
         private readonly List<Route> _routes = new List<Route>();
-        private readonly List<RouteSubsriber> _subscribers = new List<RouteSubsriber>();
+        private readonly List<Subsriber> _subscribers = new List<Subsriber>();
         private readonly List<Serializer> _serializers  = new List<Serializer>();
 
         public IReadOnlyList<Route> Routes => _routes;
-        public IReadOnlyList<RouteSubsriber> Subscribers => _subscribers;
+        public IReadOnlyList<Subsriber> Subscribers => _subscribers;
         public IReadOnlyList<Serializer> Serializers => _serializers;
 
         public void RegisterSerializer<T>(ISerializer<T> serializer)
@@ -23,9 +24,9 @@ namespace NetmqRouter.BusinessLogic
             RegisterSerializer(resultSerializer);
         }
 
-        public void RegisterGeneralSerializer(Type targetType, IGeneralSerializer serializer)
+        public void RegisterGeneralSerializer<T>(IGeneralSerializer<T> serializer)
         {
-            var resultSerializer = Serializer.FromGeneralSerializer(targetType, serializer);
+            var resultSerializer = Serializer.FromGeneralSerializer(serializer);
             RegisterSerializer(resultSerializer);
         }
 
@@ -48,15 +49,15 @@ namespace NetmqRouter.BusinessLogic
             _routes.Add(route);
         }
 
-        public void RegisterSubscriber(RouteSubsriber routeSubsriber)
+        public void RegisterSubscriber(Subsriber subsriber)
         {
-            if(!_routes.Contains(routeSubsriber.Incoming))
+            if(!_routes.Contains(subsriber.Incoming))
                 throw new NetmqRouterException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
 
-            if(routeSubsriber.Outcoming != null && !_routes.Contains(routeSubsriber.Outcoming))
+            if(subsriber.Outcoming != null && !_routes.Contains(subsriber.Outcoming))
                 throw new NetmqRouterException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
 
-            _subscribers.Add(routeSubsriber);
+            _subscribers.Add(subsriber);
         }
     }
 }

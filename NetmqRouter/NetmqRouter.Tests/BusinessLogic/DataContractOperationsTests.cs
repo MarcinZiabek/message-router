@@ -41,10 +41,10 @@ namespace NetmqRouter.Tests.BusinessLogic
             builder.RegisterRoute(routeD);
 
             // act
-            var dataContract = new DataContractManager(builder);
+            builder.RegisterSubscriber(new  Subsriber(routeA, routeB, _ => null));
+            builder.RegisterSubscriber(new  Subsriber(routeC, routeD, _ => null));
 
-            builder.RegisterSubscriber(new  RouteSubsriber(routeA, routeB, _ => null));
-            builder.RegisterSubscriber(new  RouteSubsriber(routeC, routeD, _ => null));
+            var dataContract = new DataContractManager(builder);
 
             // assert
             var routeNames = dataContract

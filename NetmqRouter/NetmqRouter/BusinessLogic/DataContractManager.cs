@@ -43,7 +43,8 @@ namespace NetmqRouter.BusinessLogic
         {
             var sortedSerializers = dataContract
                 .Serializers
-                .OrderByDescending(x => x, new SerializerComparer());
+                .OrderByDescending(x => x, new SerializerComparer())
+                .ToList();
 
             return dataContract
                 .Routes
@@ -53,10 +54,15 @@ namespace NetmqRouter.BusinessLogic
                     x => x,
                     x => FindSerializer(sortedSerializers, x));
 
-            Serializer FindSerializer(IOrderedEnumerable<Serializer> serializers, Type targetType)
+            Serializer FindSerializer(List<Serializer> serializers, Type targetType)
             {
-                var serializer = serializers.First(y => targetType.IsSameOrSubclass(y.TargetType));
-                return serializer.IsGeneral ? serializer.ToTypeSerializer(targetType) : serializer;
+                var serializer = serializers.FirstOrDefault(x => targetType == x.TargetType);
+
+                if (serializer != null)
+                    return serializer;
+
+                serializer = serializers.First(x => x.IsGeneral && targetType.IsSubclassOf(x.TargetType));
+                return serializer.ToTypeSerializer(targetType);
             }
         }
 

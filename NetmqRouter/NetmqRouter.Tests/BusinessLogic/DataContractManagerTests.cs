@@ -10,6 +10,25 @@ namespace NetmqRouter.Tests.BusinessLogic
     [TestFixture]
     public class DataContractManagerTests
     {
+        #region Test Classes
+
+        internal class ClassA
+        {
+
+        }
+
+        internal class ClassB : ClassA
+        {
+
+        }
+
+        internal class ClassC : ClassB
+        {
+
+        }
+
+        #endregion
+
         [Test]
         public void IndexRoutes()
         {
@@ -71,7 +90,47 @@ namespace NetmqRouter.Tests.BusinessLogic
         [Test]
         public void IndexSerializers()
         {
+            // arrange
+            var routeA = new Route("RouteA", typeof(ClassA));
+            var routeB = new Route("RouteB", typeof(ClassB));
+            var routeC = new Route("RouteC", typeof(ClassC));
+            var routeG = new Route("RouteG", typeof(object));
 
+            var serializerMockA = new Mock<IGeneralSerializer<ClassA>>();
+            serializerMockA.Setup(x => x.Serialize(It.IsAny<ClassA>())).Returns(new[] {(byte) 'A'});
+
+            var serializerMockB = new Mock<ISerializer<ClassB>>();
+            serializerMockB.Setup(x => x.Serialize(It.IsAny<ClassB>())).Returns(new[] {(byte) 'B'});
+
+            var serializerMockG = new Mock<IGeneralSerializer<object>>();
+            serializerMockG.Setup(x => x.Serialize(It.IsAny<object>())).Returns(new[] {(byte) 'G'});
+
+            var serializerA = Serializer.FromGeneralSerializer(serializerMockA.Object);
+            var serializerB = Serializer.FromTypeSerializer(serializerMockB.Object);
+            var serializerG = Serializer.FromGeneralSerializer(serializerMockG.Object);
+
+            var routes = new List<Route>()
+            {
+                routeA, routeB, routeC, routeG
+            };
+
+            var serializers = new List<Serializer>()
+            {
+                serializerA, serializerB, serializerG
+            };
+
+            var contract = new Mock<IDataContractAccess>();
+            contract.Setup(x => x.Routes).Returns(routes);
+            contract.Setup(x => x.Serializers).Returns(serializers);
+
+            // act
+            var mapping = DataContractManager.IndexSerializers(contract.Object);
+
+            // assert
+            Assert.AreEqual((byte)'A', mapping[routeA.DataType].Serialize(null)[0]);
+            Assert.AreEqual((byte)'B', mapping[routeB.DataType].Serialize(null)[0]);
+            Assert.AreEqual((byte)'A', mapping[routeC.DataType].Serialize(null)[0]);
+            Assert.AreEqual((byte)'G', mapping[routeG.DataType].Serialize(null)[0]);
         }
     }
 }

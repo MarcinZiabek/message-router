@@ -14,10 +14,10 @@ namespace NetmqRouter.Helpers
                 return 0;
 
             if (typeA.IsSubclassOf(typeB))
-                return -1;
+                return 1;
 
             if (typeB.IsSubclassOf(typeA))
-                return 1;
+                return -1;
 
             return 0;
         }

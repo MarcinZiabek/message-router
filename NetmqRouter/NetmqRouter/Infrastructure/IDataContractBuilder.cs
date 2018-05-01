@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using NetmqRouter.Models;
+﻿using NetmqRouter.Models;
 
 namespace NetmqRouter.Infrastructure
 {

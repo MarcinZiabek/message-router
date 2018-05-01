@@ -1,5 +1,4 @@
-﻿using System;
-using NetmqRouter.Infrastructure;
+﻿using NetmqRouter.Infrastructure;
 
 namespace NetmqRouter.Serialization
 {

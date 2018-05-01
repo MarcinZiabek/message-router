@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="BusinessLogic\ClassAnalyzerTests.cs" />
     <Compile Include="BusinessLogic\DataContractBuilderTests.cs" />
+    <Compile Include="BusinessLogic\DataContractManagerTests.cs" />
     <Compile Include="BusinessLogic\DataContractOperationsTests.cs" />
     <Compile Include="ExampleData.cs" />
     <Compile Include="Helpers\TypeExtensionsTests.cs" />

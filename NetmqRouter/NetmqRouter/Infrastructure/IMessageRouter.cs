@@ -1,5 +1,4 @@
 ﻿using System;
-using NetmqRouter.Models;
 
 namespace NetmqRouter.Infrastructure
 {

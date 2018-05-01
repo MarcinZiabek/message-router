@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NetmqRouter.Models;
+﻿using NetmqRouter.Models;
 using NetMQ;
-using NetMQ.Sockets;
 
 namespace NetmqRouter
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetmqRouter.Infrastructure
+﻿namespace NetmqRouter.Infrastructure
 {
     /// <summary>
     /// This interface should be used for the creation of custom data serializers.

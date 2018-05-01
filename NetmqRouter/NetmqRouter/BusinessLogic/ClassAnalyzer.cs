@@ -45,7 +45,7 @@ namespace NetmqRouter.BusinessLogic
 
             if(responseRoute != null && route == null)
                 throw new NetmqRouterException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assgined.");
-            
+
             if (route == null)
                 return null;
 
@@ -55,15 +55,15 @@ namespace NetmqRouter.BusinessLogic
             var agrumentType = methodInfo
                 .GetParameters()
                 .FirstOrDefault()
-                ?.ParameterType 
+                ?.ParameterType
                 ?? typeof(void);
 
             return new Subsriber()
             {
                 Incoming = new Route(route.Name, agrumentType),
-                Outcoming = (responseRoute == null) ? null : new Route(responseRoute?.Name, methodInfo.ReturnType),
-                
-                Method = payload => methodInfo?.Invoke(_object, new[] { payload })
+                Outcoming = (responseRoute == null) ? null : new Route(responseRoute.Name, methodInfo.ReturnType),
+
+                Method = payload => methodInfo.Invoke(_object, new[] { payload })
             };
         }
     }

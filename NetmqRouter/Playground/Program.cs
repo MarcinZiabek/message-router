@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using NetmqRouter;
-using NetmqRouter.BusinessLogic;
-using NetmqRouter.Tests;
-using NetMQ.Sockets;
-
-namespace Playground
+﻿namespace Playground
 {
     class Program
     {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NetmqRouter.Attributes;
 using NetmqRouter.BusinessLogic;
@@ -40,7 +37,7 @@ namespace NetmqRouter.Tests
 
             var router = MessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
-                .RegisterSerializerForType<string>(new BasicTextSerializer())
+                .RegisterSerializerForType(new BasicTextSerializer())
                 .RegisterRoute("TestRoute", typeof(string))
                 .Subscribe(subscriber)
                 .StartRouting();

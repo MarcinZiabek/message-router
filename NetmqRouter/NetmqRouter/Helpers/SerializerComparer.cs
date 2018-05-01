@@ -4,6 +4,11 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Helpers
 {
+    /// <summary>
+    /// This class can be used for comparing serializers. Rules: a general serializer is always considered
+    /// as "lower" in comparison to type a type serializer. If both serializers has the same IsGeneral flag,
+    /// target types are compared.
+    /// </summary>
     internal class SerializerComparer : IComparer<Serializer>
     {
         private readonly IComparer<Type> _typeComparer;

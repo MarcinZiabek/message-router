@@ -9,6 +9,8 @@ namespace NetmqRouter.Models
         public readonly string RouteName;
         public readonly object Payload;
 
+        /// <param name="routeName">Name of the target route.</param>
+        /// <param name="payload">Object of type that is compatible with the route's target type.</param>
         public Message(string routeName, object payload)
         {
             RouteName = routeName;

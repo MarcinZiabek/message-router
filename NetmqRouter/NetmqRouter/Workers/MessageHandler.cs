@@ -6,11 +6,15 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Workers
 {
+    /// <summary>
+    /// This worker is responsible for handling all messages.
+    /// Steps: send a deserialzied message to all route subscribers, gather responses and send them via an event.
+    /// </summary>
     internal class MessageHandler : WorkerClassBase
     {
         private readonly IDataContractOperations _dataContractOperations;
         private readonly ConcurrentQueue<Message> _messageQueue = new ConcurrentQueue<Message>();
-        
+
         public event Action<Message> OnNewMessage;
 
         public MessageHandler(IDataContractOperations dataContractOperations)
@@ -25,12 +29,10 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
 
-            var re = _dataContractOperations
+            _dataContractOperations
                 .CallRoute(message)
-                .ToList();
-
-
-            re.ForEach(x => OnNewMessage?.Invoke(x));
+                .ToList()
+                .ForEach(x => OnNewMessage?.Invoke(x));
 
             return true;
         }

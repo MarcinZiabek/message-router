@@ -7,6 +7,8 @@ namespace NetmqRouter.Models
         public string Name { get; set; }
         public Type DataType { get; set; }
 
+        /// <param name="name">Name of the route</param>
+        /// <param name="dataType">Type that will be expected to receive</param>
         public Route(string name, Type dataType)
         {
             Name = name;

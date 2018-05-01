@@ -4,6 +4,9 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Workers
 {
+    /// <summary>
+    /// This worker is responsible for sending messages through the output socket.
+    /// </summary>
     internal class MessageSender : WorkerClassBase
     {
         private readonly IConnection _connection;
@@ -15,7 +18,7 @@ namespace NetmqRouter.Workers
         }
 
         public void SendMessage(SerializedMessage message) => _messageQueue.Enqueue(message);
-        
+
         internal override bool DoWork()
         {
             if (!_messageQueue.TryDequeue(out var message))

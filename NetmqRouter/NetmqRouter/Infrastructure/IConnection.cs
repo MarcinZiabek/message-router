@@ -7,6 +7,9 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Infrastructure
 {
+    /// <summary>
+    /// This interface should be used for implementing custom communication layer.
+    /// </summary>
     public interface IConnection
     {
         void Connect(IEnumerable<string> routeNames);

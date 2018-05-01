@@ -5,6 +5,9 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.Workers
 {
+    /// <summary>
+    /// This worker is responsible for serializing all messages.
+    /// </summary>
     internal class MessageSerializer : WorkerClassBase
     {
         private readonly IDataContractOperations _dataContractOperations;
@@ -16,14 +19,14 @@ namespace NetmqRouter.Workers
         {
             _dataContractOperations = dataContractOperations;
         }
-        
+
         public void SerializeMessage(Message message) => _messageQueue.Enqueue(message);
-        
+
         internal override bool DoWork()
         {
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
-            
+
             var serializedMessage = _dataContractOperations.Serialize(message);
             OnNewMessage?.Invoke(serializedMessage);
 

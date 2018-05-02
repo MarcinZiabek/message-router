@@ -14,6 +14,11 @@ namespace NetmqRouter.Models
         public byte[] Serialize(object _object) => SerializeFunction(_object);
         public object Deserialize(byte[] data) => DeserializeFunction(data, TargetType);
 
+        private Serializer()
+        {
+
+        }
+
         public static Serializer FromTypeSerializer<T>(ISerializer<T> serializer)
         {
             return new Serializer()

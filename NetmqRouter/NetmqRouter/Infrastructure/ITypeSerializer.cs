@@ -3,7 +3,7 @@
     /// <summary>
     /// This interface should be used for the creation of custom data serializers.
     /// </summary>
-    public interface ISerializer<T>
+    public interface ITypeSerializer<T>
     {
         /// <summary>
         /// Serialize a specified object to byte array.

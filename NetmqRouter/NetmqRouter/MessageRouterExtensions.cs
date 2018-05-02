@@ -42,9 +42,9 @@ namespace NetmqRouter
             return router;
         }
 
-        public static MessageRouter RegisterSerializerForType<T>(this MessageRouter router, ISerializer<T> serializer)
+        public static MessageRouter RegisterSerializerForType<T>(this MessageRouter router, ITypeSerializer<T> typeSerializer)
         {
-            router.DataContractBuilder.RegisterSerializer(serializer);
+            router.DataContractBuilder.RegisterSerializer(typeSerializer);
             return router;
         }
 

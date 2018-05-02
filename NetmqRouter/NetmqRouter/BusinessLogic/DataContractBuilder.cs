@@ -16,9 +16,9 @@ namespace NetmqRouter.BusinessLogic
         public IReadOnlyList<Subsriber> Subscribers => _subscribers;
         public IReadOnlyList<Serializer> Serializers => _serializers;
 
-        public void RegisterSerializer<T>(ISerializer<T> serializer)
+        public void RegisterSerializer<T>(ITypeSerializer<T> typeSerializer)
         {
-            var resultSerializer = Serializer.FromTypeSerializer(serializer);
+            var resultSerializer = Serializer.FromTypeSerializer(typeSerializer);
             RegisterSerializer(resultSerializer);
         }
 
@@ -39,7 +39,7 @@ namespace NetmqRouter.BusinessLogic
         public void RegisterRoute(Route route)
         {
             if(!_serializers.Any(x => route.DataType.IsSameOrSubclass(x.TargetType)))
-                throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no serializer for it.");
+                throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no typeSerializer for it.");
 
             if(_routes.Any(x => x.Name == route.Name))
                 throw new NetmqRouterException($"Route with name {route.Name} is already registered.");

@@ -27,10 +27,10 @@ namespace NetmqRouter.Tests.Helpers
         public void CompareTwoTypeSerializers()
         {
             // arrange
-            var serializerMockA = new Mock<ISerializer<ClassA>>();
+            var serializerMockA = new Mock<ITypeSerializer<ClassA>>();
             var serializerA = Serializer.FromTypeSerializer(serializerMockA.Object);
 
-            var serializerMockB = new Mock<ISerializer<ClassB>>();
+            var serializerMockB = new Mock<ITypeSerializer<ClassB>>();
             var serializerB = Serializer.FromTypeSerializer(serializerMockB.Object);
 
             // assert
@@ -59,7 +59,7 @@ namespace NetmqRouter.Tests.Helpers
         public void CompareVariousSerializers()
         {
             // arrange
-            var serializerMock1 = new Mock<ISerializer<string>>();
+            var serializerMock1 = new Mock<ITypeSerializer<string>>();
             var serializer1 = Serializer.FromTypeSerializer(serializerMock1.Object);
 
             var serializerMock2 = new Mock<IGeneralSerializer<string>>();

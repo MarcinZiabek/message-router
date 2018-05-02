@@ -37,7 +37,7 @@ namespace NetmqRouter.Tests
 
             var router = MessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
-                .RegisterSerializerForType(new BasicTextSerializer())
+                .RegisterSerializerForType(new BasicTextTypeSerializer())
                 .RegisterRoute("TestRoute", typeof(string))
                 .Subscribe(subscriber)
                 .StartRouting();

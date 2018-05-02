@@ -14,5 +14,12 @@ namespace NetmqRouter.Models
             RouteName = routeName;
             Payload = payload;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Message r &&
+                   r.RouteName == RouteName &&
+                   r.Payload == Payload;
+        }
     }
 }

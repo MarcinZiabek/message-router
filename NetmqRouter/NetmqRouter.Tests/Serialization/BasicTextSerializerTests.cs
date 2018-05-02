@@ -11,7 +11,7 @@ namespace NetmqRouter.Tests.Serialization
         public void Serialize()
         {
             // arrange
-            var serializer = new BasicTextSerializer(Encoding.ASCII);
+            var serializer = new BasicTextTypeSerializer(Encoding.ASCII);
             var text = "test";
             var expectedResult = new byte[] { 116, 101, 115, 116 };
 
@@ -26,7 +26,7 @@ namespace NetmqRouter.Tests.Serialization
         public void Deserialize()
         {
             // arrange
-            var serializer = new BasicTextSerializer(Encoding.ASCII);
+            var serializer = new BasicTextTypeSerializer(Encoding.ASCII);
             var serializedText = new byte[] { 116, 101, 115, 116 };
             var expectedResult = "test";
 

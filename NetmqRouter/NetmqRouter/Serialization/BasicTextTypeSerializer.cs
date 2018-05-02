@@ -6,17 +6,17 @@ namespace NetmqRouter.Serialization
     /// <summary>
     /// This class can be used for text serialization.
     /// </summary>
-    public class BasicTextSerializer : ISerializer<string>
+    public class BasicTextTypeSerializer : ITypeSerializer<string>
     {
         private readonly Encoding _encoding;
 
         /// <param name="encoding">Encoding that will be used for text serialization.</param>
-        public BasicTextSerializer(Encoding encoding)
+        public BasicTextTypeSerializer(Encoding encoding)
         {
             _encoding = encoding;
         }
 
-        public BasicTextSerializer() : this(Encoding.UTF8)
+        public BasicTextTypeSerializer() : this(Encoding.UTF8)
         {
 
         }

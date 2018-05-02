@@ -10,7 +10,7 @@ namespace NetmqRouter.Tests.Serialization
         public void Serialize()
         {
             // arrange
-            var serializer = new RawDataSerializer();
+            var serializer = new RawDataTypeSerializer();
             var data = new byte[] {1, 2, 3};
 
             // act
@@ -24,7 +24,7 @@ namespace NetmqRouter.Tests.Serialization
         public void Deserialize()
         {
             // arrange
-            var serializer = new RawDataSerializer();
+            var serializer = new RawDataTypeSerializer();
             var serializedData = new byte[] {1, 2, 3};
 
             // act

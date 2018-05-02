@@ -50,6 +50,7 @@ namespace NetmqRouter.BusinessLogic
                 .Routes
                 .Select(x => x.DataType)
                 .Distinct()
+                .Where(x => x != typeof(void))
                 .ToDictionary(
                     x => x,
                     x => FindSerializer(sortedSerializers, x));
@@ -79,8 +80,11 @@ namespace NetmqRouter.BusinessLogic
                 [message.RouteName]
                 .Select(x =>
                 {
+                    if (x.Outcoming == null)
+                        return null;
+
                     var response = x.Method(message.Payload);
-                    return (x.Outcoming == null) ? null : new Message(x.Outcoming.Name, response);
+                    return new Message(x.Outcoming.Name, response);
                 })
                 .Where(x => x != null);
         }

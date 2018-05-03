@@ -44,13 +44,13 @@ namespace NetmqRouter.Tests
 
             router.SendMessage("TestRoute", "test");
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
-
-            Assert.AreEqual("test", subscriber.PassedValue);
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
             router
                 .StopRouting()
                 .Disconnect();
+
+            Assert.AreEqual("test", subscriber.PassedValue);
         }
     }
 }

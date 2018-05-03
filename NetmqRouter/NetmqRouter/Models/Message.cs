@@ -1,8 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("NetmqRouter.Tests")]
-
-namespace NetmqRouter.Models
+﻿namespace NetmqRouter.Models
 {
     internal class Message
     {

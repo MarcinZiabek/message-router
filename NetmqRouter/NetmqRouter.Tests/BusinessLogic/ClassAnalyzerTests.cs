@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using NetmqRouter.Attributes;
 using NetmqRouter.BusinessLogic;
@@ -208,7 +207,31 @@ namespace NetmqRouter.Tests.BusinessLogic
 
         #region BaseRoute attribute
 
-        // TODO: add more tests
+        [BaseRoute("BaseRoute")]
+        class ClassWithBaseRoute
+        {
+            [Route("IncomingRoute")]
+            [ResponseRoute("OutcomingRoute")]
+            public void Handler()
+            {
+
+            }
+        }
+
+        [Test]
+        public void HandleBaseRoute()
+        {
+            // arrange
+            var subscriber = new ClassWithBaseRoute();
+
+            // act
+            var result = ClassAnalyzer.AnalyzeClass(subscriber);
+
+            // assert
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("BaseRoute/IncomingRoute", result[0].Incoming.Name);
+            Assert.AreEqual("OutcomingRoute", result[0].Outcoming.Name);
+        }
 
         #endregion
 

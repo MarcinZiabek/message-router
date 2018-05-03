@@ -80,11 +80,8 @@ namespace NetmqRouter.BusinessLogic
                 [message.RouteName]
                 .Select(x =>
                 {
-                    if (x.Outcoming == null)
-                        return null;
-
                     var response = x.Method(message.Payload);
-                    return new Message(x.Outcoming.Name, response);
+                    return (x.Outcoming == null) ? null : new Message(x.Outcoming.Name, response);
                 })
                 .Where(x => x != null);
         }

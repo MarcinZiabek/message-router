@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using NetmqRouter.Models;
-
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace NetmqRouter.Infrastructure
 {

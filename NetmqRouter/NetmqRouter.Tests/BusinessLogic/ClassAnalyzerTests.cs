@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using NetmqRouter.Attributes;
 using NetmqRouter.BusinessLogic;
@@ -202,6 +203,12 @@ namespace NetmqRouter.Tests.BusinessLogic
                 .Outcoming
                 .DataType;
         }
+
+        #endregion
+
+        #region BaseRoute attribute
+
+        // TODO: add more tests
 
         #endregion
 

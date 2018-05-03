@@ -18,7 +18,26 @@ namespace NetmqRouter.Models
 
         public Subsriber()
         {
-            
+
+        }
+
+        public static Subsriber Create<T>(string routeName, Action<T> action)
+        {
+            var route = new Route(routeName, typeof(T));
+
+            return new Subsriber(route, null, payload =>
+            {
+                action((T) payload);
+                return null;
+            });
+        }
+
+        public static Subsriber Create<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action)
+        {
+            var incomingRoute = new Route(incomingRouteName, typeof(T));
+            var outcomingRoute = new Route(outcomingRouteName, typeof(TK));
+
+            return new Subsriber(incomingRoute, outcomingRoute, payload => action((T) payload));
         }
     }
 }

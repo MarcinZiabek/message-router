@@ -42,7 +42,7 @@ namespace NetmqRouter
             return router;
         }
 
-        public static MessageRouter RegisterSerializerForType<T>(this MessageRouter router, ITypeSerializer<T> typeSerializer)
+        public static MessageRouter RegisterTypeSerializerFor<T>(this MessageRouter router, ITypeSerializer<T> typeSerializer)
         {
             router.DataContractBuilder.RegisterSerializer(typeSerializer);
             return router;
@@ -51,6 +51,20 @@ namespace NetmqRouter
         public static MessageRouter RegisterGeneralSerializerFor<T>(this MessageRouter router, IGeneralSerializer<T> serializer)
         {
             router.DataContractBuilder.RegisterGeneralSerializer(serializer);
+            return router;
+        }
+
+        public static MessageRouter RegisterSubscriber<T>(this MessageRouter router, string routeName, Action<T> action)
+        {
+            var subscriber = Subsriber.Create(routeName, action);
+            router.DataContractBuilder.RegisterSubscriber(subscriber);
+            return router;
+        }
+
+        public static MessageRouter RegisterSubscriber<T, TK>(this MessageRouter router, string incomingRouteName, string outcomingRouteName, Func<T, TK> action)
+        {
+            var subscriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
+            router.DataContractBuilder.RegisterSubscriber(subscriber);
             return router;
         }
     }

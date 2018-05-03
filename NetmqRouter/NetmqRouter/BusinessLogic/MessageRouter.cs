@@ -15,7 +15,7 @@ namespace NetmqRouter.BusinessLogic
         internal int NumberOfSerializationWorkes = 1;
         internal int NumberOfHandlingWorkes = 4;
 
-        private MessageRouter(IConnection connection)
+        public MessageRouter(IConnection connection)
         {
             Connection = connection;
         }
@@ -64,8 +64,29 @@ namespace NetmqRouter.BusinessLogic
 
         public static MessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
         {
-            var connection = new PubSubConnection(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
+            return WithPubSubConnecton(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
+        }
+
+        public static MessageRouter WithPushPullConnection(PushSocket pushSocket, PullSocket pullSocket)
+        {
+            var connection = new PushPullConnection(pushSocket, pullSocket);
             return new MessageRouter(connection);
+        }
+
+        public static MessageRouter WithPushPullConnection(string pushAddress, string pullAddress)
+        {
+            return WithPushPullConnection(new PushSocket(pushAddress), new PullSocket(pullAddress));
+        }
+
+        public static MessageRouter WithPairConnection(PairSocket socket)
+        {
+            var connection = new PairConnection(socket);
+            return new MessageRouter(connection);
+        }
+
+        public static MessageRouter WithPairConnection(string address)
+        {
+            return WithPairConnection(new PairSocket(address));
         }
 
         #endregion

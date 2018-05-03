@@ -6,12 +6,12 @@ using NetMQ.Sockets;
 
 namespace NetmqRouter
 {
-    internal class PubSubConnection : IConnection
+    public class PushPullConnection : IConnection
     {
-        PublisherSocket PublisherSocket { get; }
-        SubscriberSocket SubscriberSocket { get; }
+        PushSocket PublisherSocket { get; }
+        PullSocket SubscriberSocket { get; }
 
-        public PubSubConnection(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
+        public PushPullConnection(PushSocket publisherSocket, PullSocket subscriberSocket)
         {
             PublisherSocket = publisherSocket;
             SubscriberSocket = subscriberSocket;
@@ -23,9 +23,7 @@ namespace NetmqRouter
 
         public void Connect(IEnumerable<string> routeNames)
         {
-            routeNames
-                .ToList()
-                .ForEach(SubscriberSocket.Subscribe);
+
         }
 
         public void Disconnect()

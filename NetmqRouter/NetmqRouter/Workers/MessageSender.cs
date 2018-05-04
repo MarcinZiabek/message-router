@@ -1,4 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -21,10 +23,18 @@ namespace NetmqRouter.Workers
 
         internal override bool DoWork()
         {
-            if (!_messageQueue.TryDequeue(out var message))
-                return false;
+            try
+            {
+                if (!_messageQueue.TryDequeue(out var message))
+                    return false;
 
-            _connection.SendMessage(message);
+                _connection.SendMessage(message);
+            }
+            catch (Exception e)
+            {
+                throw new ConnectionException("Cannot send a message", e);
+            }
+
             return true;
         }
     }

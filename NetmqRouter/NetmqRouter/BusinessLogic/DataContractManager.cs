@@ -7,11 +7,13 @@ using NetmqRouter.Models;
 
 namespace NetmqRouter.BusinessLogic
 {
-    internal class DataContractManager : IDataContractOperations
+    internal class DataContractManager : IDataContractOperations, IExceptionSource
     {
         private readonly IReadOnlyDictionary<string, Route> _routes;
         private readonly IReadOnlyDictionary<string, List<Subsriber>> _subscribers;
         private readonly IReadOnlyDictionary<Type, Serializer> _serializers;
+
+        public event Action<Exception> OnException;
 
         public DataContractManager(IDataContractAccess dataContract)
         {

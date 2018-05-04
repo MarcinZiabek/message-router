@@ -1,16 +1,19 @@
-﻿using NetmqRouter.Infrastructure;
+﻿using System;
+using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 using NetmqRouter.Workers;
 
 namespace NetmqRouter.BusinessLogic
 {
-    internal class DataFlowManager
+    internal class DataFlowManager : IExceptionSource
     {
         private MessageReveiver _messageReveiver;
         private MessageDeserializer _messageDeserializer;
         private MessageHandler _messageHandler;
         private MessageSerializer _messageSerializer;
         private MessageSender _messageSender;
+
+        public event Action<Exception> OnException;
 
         public void CreateWorkers(IConnection connection, IDataContractOperations dataContractOperations)
         {
@@ -19,6 +22,15 @@ namespace NetmqRouter.BusinessLogic
             _messageHandler = new MessageHandler(dataContractOperations);
             _messageSerializer = new MessageSerializer(dataContractOperations);
             _messageSender = new MessageSender(connection);
+        }
+
+        public void RegisterExceptionsHandler()
+        {
+            _messageReveiver.OnException += OnException;
+            _messageDeserializer.OnException += OnException;
+            _messageHandler.OnException += OnException;
+            _messageSerializer.OnException += OnException;
+            _messageSender.OnException += OnException;
         }
 
         public void RegisterDataFlow()
@@ -46,7 +58,7 @@ namespace NetmqRouter.BusinessLogic
             _messageSerializer.Stop();
             _messageSender.Stop();
         }
-        
+
         internal void SendMessage(Message message)
         {
             _messageSerializer.SerializeMessage(message);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NetmqRouter.Attributes;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Models;
 
 namespace NetmqRouter.BusinessLogic
@@ -20,13 +21,13 @@ namespace NetmqRouter.BusinessLogic
             return routes;
         }
 
-        internal static string GetBaseRoute(Type type)
+        private static string GetBaseRoute(Type type)
         {
             var attribute = type.GetCustomAttributes(typeof(BaseRouteAttribute)).SingleOrDefault();
             return (attribute as BaseRouteAttribute)?.Name;
         }
 
-        internal static IEnumerable<Subsriber> FindRoutesInClass(object _object)
+        private static IEnumerable<Subsriber> FindRoutesInClass(object _object)
         {
             return _object
                 .GetType()
@@ -35,19 +36,19 @@ namespace NetmqRouter.BusinessLogic
                 .Where(x => x != null);
         }
 
-        internal static Subsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
+        private static Subsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
         {
             var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
             var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
 
             if(responseRoute != null && route == null)
-                throw new NetmqRouterException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assigned.");
+                throw new ConfigurationException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assigned.");
 
             if (route == null)
                 return null;
 
             if (methodInfo.GetParameters().Length > 1)
-                throw new NetmqRouterException($"Method {methodInfo.Name} cannot have more than one argument");
+                throw new ConfigurationException($"Method {methodInfo.Name} cannot have more than one argument");
 
             var agrumentType = methodInfo
                 .GetParameters()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -29,10 +30,17 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
 
-            _dataContractOperations
-                .CallRoute(message)
-                .ToList()
-                .ForEach(x => OnNewMessage?.Invoke(x));
+            try
+            {
+                _dataContractOperations
+                    .CallRoute(message)
+                    .ToList()
+                    .ForEach(x => OnNewMessage?.Invoke(x));
+            }
+            catch (Exception e)
+            {
+                throw new SubscriberException("The subscriber code throws an exception.", e);
+            }
 
             return true;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 
 namespace NetmqRouter.Models
@@ -44,7 +45,7 @@ namespace NetmqRouter.Models
         public Serializer ToTypeSerializer(Type targetType)
         {
             if(!IsGeneral)
-                throw new Exception("Only general serializers can be replaced to type ones.");
+                throw new ConfigurationException("Only general serializers can be replaced to type ones.");
 
             return new Serializer()
             {

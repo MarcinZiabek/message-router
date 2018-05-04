@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter
+namespace NetmqRouter.Exceptions
 {
     public class NetmqRouterException : Exception
     {

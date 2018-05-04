@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Moq;
 using NetmqRouter.BusinessLogic;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 using NUnit.Framework;

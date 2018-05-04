@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Helpers;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
@@ -31,7 +32,7 @@ namespace NetmqRouter.BusinessLogic
         private void RegisterSerializer(Serializer serializer)
         {
             if(_serializers.Any(x => x.TargetType == serializer.TargetType))
-                throw new NetmqRouterException($"Serializer for type {serializer.TargetType} is already registered!");
+                throw new ConfigurationException($"Serializer for type {serializer.TargetType} is already registered!");
 
             _serializers.Add(serializer);
         }
@@ -39,10 +40,10 @@ namespace NetmqRouter.BusinessLogic
         public void RegisterRoute(Route route)
         {
             if(!_serializers.Any(x => route.DataType.IsSameOrSubclass(x.TargetType)))
-                throw new NetmqRouterException($"Can not register route with type {route.DataType} because there is no typeSerializer for it.");
+                throw new ConfigurationException($"Can not register route with type {route.DataType} because there is no typeSerializer for it.");
 
             if(_routes.Any(x => x.Name == route.Name))
-                throw new NetmqRouterException($"Route with name {route.Name} is already registered.");
+                throw new ConfigurationException($"Route with name {route.Name} is already registered.");
 
             _routes.Add(route);
         }
@@ -50,10 +51,10 @@ namespace NetmqRouter.BusinessLogic
         public void RegisterSubscriber(Subsriber subsriber)
         {
             if(!_routes.Contains(subsriber.Incoming))
-                throw new NetmqRouterException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
+                throw new ConfigurationException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
 
             if(subsriber.Outcoming != null && !_routes.Contains(subsriber.Outcoming))
-                throw new NetmqRouterException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
+                throw new ConfigurationException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
 
             _subscribers.Add(subsriber);
         }

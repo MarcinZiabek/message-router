@@ -2,6 +2,7 @@
 using System.Linq;
 using NetmqRouter.Attributes;
 using NetmqRouter.BusinessLogic;
+using NetmqRouter.Exceptions;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.BusinessLogic

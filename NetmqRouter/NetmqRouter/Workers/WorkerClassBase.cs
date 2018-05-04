@@ -8,10 +8,12 @@ namespace NetmqRouter.Workers
     /// <summary>
     /// This class can be used for creating any worker class that needs to perform repeating task.
     /// </summary>
-    internal abstract class WorkerClassBase : IWorkerTask
+    internal abstract class WorkerClassBase : IWorkerTask, IExceptionSource
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CancellationToken _cancellationToken;
+
+        public event Action<Exception> OnException;
 
         public void Start(int numberOfWorkers = 1)
         {
@@ -40,7 +42,7 @@ namespace NetmqRouter.Workers
             }
             catch (Exception e)
             {
-
+                OnException?.Invoke(e);
             }
 
         }

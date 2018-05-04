@@ -1,4 +1,5 @@
 ﻿using System;
+using NetmqRouter.Exceptions;
 
 namespace NetmqRouter.Attributes
 {

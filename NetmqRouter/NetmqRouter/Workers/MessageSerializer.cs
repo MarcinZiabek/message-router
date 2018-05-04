@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -27,8 +28,15 @@ namespace NetmqRouter.Workers
             if (!_messageQueue.TryDequeue(out var message))
                 return false;
 
-            var serializedMessage = _dataContractOperations.Serialize(message);
-            OnNewMessage?.Invoke(serializedMessage);
+            try
+            {
+                var serializedMessage = _dataContractOperations.Serialize(message);
+                OnNewMessage?.Invoke(serializedMessage);
+            }
+            catch (Exception e)
+            {
+                throw new SerializationException("Cannot serialize the message", e);
+            }
 
             return true;
         }

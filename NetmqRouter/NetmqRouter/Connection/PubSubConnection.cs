@@ -4,7 +4,7 @@ using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 using NetMQ.Sockets;
 
-namespace NetmqRouter
+namespace NetmqRouter.Connection
 {
     internal class PubSubConnection : IConnection
     {

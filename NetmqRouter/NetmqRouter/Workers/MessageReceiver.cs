@@ -1,4 +1,5 @@
 ﻿using System;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 
@@ -20,10 +21,18 @@ namespace NetmqRouter.Workers
 
         internal override bool DoWork()
         {
-            if (!_connection.TryReceiveMessage(out var serializedMessage))
-                return false;
+            try
+            {
+                if (!_connection.TryReceiveMessage(out var serializedMessage))
+                    return false;
 
-            OnNewMessage?.Invoke(serializedMessage);
+                OnNewMessage?.Invoke(serializedMessage);
+            }
+            catch (Exception e)
+            {
+                throw new ConnectionException("Cannot receive a message", e);
+            }
+
             return true;
         }
     }

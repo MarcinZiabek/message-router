@@ -5,17 +5,17 @@ namespace NetmqRouter.Infrastructure
 {
     public interface IMessageRouterConfiguration
     {
-        MessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes);
+        IMessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes);
 
-        MessageRouter RegisterRoute(string routeName, Type dataType);
+        IMessageRouter RegisterRoute(string routeName, Type dataType);
 
-        MessageRouter RegisterTypeSerializerFor<T>(ITypeSerializer<T> typeSerializer);
-        MessageRouter RegisterGeneralSerializerFor<T>(IGeneralSerializer<T> serializer);
+        IMessageRouter RegisterTypeSerializerFor<T>(ITypeSerializer<T> typeSerializer);
+        IMessageRouter RegisterGeneralSerializerFor<T>(IGeneralSerializer<T> serializer);
 
-        MessageRouter RegisterSubscriber<T>(T subscriber);
-        MessageRouter RegisterSubscriber(string routeName, Action action);
-        MessageRouter RegisterSubscriber<T>(string routeName, Action<T> action);
-        MessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action);
-        MessageRouter RegisterSubscriber<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action);
+        IMessageRouter RegisterSubscriber<T>(T subscriber);
+        IMessageRouter RegisterSubscriber(string routeName, Action action);
+        IMessageRouter RegisterSubscriber<T>(string routeName, Action<T> action);
+        IMessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action);
+        IMessageRouter RegisterSubscriber<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action);
     }
 }

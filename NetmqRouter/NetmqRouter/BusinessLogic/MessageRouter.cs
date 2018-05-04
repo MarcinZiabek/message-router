@@ -26,7 +26,7 @@ namespace NetmqRouter.BusinessLogic
 
         #region Managing
 
-        public MessageRouter StartRouting()
+        public IMessageRouter StartRouting()
         {
             var dataContract = new DataContractManager(_dataContractBuilder);
             _connection.Connect(dataContract.GetIncomingRouteNames());
@@ -39,7 +39,7 @@ namespace NetmqRouter.BusinessLogic
             return this;
         }
 
-        public MessageRouter StopRouting()
+        public IMessageRouter StopRouting()
         {
             _dataFlowManager.StopWorkers();
             return this;
@@ -51,13 +51,13 @@ namespace NetmqRouter.BusinessLogic
             Disconnect();
         }
 
-        public MessageRouter Disconnect()
+        public IMessageRouter Disconnect()
         {
             _connection.Disconnect();
             return this;
         }
 
-        public MessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes)
+        public IMessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes)
         {
             _numberOfSerializationWorkes = numberOfSerializationWorkes;
             _numberOfHandlingWorkes = numberOfHandlingWorkes;
@@ -69,35 +69,35 @@ namespace NetmqRouter.BusinessLogic
 
         #region Connection
 
-        public static MessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
+        public static IMessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
         {
             var connection = new PubSubConnection(publisherSocket, subscriberSocket);
             return new MessageRouter(connection);
         }
 
-        public static MessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
+        public static IMessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
         {
             return WithPubSubConnecton(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
         }
 
-        public static MessageRouter WithPushPullConnection(PushSocket pushSocket, PullSocket pullSocket)
+        public static IMessageRouter WithPushPullConnection(PushSocket pushSocket, PullSocket pullSocket)
         {
             var connection = new PushPullConnection(pushSocket, pullSocket);
             return new MessageRouter(connection);
         }
 
-        public static MessageRouter WithPushPullConnection(string pushAddress, string pullAddress)
+        public static IMessageRouter WithPushPullConnection(string pushAddress, string pullAddress)
         {
             return WithPushPullConnection(new PushSocket(pushAddress), new PullSocket(pullAddress));
         }
 
-        public static MessageRouter WithPairConnection(PairSocket socket)
+        public static IMessageRouter WithPairConnection(PairSocket socket)
         {
             var connection = new PairConnection(socket);
             return new MessageRouter(connection);
         }
 
-        public static MessageRouter WithPairConnection(string address)
+        public static IMessageRouter WithPairConnection(string address)
         {
             return WithPairConnection(new PairSocket(address));
         }
@@ -106,13 +106,13 @@ namespace NetmqRouter.BusinessLogic
 
         #region Serialization
 
-        public MessageRouter RegisterTypeSerializerFor<T>(ITypeSerializer<T> typeSerializer)
+        public IMessageRouter RegisterTypeSerializerFor<T>(ITypeSerializer<T> typeSerializer)
         {
             _dataContractBuilder.RegisterSerializer(typeSerializer);
             return this;
         }
 
-        public MessageRouter RegisterGeneralSerializerFor<T>(IGeneralSerializer<T> serializer)
+        public IMessageRouter RegisterGeneralSerializerFor<T>(IGeneralSerializer<T> serializer)
         {
             _dataContractBuilder.RegisterGeneralSerializer(serializer);
             return this;
@@ -122,7 +122,7 @@ namespace NetmqRouter.BusinessLogic
 
         #region Routing
 
-        public MessageRouter RegisterRoute(string routeName, Type dataType)
+        public IMessageRouter RegisterRoute(string routeName, Type dataType)
         {
             _dataContractBuilder.RegisterRoute(new Route(routeName, dataType));
             return this;
@@ -132,7 +132,7 @@ namespace NetmqRouter.BusinessLogic
 
         #region Subscription
 
-        public MessageRouter RegisterSubscriber<T>(T subscriber)
+        public IMessageRouter RegisterSubscriber<T>(T subscriber)
         {
             ClassAnalyzer
                 .AnalyzeClass(subscriber)
@@ -142,28 +142,28 @@ namespace NetmqRouter.BusinessLogic
             return this;
         }
 
-        public MessageRouter RegisterSubscriber(string routeName, Action action)
+        public IMessageRouter RegisterSubscriber(string routeName, Action action)
         {
             var subscriber = Subsriber.Create(routeName, action);
             _dataContractBuilder.RegisterSubscriber(subscriber);
             return this;
         }
 
-        public MessageRouter RegisterSubscriber<T>(string routeName, Action<T> action)
+        public IMessageRouter RegisterSubscriber<T>(string routeName, Action<T> action)
         {
             var subscriber = Subsriber.Create(routeName, action);
             _dataContractBuilder.RegisterSubscriber(subscriber);
             return this;
         }
 
-        public MessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action)
+        public IMessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action)
         {
             var subscriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
             _dataContractBuilder.RegisterSubscriber(subscriber);
             return this;
         }
 
-        public MessageRouter RegisterSubscriber<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action)
+        public IMessageRouter RegisterSubscriber<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action)
         {
             var subscriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
             _dataContractBuilder.RegisterSubscriber(subscriber);

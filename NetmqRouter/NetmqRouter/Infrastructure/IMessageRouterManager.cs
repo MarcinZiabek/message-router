@@ -4,9 +4,9 @@ namespace NetmqRouter.Infrastructure
 {
     public interface IMessageRouterManager
     {
-        MessageRouter StartRouting();
-        MessageRouter StopRouting();
+        IMessageRouter StartRouting();
+        IMessageRouter StopRouting();
 
-        MessageRouter Disconnect();
+        IMessageRouter Disconnect();
     }
 }

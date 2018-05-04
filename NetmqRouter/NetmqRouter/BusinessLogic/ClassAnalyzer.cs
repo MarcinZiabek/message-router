@@ -41,7 +41,7 @@ namespace NetmqRouter.BusinessLogic
             var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
 
             if(responseRoute != null && route == null)
-                throw new NetmqRouterException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assgined.");
+                throw new NetmqRouterException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assigned.");
 
             if (route == null)
                 return null;

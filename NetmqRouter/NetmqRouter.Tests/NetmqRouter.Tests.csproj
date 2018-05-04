@@ -82,6 +82,7 @@
     <Compile Include="Serialization\BasicTextSerializerTests.cs" />
     <Compile Include="Serialization\JsonObjectSerializerTests.cs" />
     <Compile Include="Serialization\RawDataSerializerTests.cs" />
+    <Compile Include="Serialization\XmlSerializationTests.cs" />
     <Compile Include="Workers\MessageDeserializerTests.cs" />
     <Compile Include="Workers\MessageHandlerTests.cs" />
     <Compile Include="Workers\MessageReceiverTests.cs" />

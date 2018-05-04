@@ -44,7 +44,7 @@ namespace NetmqRouter.Tests
 
             router.SendMessage("TestRoute", "test");
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
             router
                 .StopRouting()

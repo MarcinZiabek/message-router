@@ -40,7 +40,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             dataContract.RegisterSerializer(serializer.Object);
 
             // act
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 dataContract.RegisterSerializer(serializer2.Object);
             });
@@ -90,7 +90,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             dataContract.RegisterGeneralSerializer(serializer.Object);
 
             // act
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 dataContract.RegisterGeneralSerializer(serializer2.Object);
             });
@@ -159,7 +159,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             var route = new Route("BasicRoute", typeof(string));
 
             // act
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 dataContract.RegisterRoute(route);
             });
@@ -176,7 +176,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             // act
             dataContract.RegisterRoute(new Route("BasicRoute", typeof(string)));
 
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 dataContract.RegisterRoute(new Route("BasicRoute", typeof(int)));
             });
@@ -237,7 +237,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             var subscriber = new Subsriber(route, null, _ => null);
 
             // act
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 dataContract.RegisterSubscriber(subscriber);
             });
@@ -258,7 +258,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             dataContract.RegisterRoute(incomingRoute);
 
             // act
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 dataContract.RegisterSubscriber(subscriber);
             });

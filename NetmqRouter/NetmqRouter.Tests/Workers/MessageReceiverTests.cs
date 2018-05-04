@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using System;
+using Moq;
+using NetmqRouter.Exceptions;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 using NetmqRouter.Workers;
@@ -53,6 +55,23 @@ namespace NetmqRouter.Tests.Workers
             Assert.AreEqual(message, messageFromEvent);
 
             connection.Verify(x => x.TryReceiveMessage(out message), Times.Once);
+        }
+
+        [Test]
+        public void OnException()
+        {
+            // arrange
+            var connection = new Mock<IConnection>();
+            SerializedMessage message;
+            connection.Setup(x => x.TryReceiveMessage(out message)).Throws<Exception>();
+
+            var worker = new MessageReveiver(connection.Object);
+
+            // assert
+            Assert.Throws<ConnectionException>(() =>
+            {
+                worker.DoWork();
+            });
         }
     }
 }

@@ -87,7 +87,7 @@ namespace NetmqRouter.Tests.BusinessLogic
         public void HandleMethodWithRouteResponseAttributeButwithoutBasicRoute()
         {
             var subscriber = new ExampleSubscriberWithOutcomingRouteButWithoutIcoming();
-            Assert.Throws<NetmqRouterException>(() => { ClassAnalyzer.AnalyzeClass(subscriber); });
+            Assert.Throws<ConfigurationException>(() => { ClassAnalyzer.AnalyzeClass(subscriber); });
         }
 
         #endregion
@@ -279,7 +279,7 @@ namespace NetmqRouter.Tests.BusinessLogic
         {
             var subscriber = new ExampleSubscriberRouteWithMoreThanOneArgument();
 
-            Assert.Throws<NetmqRouterException>(() =>
+            Assert.Throws<ConfigurationException>(() =>
             {
                 ClassAnalyzer.AnalyzeClass(subscriber);
             });

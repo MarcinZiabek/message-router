@@ -1,7 +1,7 @@
 ﻿using NetmqRouter.Models;
 using NetMQ;
 
-namespace NetmqRouter
+namespace NetmqRouter.Helpers
 {
     internal static class SocketExtensions
     {

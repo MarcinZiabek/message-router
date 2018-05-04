@@ -7,7 +7,7 @@ using NetMQ.Sockets;
 
 namespace NetmqRouter.BusinessLogic
 {
-    public class MessageRouter : IExceptionSource, IDisposable
+    public class MessageRouter : IMessageRouter
     {
         private readonly IDataContractBuilder _dataContractBuilder = new DataContractBuilder();
         private readonly IConnection _connection;
@@ -54,6 +54,14 @@ namespace NetmqRouter.BusinessLogic
         public MessageRouter Disconnect()
         {
             _connection.Disconnect();
+            return this;
+        }
+
+        public MessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes)
+        {
+            _numberOfSerializationWorkes = numberOfSerializationWorkes;
+            _numberOfHandlingWorkes = numberOfHandlingWorkes;
+
             return this;
         }
 
@@ -124,7 +132,7 @@ namespace NetmqRouter.BusinessLogic
 
         #region Subscription
 
-        public MessageRouter Subscribe<T>(T subscriber)
+        public MessageRouter RegisterSubscriber<T>(T subscriber)
         {
             ClassAnalyzer
                 .AnalyzeClass(subscriber)
@@ -134,9 +142,23 @@ namespace NetmqRouter.BusinessLogic
             return this;
         }
 
+        public MessageRouter RegisterSubscriber(string routeName, Action action)
+        {
+            var subscriber = Subsriber.Create(routeName, action);
+            _dataContractBuilder.RegisterSubscriber(subscriber);
+            return this;
+        }
+
         public MessageRouter RegisterSubscriber<T>(string routeName, Action<T> action)
         {
             var subscriber = Subsriber.Create(routeName, action);
+            _dataContractBuilder.RegisterSubscriber(subscriber);
+            return this;
+        }
+
+        public MessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action)
+        {
+            var subscriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
             _dataContractBuilder.RegisterSubscriber(subscriber);
             return this;
         }
@@ -153,14 +175,6 @@ namespace NetmqRouter.BusinessLogic
         #region Messaging
 
         internal void SendMessage(Message message) => _dataFlowManager.SendMessage(message);
-
-        public MessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes)
-        {
-            _numberOfSerializationWorkes = numberOfSerializationWorkes;
-            _numberOfHandlingWorkes = numberOfHandlingWorkes;
-
-            return this;
-        }
 
         public void SendMessage(string routeName)
         {

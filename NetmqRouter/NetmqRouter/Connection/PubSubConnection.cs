@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NetmqRouter.Helpers;
 using NetmqRouter.Infrastructure;
 using NetmqRouter.Models;
 using NetMQ.Sockets;

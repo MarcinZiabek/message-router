@@ -2,12 +2,8 @@
 
 namespace NetmqRouter.Infrastructure
 {
-    public interface IMessageRouter : IDisposable
+    public interface IMessageRouter : IMessageRouterManager, IMessageRouterConfiguration, IMessageSender, IExceptionSource, IDisposable
     {
-        IMessageRouter Subscribe<T>(T subscriber);
 
-        IMessageRouter StartRouting();
-        IMessageRouter StopRouting();
-        IMessageRouter Disconnect();
     }
 }

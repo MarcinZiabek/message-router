@@ -11,7 +11,7 @@ namespace NetmqRouter.Tests
     [TestFixture]
     public class MessagesRouterTests
     {
-        private const string Address = "tcp://localhost:50003";
+        private const string Address = "tcp://localhost:50000";
 
         class ExampleSubscriber
         {
@@ -38,11 +38,10 @@ namespace NetmqRouter.Tests
             var router = MessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
                 .RegisterTypeSerializerFor(new BasicTextTypeSerializer())
+                .RegisterGeneralSerializerFor(new JsonObjectSerializer())
                 .RegisterRoute("TestRoute", typeof(string))
-                .Subscribe(subscriber)
+                .RegisterSubscriber(subscriber)
                 .StartRouting();
-
-            router.SendMessage("TestRoute", "test");
 
             await Task.Delay(TimeSpan.FromSeconds(3));
 

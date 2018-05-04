@@ -2,7 +2,7 @@
 
 namespace NetmqRouter.Infrastructure
 {
-    internal interface IExceptionSource
+    public interface IExceptionSource
     {
         event Action<Exception> OnException;
     }

@@ -11,21 +11,40 @@ namespace NetmqRouter.Tests
     [TestFixture]
     public class MessagesRouterTests
     {
-        private const string Address = "tcp://localhost:50000";
+        private const string Address = "tcp://localhost:6000";
+
+        // will be serialized as JSON
+        class CustomPayload
+        {
+            public string Text { get; set; }
+            public int Number { get; set; }
+
+            public CustomPayload(string text, int number)
+            {
+                Text = text;
+                Number = number;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is CustomPayload o &&
+                       this.Number == o.Number;
+            }
+        }
 
         class ExampleSubscriber
         {
-            public string PassedValue = "";
+            public CustomPayload PassedValue;
 
             [Route("TestRoute")]
-            public void Test(string value)
+            public void Test(CustomPayload value)
             {
                 PassedValue = value;
             }
         }
 
         [Test]
-        public async Task IncomingRouteNameWithoutBaseRoute()
+        public async Task RoutingTest()
         {
             var publisherSocket = new PublisherSocket();
             publisherSocket.Bind(Address);
@@ -37,11 +56,19 @@ namespace NetmqRouter.Tests
 
             var router = MessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
-                .RegisterTypeSerializerFor(new BasicTextTypeSerializer())
-                .RegisterGeneralSerializerFor(new JsonObjectSerializer())
-                .RegisterRoute("TestRoute", typeof(string))
+                .RegisterTypeSerializer(new RawDataTypeSerializer())
+                .RegisterTypeSerializer(new BasicTextTypeSerializer())
+                .RegisterGeneralSerializer(new JsonObjectSerializer())
+                .RegisterRoute("TestRoute", typeof(CustomPayload))
                 .RegisterSubscriber(subscriber)
                 .StartRouting();
+
+            router.SendMessage("TestRoute", new CustomPayload("Hellow world", 123));
+
+            router.OnException += exception =>
+            {
+                // handle any exception
+            };
 
             await Task.Delay(TimeSpan.FromSeconds(3));
 
@@ -49,7 +76,8 @@ namespace NetmqRouter.Tests
                 .StopRouting()
                 .Disconnect();
 
-            Assert.AreEqual("test", subscriber.PassedValue);
+            var expectedValue = new CustomPayload("Hellow world", 123);
+            Assert.AreEqual(expectedValue, subscriber.PassedValue);
         }
     }
 }

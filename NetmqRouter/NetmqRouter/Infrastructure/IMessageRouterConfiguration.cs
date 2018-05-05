@@ -9,8 +9,8 @@ namespace NetmqRouter.Infrastructure
 
         IMessageRouter RegisterRoute(string routeName, Type dataType);
 
-        IMessageRouter RegisterTypeSerializerFor<T>(ITypeSerializer<T> typeSerializer);
-        IMessageRouter RegisterGeneralSerializerFor<T>(IGeneralSerializer<T> serializer);
+        IMessageRouter RegisterTypeSerializer<T>(ITypeSerializer<T> typeSerializer);
+        IMessageRouter RegisterGeneralSerializer<T>(IGeneralSerializer<T> serializer);
 
         IMessageRouter RegisterSubscriber<T>(T subscriber);
         IMessageRouter RegisterSubscriber(string routeName, Action action);

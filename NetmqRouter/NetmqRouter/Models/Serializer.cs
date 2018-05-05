@@ -20,14 +20,14 @@ namespace NetmqRouter.Models
 
         }
 
-        public static Serializer FromTypeSerializer<T>(ITypeSerializer<T> typeSerializer)
+        public static Serializer FromTypeSerializer<T>(ITypeSerializer<T> serializer)
         {
             return new Serializer()
             {
                 TargetType = typeof(T),
                 IsGeneral = false,
-                SerializeFunction = obj => typeSerializer.Serialize((T)obj),
-                DeserializeFunction = (data, _) => typeSerializer.Deserialize(data)
+                SerializeFunction = obj => serializer.Serialize((T)obj),
+                DeserializeFunction = (data, _) => serializer.Deserialize(data)
             };
         }
 
@@ -52,7 +52,7 @@ namespace NetmqRouter.Models
                 TargetType = targetType,
                 IsGeneral = false,
                 SerializeFunction = Serialize,
-                DeserializeFunction = (data, _) => Deserialize(data)
+                DeserializeFunction = DeserializeFunction
             };
         }
     }

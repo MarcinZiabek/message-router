@@ -59,7 +59,7 @@ namespace NetmqRouter.BusinessLogic
 
             Serializer FindSerializer(List<Serializer> serializers, Type targetType)
             {
-                var serializer = serializers.FirstOrDefault(x => targetType == x.TargetType);
+                var serializer = serializers.FirstOrDefault(x => !x.IsGeneral && targetType == x.TargetType);
 
                 if (serializer != null)
                     return serializer;

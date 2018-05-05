@@ -106,13 +106,13 @@ namespace NetmqRouter.BusinessLogic
 
         #region Serialization
 
-        public IMessageRouter RegisterTypeSerializerFor<T>(ITypeSerializer<T> typeSerializer)
+        public IMessageRouter RegisterTypeSerializer<T>(ITypeSerializer<T> typeSerializer)
         {
             _dataContractBuilder.RegisterSerializer(typeSerializer);
             return this;
         }
 
-        public IMessageRouter RegisterGeneralSerializerFor<T>(IGeneralSerializer<T> serializer)
+        public IMessageRouter RegisterGeneralSerializer<T>(IGeneralSerializer<T> serializer)
         {
             _dataContractBuilder.RegisterGeneralSerializer(serializer);
             return this;

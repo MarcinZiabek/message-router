@@ -64,7 +64,7 @@ namespace NetmqRouter.BusinessLogic
                 if (serializer != null)
                     return serializer;
 
-                serializer = serializers.First(x => x.IsGeneral && targetType.IsSubclassOf(x.TargetType));
+                serializer = serializers.First(x => x.IsGeneral && targetType.IsSameOrSubclass(x.TargetType));
                 return serializer.ToTypeSerializer(targetType);
             }
         }

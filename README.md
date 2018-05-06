@@ -1,8 +1,3 @@
----
-title: NetmqRouter
-description: The best way to route messages across your NetMQ system.
----
-
 What is it and what is it good for?
 -----------------------------------
 

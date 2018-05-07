@@ -11,3 +11,8 @@
 /NetmqRouter/Playground/obj/Debug
 /NetmqRouter/Playground/bin/Debug
 /NetmqRouter/.idea/.idea.NetmqRouter
+/NetmqRouter/.idea/.idea.MessageRouter
+/NetmqRouter/MessageRouter/bin/Release
+/NetmqRouter/MessageRouter/obj
+/NetmqRouter/MessageRouter.Tests/bin/Release
+/NetmqRouter/MessageRouter.Tests/obj

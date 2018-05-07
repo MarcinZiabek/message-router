@@ -90,9 +90,9 @@
     <Compile Include="Workers\MessageSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetmqRouter\NetmqRouter.csproj">
+    <ProjectReference Include="..\MessageRouter\MessageRouter.csproj">
       <Project>{F5DC173A-1CE4-4295-8C4E-D1AC844B07FF}</Project>
-      <Name>NetmqRouter</Name>
+      <Name>MessageRouter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

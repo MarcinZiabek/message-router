@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetmqRouter", "NetmqRouter\NetmqRouter.csproj", "{F5DC173A-1CE4-4295-8C4E-D1AC844B07FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageRouter", "MessageRouter\MessageRouter.csproj", "{F5DC173A-1CE4-4295-8C4E-D1AC844B07FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetmqRouter.Tests", "NetmqRouter.Tests\NetmqRouter.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageRouter.Tests", "MessageRouter.Tests\MessageRouter.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

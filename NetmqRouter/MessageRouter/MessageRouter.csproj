@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+    <Company>MarcinZiabek</Company>
+    <Authors>Marcin Ziąbek</Authors>
+    <Version>0.9.0</Version>
+    <PackageId>MarcinZiabek.MessageRouter</PackageId>
+    <PackageIconUrl>https://github.com/zeromq/netmq/blob/master/img/NetMQ.ico</PackageIconUrl>
+    <PackageProjectUrl>https://marcinziabek.github.io/netmq-router/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarcinZiabek/netmq-router</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>netmq zeromq routing message queue messages routing serialization communication router</PackageTags>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NetMQ" Version="4.0.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+</Project>

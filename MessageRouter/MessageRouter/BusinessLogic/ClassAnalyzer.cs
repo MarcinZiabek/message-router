@@ -23,7 +23,7 @@ namespace MessageRouter.BusinessLogic
 
         private static string GetBaseRoute(Type type)
         {
-            var attribute = type.GetCustomAttributes(typeof(BaseRouteAttribute)).SingleOrDefault();
+            var attribute = type.GetTypeInfo().GetCustomAttributes(typeof(BaseRouteAttribute)).SingleOrDefault();
             return (attribute as BaseRouteAttribute)?.Name;
         }
 
@@ -31,15 +31,16 @@ namespace MessageRouter.BusinessLogic
         {
             return _object
                 .GetType()
-                .GetMethods()
+                .GetTypeInfo()
+                .DeclaredMethods
                 .Select(x => AnalyzeMethod(_object, x))
                 .Where(x => x != null);
         }
 
         private static Subsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
         {
-            var route = Attribute.GetCustomAttribute(methodInfo, typeof(RouteAttribute)) as RouteAttribute;
-            var responseRoute = Attribute.GetCustomAttribute(methodInfo, typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
+            var route = methodInfo.GetCustomAttribute(typeof(RouteAttribute)) as RouteAttribute;
+            var responseRoute = methodInfo.GetCustomAttribute(typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
 
             if(responseRoute != null && route == null)
                 throw new ConfigurationException($"Method {methodInfo.Name} with RouteResponse attribute does not have Route attribute assigned.");

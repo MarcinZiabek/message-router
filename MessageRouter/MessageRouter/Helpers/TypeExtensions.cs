@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace MessageRouter.Helpers
 {
@@ -6,7 +7,7 @@ namespace MessageRouter.Helpers
     {
         public static bool IsSameOrSubclass(this Type type, Type targetType)
         {
-            return (type == targetType) || type.IsSubclassOf(targetType);
+            return (type == targetType) || type.GetTypeInfo().IsSubclassOf(targetType);
         }
     }
 }

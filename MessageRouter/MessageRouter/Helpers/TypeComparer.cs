@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MessageRouter.Helpers
 {
@@ -15,10 +16,10 @@ namespace MessageRouter.Helpers
             if (typeA == null || typeB == null)
                 return 0;
 
-            if (typeA.IsSubclassOf(typeB))
+            if (typeA.GetTypeInfo().IsSubclassOf(typeB))
                 return 1;
 
-            if (typeB.IsSubclassOf(typeA))
+            if (typeB.GetTypeInfo().IsSubclassOf(typeA))
                 return -1;
 
             return 0;

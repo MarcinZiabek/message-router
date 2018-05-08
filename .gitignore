@@ -16,3 +16,15 @@
 /NetmqRouter/MessageRouter/obj
 /NetmqRouter/MessageRouter.Tests/bin/Release
 /NetmqRouter/MessageRouter.Tests/obj
+/MessageRouter/.vs/MessageRouter/v15
+/MessageRouter/MessageRouter/bin/Debug
+/MessageRouter/MessageRouter/obj
+/MessageRouter/MessageRouter.Json/obj
+/MessageRouter/MessageRouter.NetMQ/bin/Debug
+/MessageRouter/MessageRouter.NetMQ/obj
+/MessageRouter/MessageRouter.Tests/bin/Debug
+/MessageRouter/MessageRouter.Tests/obj/Debug
+/MessageRouter/MessageRouter.Xml/bin/Debug
+/MessageRouter/MessageRouter.Xml/obj
+/MessageRouter/packages
+/MessageRouter/MessageRouter.Json/bin/Debug

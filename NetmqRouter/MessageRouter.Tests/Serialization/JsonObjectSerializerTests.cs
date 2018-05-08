@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using MessageRouter.Json;
 using MessageRouter.Serialization;
 using NUnit.Framework;
 

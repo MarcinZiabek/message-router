@@ -3,7 +3,7 @@ using System.Text;
 using MessageRouter.Infrastructure;
 using Newtonsoft.Json;
 
-namespace MessageRouter.Serialization
+namespace MessageRouter.Json
 {
     /// <summary>
     /// This class can be used for serialization of any object to the JSON format.

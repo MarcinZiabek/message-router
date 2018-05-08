@@ -2,7 +2,6 @@
 using System.Linq;
 using MessageRouter.Infrastructure;
 using MessageRouter.Models;
-using NetMQ.Sockets;
 
 namespace MessageRouter.BusinessLogic
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using MessageRouter.Serialization;
+using MessageRouter.Xml;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.Serialization

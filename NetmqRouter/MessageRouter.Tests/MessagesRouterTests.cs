@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MessageRouter.Attributes;
+using MessageRouter.Json;
 using MessageRouter.NetMQ;
 using MessageRouter.Serialization;
 using NetMQ.Sockets;

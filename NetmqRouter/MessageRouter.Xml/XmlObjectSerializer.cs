@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using MessageRouter.Infrastructure;
 
-namespace MessageRouter.Serialization
+namespace MessageRouter.Xml
 {
     /// <summary>
     /// This class can be used for serialization of any object to the XML format.

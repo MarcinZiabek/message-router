@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
-using NetmqRouter.Infrastructure;
+using MessageRouter.Infrastructure;
 using Newtonsoft.Json;
 
-namespace NetmqRouter.Serialization
+namespace MessageRouter.Serialization
 {
     /// <summary>
     /// This class can be used for serialization of any object to the JSON format.

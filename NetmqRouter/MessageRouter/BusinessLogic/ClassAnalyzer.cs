@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NetmqRouter.Attributes;
-using NetmqRouter.Exceptions;
-using NetmqRouter.Models;
+using MessageRouter.Attributes;
+using MessageRouter.Exceptions;
+using MessageRouter.Models;
 
-namespace NetmqRouter.BusinessLogic
+namespace MessageRouter.BusinessLogic
 {
     internal class ClassAnalyzer
     {

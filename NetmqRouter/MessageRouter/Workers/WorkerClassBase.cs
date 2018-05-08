@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NetmqRouter.Infrastructure;
+using MessageRouter.Infrastructure;
 
-namespace NetmqRouter.Workers
+namespace MessageRouter.Workers
 {
     /// <summary>
     /// This class can be used for creating any worker class that needs to perform repeating task.

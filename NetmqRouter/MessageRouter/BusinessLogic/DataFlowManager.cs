@@ -1,9 +1,9 @@
 ﻿using System;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
-using NetmqRouter.Workers;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
+using MessageRouter.Workers;
 
-namespace NetmqRouter.BusinessLogic
+namespace MessageRouter.BusinessLogic
 {
     internal class DataFlowManager : IExceptionSource
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetmqRouter.Helpers;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+using MessageRouter.Helpers;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 
-namespace NetmqRouter.BusinessLogic
+namespace MessageRouter.BusinessLogic
 {
     internal class DataContractManager : IDataContractOperations, IExceptionSource
     {

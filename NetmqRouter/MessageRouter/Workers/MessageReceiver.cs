@@ -1,9 +1,9 @@
 ﻿using System;
-using NetmqRouter.Exceptions;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+using MessageRouter.Exceptions;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 
-namespace NetmqRouter.Workers
+namespace MessageRouter.Workers
 {
     /// <summary>
     /// This worker is responsible for receiving messages from the input socket.

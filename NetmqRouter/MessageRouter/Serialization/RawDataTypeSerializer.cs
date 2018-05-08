@@ -1,6 +1,6 @@
-﻿using NetmqRouter.Infrastructure;
+﻿using MessageRouter.Infrastructure;
 
-namespace NetmqRouter.Serialization
+namespace MessageRouter.Serialization
 {
     /// <summary>
     /// Basic typeSerializer that pass byte arrays "as is".

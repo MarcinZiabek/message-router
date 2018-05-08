@@ -1,9 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
+using MessageRouter.BusinessLogic;
+using MessageRouter.Exceptions;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 using Moq;
-using NetmqRouter.BusinessLogic;
-using NetmqRouter.Exceptions;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
 using NUnit.Framework;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using NetmqRouter.Infrastructure;
+using MessageRouter.Infrastructure;
 
-namespace NetmqRouter.Serialization
+namespace MessageRouter.Serialization
 {
     /// <summary>
     /// This class can be used for text serialization.

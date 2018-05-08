@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using NetmqRouter.Helpers;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+using MessageRouter.Helpers;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 using NetMQ.Sockets;
 
-namespace NetmqRouter.Connection
+namespace MessageRouter.NetMQ
 {
     public class PushPullConnection : IConnection
     {

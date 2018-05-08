@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter.Helpers
+namespace MessageRouter.Helpers
 {
     internal static class TypeExtensions
     {

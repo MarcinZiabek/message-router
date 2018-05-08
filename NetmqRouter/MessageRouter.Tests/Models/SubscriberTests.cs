@@ -1,5 +1,5 @@
 ﻿using System;
-using NetmqRouter.Models;
+using MessageRouter.Models;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.Models

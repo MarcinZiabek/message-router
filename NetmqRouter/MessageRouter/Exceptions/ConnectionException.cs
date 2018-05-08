@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter.Exceptions
+namespace MessageRouter.Exceptions
 {
     public class ConnectionException : NetmqRouterException
     {

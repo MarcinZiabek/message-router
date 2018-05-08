@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NetmqRouter.Models;
+using MessageRouter.Models;
 
-namespace NetmqRouter.Infrastructure
+namespace MessageRouter.Infrastructure
 {
     internal interface IDataContractAccess
     {

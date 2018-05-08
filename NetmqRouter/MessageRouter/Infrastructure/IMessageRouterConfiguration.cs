@@ -1,7 +1,6 @@
 ﻿using System;
-using NetmqRouter.BusinessLogic;
 
-namespace NetmqRouter.Infrastructure
+namespace MessageRouter.Infrastructure
 {
     public interface IMessageRouterConfiguration
     {

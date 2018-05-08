@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NetmqRouter.Helpers;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+using MessageRouter.Helpers;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 using NetMQ.Sockets;
 
-namespace NetmqRouter.Connection
+namespace MessageRouter.NetMQ
 {
     internal class PubSubConnection : IConnection
     {

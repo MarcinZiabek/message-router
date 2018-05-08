@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter.Infrastructure
+namespace MessageRouter.Infrastructure
 {
     /// <summary>
     /// This interface should be used for the creation of custom data serializers.

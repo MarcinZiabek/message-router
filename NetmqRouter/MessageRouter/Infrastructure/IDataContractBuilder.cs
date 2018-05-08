@@ -1,6 +1,6 @@
-﻿using NetmqRouter.Models;
+﻿using MessageRouter.Models;
 
-namespace NetmqRouter.Infrastructure
+namespace MessageRouter.Infrastructure
 {
     internal interface IDataContractBuilder : IDataContractAccess
     {

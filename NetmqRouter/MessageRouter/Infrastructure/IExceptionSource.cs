@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetmqRouter.Infrastructure
+namespace MessageRouter.Infrastructure
 {
     public interface IExceptionSource
     {

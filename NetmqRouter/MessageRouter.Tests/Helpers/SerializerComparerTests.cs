@@ -1,7 +1,7 @@
-﻿using Moq;
-using NetmqRouter.Helpers;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+﻿using MessageRouter.Helpers;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
+using Moq;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.Helpers

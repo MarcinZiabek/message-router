@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetmqRouter.Attributes;
-using NetmqRouter.BusinessLogic;
-using NetmqRouter.Serialization;
+using MessageRouter.Attributes;
+using MessageRouter.NetMQ;
+using MessageRouter.Serialization;
 using NetMQ.Sockets;
 using NUnit.Framework;
 
@@ -54,7 +54,7 @@ namespace NetmqRouter.Tests
 
             var subscriber = new ExampleSubscriber();
 
-            var router = MessageRouter
+            var router = NetmqMessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
                 .RegisterTypeSerializer(new RawDataTypeSerializer())
                 .RegisterTypeSerializer(new BasicTextTypeSerializer())

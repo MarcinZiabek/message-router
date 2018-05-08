@@ -1,4 +1,4 @@
-﻿namespace NetmqRouter.Models
+﻿namespace MessageRouter.Models
 {
     public struct SerializedMessage
     {

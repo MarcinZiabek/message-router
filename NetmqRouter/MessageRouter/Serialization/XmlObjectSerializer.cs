@@ -3,10 +3,9 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using NetmqRouter.Infrastructure;
-using Newtonsoft.Json;
+using MessageRouter.Infrastructure;
 
-namespace NetmqRouter.Serialization
+namespace MessageRouter.Serialization
 {
     /// <summary>
     /// This class can be used for serialization of any object to the XML format.

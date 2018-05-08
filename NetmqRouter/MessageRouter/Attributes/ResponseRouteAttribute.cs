@@ -1,7 +1,7 @@
 ﻿using System;
-using NetmqRouter.Exceptions;
+using MessageRouter.Exceptions;
 
-namespace NetmqRouter.Attributes
+namespace MessageRouter.Attributes
 {
     /// <summary>
     /// This attribute can be used for annotating any method that should act as a route.

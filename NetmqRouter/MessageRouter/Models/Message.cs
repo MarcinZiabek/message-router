@@ -1,4 +1,4 @@
-﻿namespace NetmqRouter.Models
+﻿namespace MessageRouter.Models
 {
     internal class Message
     {

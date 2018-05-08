@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NetmqRouter.Models;
+using MessageRouter.Models;
 
-namespace NetmqRouter.Helpers
+namespace MessageRouter.Helpers
 {
     /// <summary>
     /// This class can be used for comparing serializers. Rules: a general serializer is always considered

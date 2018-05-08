@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NetmqRouter.Helpers
+namespace MessageRouter.Helpers
 {
     /// <summary>
     /// This class can be used for comparing types in order to create list of classes

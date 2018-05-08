@@ -1,4 +1,4 @@
-﻿namespace NetmqRouter.Infrastructure
+﻿namespace MessageRouter.Infrastructure
 {
     internal interface IWorkerTask
     {

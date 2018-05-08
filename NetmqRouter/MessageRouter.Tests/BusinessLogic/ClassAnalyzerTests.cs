@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using NetmqRouter.Attributes;
-using NetmqRouter.BusinessLogic;
-using NetmqRouter.Exceptions;
+using MessageRouter.Attributes;
+using MessageRouter.BusinessLogic;
+using MessageRouter.Exceptions;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.BusinessLogic

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NetmqRouter.Models;
+using MessageRouter.Models;
 
-namespace NetmqRouter.Infrastructure
+namespace MessageRouter.Infrastructure
 {
     /// <summary>
     /// This interface should be used for implementing custom communication layer.

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MessageRouter.BusinessLogic;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 using Moq;
-using NetmqRouter.BusinessLogic;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.BusinessLogic

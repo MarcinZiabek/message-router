@@ -1,8 +1,8 @@
 ﻿using System;
-using NetmqRouter.Exceptions;
-using NetmqRouter.Infrastructure;
+using MessageRouter.Exceptions;
+using MessageRouter.Infrastructure;
 
-namespace NetmqRouter.Models
+namespace MessageRouter.Models
 {
     internal class Serializer
     {

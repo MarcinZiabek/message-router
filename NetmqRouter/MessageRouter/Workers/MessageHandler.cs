@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using NetmqRouter.Exceptions;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+using MessageRouter.Exceptions;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 
-namespace NetmqRouter.Workers
+namespace MessageRouter.Workers
 {
     /// <summary>
     /// This worker is responsible for handling all messages.

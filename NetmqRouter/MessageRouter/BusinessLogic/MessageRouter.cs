@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using NetmqRouter.Connection;
-using NetmqRouter.Infrastructure;
-using NetmqRouter.Models;
+using MessageRouter.Infrastructure;
+using MessageRouter.Models;
 using NetMQ.Sockets;
 
-namespace NetmqRouter.BusinessLogic
+namespace MessageRouter.BusinessLogic
 {
     public class MessageRouter : IMessageRouter
     {
@@ -63,43 +62,6 @@ namespace NetmqRouter.BusinessLogic
             _numberOfHandlingWorkes = numberOfHandlingWorkes;
 
             return this;
-        }
-
-        #endregion
-
-        #region Connection
-
-        public static IMessageRouter WithPubSubConnecton(PublisherSocket publisherSocket, SubscriberSocket subscriberSocket)
-        {
-            var connection = new PubSubConnection(publisherSocket, subscriberSocket);
-            return new MessageRouter(connection);
-        }
-
-        public static IMessageRouter WithPubSubConnecton(string publishAddress, string subscribeAddress)
-        {
-            return WithPubSubConnecton(new PublisherSocket(publishAddress), new SubscriberSocket(subscribeAddress));
-        }
-
-        public static IMessageRouter WithPushPullConnection(PushSocket pushSocket, PullSocket pullSocket)
-        {
-            var connection = new PushPullConnection(pushSocket, pullSocket);
-            return new MessageRouter(connection);
-        }
-
-        public static IMessageRouter WithPushPullConnection(string pushAddress, string pullAddress)
-        {
-            return WithPushPullConnection(new PushSocket(pushAddress), new PullSocket(pullAddress));
-        }
-
-        public static IMessageRouter WithPairConnection(PairSocket socket)
-        {
-            var connection = new PairConnection(socket);
-            return new MessageRouter(connection);
-        }
-
-        public static IMessageRouter WithPairConnection(string address)
-        {
-            return WithPairConnection(new PairSocket(address));
         }
 
         #endregion

@@ -1,11 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <Description>A JSON serialization support for the Message.Router library.</Description>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <PackageTags>netmq zeromq routing message queue messages routing serialization communication router JSON json</PackageTags>
+    <RepositoryUrl>https://github.com/MarcinZiabek/message-router</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarcinZiabek/message-router/master/img/logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
+    <Company>MarcinZiabek</Company>
+    <Authors>Marcin Ziąbek</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Message.Router" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MessageRouter\MessageRouter.csproj" />
   </ItemGroup>
 </Project>

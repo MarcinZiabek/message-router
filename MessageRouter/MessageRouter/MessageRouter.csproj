@@ -4,9 +4,9 @@
     <LangVersion>7.2</LangVersion>
     <Company>MarcinZiabek</Company>
     <Authors>Marcin Ziąbek</Authors>
-    <Version>1.0.0</Version>
-    <PackageId>MarcinZiabek.MessageRouter</PackageId>
-    <PackageIconUrl>https://github.com/zeromq/netmq/blob/master/img/NetMQ.ico</PackageIconUrl>
+    <Version>1.0.1</Version>
+    <PackageId>Message.Router</PackageId>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarcinZiabek/message-router/master/img/logo.png</PackageIconUrl>
     <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MarcinZiabek/message-router</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

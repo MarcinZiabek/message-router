@@ -28,3 +28,12 @@
 /MessageRouter/MessageRouter.Xml/obj
 /MessageRouter/packages
 /MessageRouter/MessageRouter.Json/bin/Debug
+/MessageRouter/MessageRouter/bin/Release
+/MessageRouter/MessageRouter.Xml/bin/Release/netstandard1.3
+/MessageRouter/MessageRouter.Tests/bin/Release
+/MessageRouter/MessageRouter.Json/bin/Release/netstandard1.3
+/MessageRouter/MessageRouter.NetMQ/bin/Release/netstandard1.5
+/MessageRouter/MessageRouter.Tests/obj/Release
+/MessageRouter/MessageRouter.Json/bin/Release
+/MessageRouter/MessageRouter.NetMQ/bin/Release
+/MessageRouter/MessageRouter.Xml/bin/Release

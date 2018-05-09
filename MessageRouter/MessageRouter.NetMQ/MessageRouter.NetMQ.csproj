@@ -1,11 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <Company>MarcinZiabek</Company>
+    <Authors>Marcin Ziąbek</Authors>
+    <Description>A NetMQ support for the Message.Router library.</Description>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
+    <PackageTags>netmq zeromq routing message queue messages routing serialization communication router</PackageTags>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarcinZiabek/message-router/master/img/logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/MarcinZiabek/message-router</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MessageRouter\MessageRouter.csproj" />
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Message.Router" Version="1.0.0" />
     <PackageReference Include="NetMQ" Version="4.0.0.1" />
   </ItemGroup>
 </Project>

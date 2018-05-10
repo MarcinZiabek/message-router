@@ -10,11 +10,11 @@ namespace MessageRouter.BusinessLogic
     internal class DataContractBuilder : IDataContractBuilder, IDataContractAccess
     {
         private readonly List<Route> _routes = new List<Route>();
-        private readonly List<Subsriber> _subscribers = new List<Subsriber>();
+        private readonly List<Subscriber> _subscribers = new List<Subscriber>();
         private readonly List<Serializer> _serializers  = new List<Serializer>();
 
         public IReadOnlyList<Route> Routes => _routes;
-        public IReadOnlyList<Subsriber> Subscribers => _subscribers;
+        public IReadOnlyList<Subscriber> Subscribers => _subscribers;
         public IReadOnlyList<Serializer> Serializers => _serializers;
 
         public void RegisterSerializer<T>(ITypeSerializer<T> typeSerializer)
@@ -48,15 +48,15 @@ namespace MessageRouter.BusinessLogic
             _routes.Add(route);
         }
 
-        public void RegisterSubscriber(Subsriber subsriber)
+        public void RegisterSubscriber(Subscriber subscriber)
         {
-            if(!_routes.Contains(subsriber.Incoming))
+            if(!_routes.Contains(subscriber.Incoming))
                 throw new ConfigurationException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
 
-            if(subsriber.Outcoming != null && !_routes.Contains(subsriber.Outcoming))
+            if(subscriber.Outcoming != null && !_routes.Contains(subscriber.Outcoming))
                 throw new ConfigurationException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
 
-            _subscribers.Add(subsriber);
+            _subscribers.Add(subscriber);
         }
     }
 }

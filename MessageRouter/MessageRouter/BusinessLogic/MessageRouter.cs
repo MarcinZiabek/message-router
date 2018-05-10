@@ -93,40 +93,8 @@ namespace MessageRouter.BusinessLogic
 
         #region Subscription
 
-        public IMessageRouter RegisterSubscriber<T>(T subscriber)
+        public IMessageRouter RegisterSubscriber(Subscriber subscriber)
         {
-            ClassAnalyzer
-                .AnalyzeClass(subscriber)
-                .ToList()
-                .ForEach(_dataContractBuilder.RegisterSubscriber);
-
-            return this;
-        }
-
-        public IMessageRouter RegisterSubscriber(string routeName, Action action)
-        {
-            var subscriber = Subsriber.Create(routeName, action);
-            _dataContractBuilder.RegisterSubscriber(subscriber);
-            return this;
-        }
-
-        public IMessageRouter RegisterSubscriber<T>(string routeName, Action<T> action)
-        {
-            var subscriber = Subsriber.Create(routeName, action);
-            _dataContractBuilder.RegisterSubscriber(subscriber);
-            return this;
-        }
-
-        public IMessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action)
-        {
-            var subscriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
-            _dataContractBuilder.RegisterSubscriber(subscriber);
-            return this;
-        }
-
-        public IMessageRouter RegisterSubscriber<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action)
-        {
-            var subscriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
             _dataContractBuilder.RegisterSubscriber(subscriber);
             return this;
         }
@@ -135,27 +103,7 @@ namespace MessageRouter.BusinessLogic
 
         #region Messaging
 
-        internal void SendMessage(Message message) => _dataFlowManager.SendMessage(message);
-
-        public void SendMessage(string routeName)
-        {
-            SendMessage(new Message(routeName, null));
-        }
-
-        public void SendMessage(string routeName, byte[] data)
-        {
-            SendMessage(new Message(routeName, data));
-        }
-
-        public void SendMessage(string routeName, string text)
-        {
-            SendMessage(new Message(routeName, text));
-        }
-
-        public void SendMessage(string routeName, object _object)
-        {
-            SendMessage(new Message(routeName, _object));
-        }
+        public void SendMessage(Message message) => _dataFlowManager.SendMessage(message);
 
         #endregion
     }

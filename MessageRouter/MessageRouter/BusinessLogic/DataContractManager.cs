@@ -10,7 +10,7 @@ namespace MessageRouter.BusinessLogic
     internal class DataContractManager : IDataContractOperations, IExceptionSource
     {
         private readonly IReadOnlyDictionary<string, Route> _routes;
-        private readonly IReadOnlyDictionary<string, List<Subsriber>> _subscribers;
+        private readonly IReadOnlyDictionary<string, List<Subscriber>> _subscribers;
         private readonly IReadOnlyDictionary<Type, Serializer> _serializers;
 
         public event Action<Exception> OnException;
@@ -31,7 +31,7 @@ namespace MessageRouter.BusinessLogic
                     x => x);
         }
 
-        internal static IReadOnlyDictionary<string, List<Subsriber>> IndexSubscribers(IDataContractAccess dataContract)
+        internal static IReadOnlyDictionary<string, List<Subscriber>> IndexSubscribers(IDataContractAccess dataContract)
         {
             return dataContract
                 .Subscribers

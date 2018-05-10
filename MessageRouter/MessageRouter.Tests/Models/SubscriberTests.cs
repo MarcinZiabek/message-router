@@ -31,7 +31,7 @@ namespace NetmqRouter.Tests.Models
             Action<InputClass> action = x => isActionCalled = true;
 
             // act
-            var subsriber = Subsriber.Create(routeName, action);
+            var subsriber = Subscriber.Create(routeName, action);
             subsriber.Method(new InputClass());
 
             // assert
@@ -57,7 +57,7 @@ namespace NetmqRouter.Tests.Models
             };
 
             // act
-            var subsriber = Subsriber.Create(incomingRouteName, outcomingRouteName, action);
+            var subsriber = Subscriber.Create(incomingRouteName, outcomingRouteName, action);
             subsriber.Method(new InputClass());
 
             // assert

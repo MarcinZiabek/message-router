@@ -6,7 +6,7 @@ namespace MessageRouter.Infrastructure
     internal interface IDataContractAccess
     {
         IReadOnlyList<Route> Routes { get; }
-        IReadOnlyList<Subsriber> Subscribers { get; }
+        IReadOnlyList<Subscriber> Subscribers { get; }
         IReadOnlyList<Serializer> Serializers { get; }
     }
 }

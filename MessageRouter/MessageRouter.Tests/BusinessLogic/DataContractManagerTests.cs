@@ -67,12 +67,12 @@ namespace NetmqRouter.Tests.BusinessLogic
             var routeB = new Route("RouteB", typeof(int));
             var routeC = new Route("RouteC", typeof(void));
 
-            var subscriber1 = new Subsriber(routeA, null, _ => null);
-            var subscriber2 = new Subsriber(routeA, routeB, _ => null);
-            var subscriber3 = new Subsriber(routeC, null, _ => null);
-            var subscriber4 = new Subsriber(routeC, routeB, _ => null);
+            var subscriber1 = new Subscriber(routeA, null, _ => null);
+            var subscriber2 = new Subscriber(routeA, routeB, _ => null);
+            var subscriber3 = new Subscriber(routeC, null, _ => null);
+            var subscriber4 = new Subscriber(routeC, routeB, _ => null);
 
-            var subscribers = new List<Subsriber>()
+            var subscribers = new List<Subscriber>()
             {
                 subscriber1, subscriber2, subscriber3, subscriber4
             };
@@ -160,8 +160,8 @@ namespace NetmqRouter.Tests.BusinessLogic
             builder.RegisterRoute(routeD);
 
             // act
-            builder.RegisterSubscriber(new Subsriber(routeA, routeB, _ => null));
-            builder.RegisterSubscriber(new Subsriber(routeC, routeD, _ => null));
+            builder.RegisterSubscriber(new Subscriber(routeA, routeB, _ => null));
+            builder.RegisterSubscriber(new Subscriber(routeC, routeD, _ => null));
 
             var dataContract = new DataContractManager(builder);
 
@@ -196,9 +196,9 @@ namespace NetmqRouter.Tests.BusinessLogic
             var responseClass1 = new ClassB();
             var responseClass2 = new ClassB();
 
-            var subscriberA = new Subsriber(routeI, routeR1, _ => responseClass1);
-            var subscriberB = new Subsriber(routeI, null, _ => null);
-            var subscriberC = new Subsriber(routeI, routeR2, _ => responseClass2);
+            var subscriberA = new Subscriber(routeI, routeR1, _ => responseClass1);
+            var subscriberB = new Subscriber(routeI, null, _ => null);
+            var subscriberC = new Subscriber(routeI, routeR2, _ => responseClass2);
 
             var routes = new List<Route>
             {
@@ -211,7 +211,7 @@ namespace NetmqRouter.Tests.BusinessLogic
                 Serializer.FromTypeSerializer(serializerMockB.Object)
             };
 
-            var subscribers = new List<Subsriber>
+            var subscribers = new List<Subscriber>
             {
                 subscriberA, subscriberB, subscriberC
             };

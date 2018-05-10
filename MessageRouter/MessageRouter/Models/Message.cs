@@ -1,13 +1,13 @@
 ﻿namespace MessageRouter.Models
 {
-    internal class Message
+    public class Message
     {
-        public readonly string RouteName;
-        public readonly object Payload;
+        internal readonly string RouteName;
+        internal readonly object Payload;
 
         /// <param name="routeName">Name of the target route.</param>
         /// <param name="payload">Object of type that is compatible with the route's target type.</param>
-        public Message(string routeName, object payload)
+        internal Message(string routeName, object payload)
         {
             RouteName = routeName;
             Payload = payload;

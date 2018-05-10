@@ -194,7 +194,7 @@ namespace NetmqRouter.Tests.BusinessLogic
 
             var serializer = new Mock<ITypeSerializer<string>>();
             var route = new Route("RouteA", typeof(string));
-            var subscriber = new Subsriber(route, null, _ => null);
+            var subscriber = new Subscriber(route, null, _ => null);
 
             dataContract.RegisterSerializer(serializer.Object);
             dataContract.RegisterRoute(route);
@@ -215,7 +215,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             var serializer = new Mock<ITypeSerializer<string>>();
             var incomingRoute = new Route("IncomingRoute", typeof(string));
             var outcomingRoute = new Route("OutcomingRoute", typeof(string));
-            var subscriber = new Subsriber(incomingRoute, outcomingRoute, _ => null);
+            var subscriber = new Subscriber(incomingRoute, outcomingRoute, _ => null);
 
             dataContract.RegisterSerializer(serializer.Object);
             dataContract.RegisterRoute(incomingRoute);
@@ -234,7 +234,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             // arrange
             var dataContract = new DataContractBuilder();
             var route = new Route("BasicRoute", typeof(string));
-            var subscriber = new Subsriber(route, null, _ => null);
+            var subscriber = new Subscriber(route, null, _ => null);
 
             // act
             Assert.Throws<ConfigurationException>(() =>
@@ -252,7 +252,7 @@ namespace NetmqRouter.Tests.BusinessLogic
             var serializer = new Mock<ITypeSerializer<string>>();
             var incomingRoute = new Route("IncomingRoute", typeof(string));
             var outcomingRoute = new Route("OutcomingRoute", typeof(string));
-            var subscriber = new Subsriber(incomingRoute, outcomingRoute, _ => null);
+            var subscriber = new Subscriber(incomingRoute, outcomingRoute, _ => null);
 
             dataContract.RegisterSerializer(serializer.Object);
             dataContract.RegisterRoute(incomingRoute);

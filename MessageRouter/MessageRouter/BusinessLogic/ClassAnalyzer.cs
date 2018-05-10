@@ -10,7 +10,7 @@ namespace MessageRouter.BusinessLogic
 {
     internal class ClassAnalyzer
     {
-        internal static List<Subsriber> AnalyzeClass(object _object)
+        internal static List<Subscriber> AnalyzeClass(object _object)
         {
             var baseRoute = GetBaseRoute(_object.GetType());
             var routes = FindRoutesInClass(_object).ToList();
@@ -27,7 +27,7 @@ namespace MessageRouter.BusinessLogic
             return (attribute as BaseRouteAttribute)?.Name;
         }
 
-        private static IEnumerable<Subsriber> FindRoutesInClass(object _object)
+        private static IEnumerable<Subscriber> FindRoutesInClass(object _object)
         {
             return _object
                 .GetType()
@@ -37,7 +37,7 @@ namespace MessageRouter.BusinessLogic
                 .Where(x => x != null);
         }
 
-        private static Subsriber AnalyzeMethod(object _object, MethodInfo methodInfo)
+        private static Subscriber AnalyzeMethod(object _object, MethodInfo methodInfo)
         {
             var route = methodInfo.GetCustomAttribute(typeof(RouteAttribute)) as RouteAttribute;
             var responseRoute = methodInfo.GetCustomAttribute(typeof(ResponseRouteAttribute)) as ResponseRouteAttribute;
@@ -57,7 +57,7 @@ namespace MessageRouter.BusinessLogic
                 ?.ParameterType
                 ?? typeof(void);
 
-            return new Subsriber()
+            return new Subscriber()
             {
                 Incoming = new Route(route.Name, agrumentType),
                 Outcoming = (responseRoute == null) ? null : new Route(responseRoute.Name, methodInfo.ReturnType),

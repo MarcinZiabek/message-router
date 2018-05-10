@@ -1,10 +1,9 @@
-﻿namespace MessageRouter.Infrastructure
+﻿using MessageRouter.Models;
+
+namespace MessageRouter.Infrastructure
 {
     public interface IMessageSender
     {
-        void SendMessage(string routeName);
-        void SendMessage(string routeName, byte[] data);
-        void SendMessage(string routeName, string text);
-        void SendMessage(string routeName, object _object);
+        void SendMessage(Message message);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using MessageRouter.Models;
 
 namespace MessageRouter.Infrastructure
 {
@@ -11,10 +12,6 @@ namespace MessageRouter.Infrastructure
         IMessageRouter RegisterTypeSerializer<T>(ITypeSerializer<T> typeSerializer);
         IMessageRouter RegisterGeneralSerializer<T>(IGeneralSerializer<T> serializer);
 
-        IMessageRouter RegisterSubscriber<T>(T subscriber);
-        IMessageRouter RegisterSubscriber(string routeName, Action action);
-        IMessageRouter RegisterSubscriber<T>(string routeName, Action<T> action);
-        IMessageRouter RegisterSubscriber<T>(string incomingRouteName, string outcomingRouteName, Func<T> action);
-        IMessageRouter RegisterSubscriber<T, TK>(string incomingRouteName, string outcomingRouteName, Func<T, TK> action);
+        IMessageRouter RegisterSubscriber(Subscriber subscriber);
     }
 }

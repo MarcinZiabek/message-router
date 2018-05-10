@@ -3,8 +3,8 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <Company>MarcinZiabek</Company>
-    <Authors>Marcin Ziąbek</Authors>
-    <Version>1.0.1</Version>
+    <Authors>MarcinZiabek</Authors>
+    <Version>1.0.2</Version>
     <PackageId>Message.Router</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/MarcinZiabek/message-router/master/img/logo.png</PackageIconUrl>
     <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
@@ -14,6 +14,7 @@
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A lightweight message routing library supporting various messaging frameworks and serialization formats.</Description>
+    <Product>Message.Router</Product>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Connection\**" />

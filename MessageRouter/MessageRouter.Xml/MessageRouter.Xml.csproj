@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <Authors>Marcin Ziąbek</Authors>
+    <Authors>MarcinZiabek</Authors>
     <Company>MarcinZiabek</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A XML serialization support for the Message.Router library.</Description>
@@ -11,6 +11,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>netmq zeromq routing message queue messages routing serialization communication router XML xml</PackageTags>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <PackageId>Message.Router.Xml</PackageId>
+    <Product>Message.Router.Xml</Product>
+    <Version>1.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Message.Router" Version="1.0.0" />

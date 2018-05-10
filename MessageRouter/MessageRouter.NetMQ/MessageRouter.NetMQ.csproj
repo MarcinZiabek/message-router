@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
     <Company>MarcinZiabek</Company>
-    <Authors>Marcin Ziąbek</Authors>
+    <Authors>MarcinZiabek</Authors>
     <Description>A NetMQ support for the Message.Router library.</Description>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
@@ -12,6 +12,9 @@
     <RepositoryUrl>https://github.com/MarcinZiabek/message-router</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Product>Message.Router.NetMQ</Product>
+    <PackageId>Message.Router.NetMQ</PackageId>
+    <Version>1.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Message.Router" Version="1.0.0" />

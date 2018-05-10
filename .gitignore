@@ -37,3 +37,8 @@
 /MessageRouter/MessageRouter.Json/bin/Release
 /MessageRouter/MessageRouter.NetMQ/bin/Release
 /MessageRouter/MessageRouter.Xml/bin/Release
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/config/applicationhost.config
+/.vs/config
+/.vs

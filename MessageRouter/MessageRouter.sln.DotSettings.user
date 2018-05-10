@@ -86,4 +86,9 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=F5DC173A_002D1CE4_002D4295_002D8C4E_002DD1AC844B07FF_002Ff_003AMessageSerializer_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=F5DC173A_002D1CE4_002D4295_002D8C4E_002DD1AC844B07FF_002Ff_003ANetmqRouterException_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=F5DC173A_002D1CE4_002D4295_002D8C4E_002DD1AC844B07FF_002Ff_003APubSubConnection_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=F5DC173A_002D1CE4_002D4295_002D8C4E_002DD1AC844B07FF_002Ff_003AXmlObjectSerializer_002Ecs/@EntryIndexedValue">ForceIncluded</s:String></wpf:ResourceDictionary>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=F5DC173A_002D1CE4_002D4295_002D8C4E_002DD1AC844B07FF_002Ff_003AXmlObjectSerializer_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/RunConfigs/Active/@EntryValue">EE7F87741D5BB74DB2C6F3F1605615E2</s:String>
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=EE7F87741D5BB74DB2C6F3F1605615E2/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=EE7F87741D5BB74DB2C6F3F1605615E2/Name/@EntryValue">MessageRouter.Xml</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=EE7F87741D5BB74DB2C6F3F1605615E2/ProjectGuid/@EntryValue">BDB853062869A1498F4D4F311A21A11B</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=EE7F87741D5BB74DB2C6F3F1605615E2/Type/@EntryValue">project</s:String></wpf:ResourceDictionary>

@@ -8,8 +8,11 @@
     <PackageIconUrl>https://raw.githubusercontent.com/MarcinZiabek/message-router/master/img/logo.png</PackageIconUrl>
     <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
     <Company>MarcinZiabek</Company>
-    <Authors>Marcin Ziąbek</Authors>
+    <Authors>MarcinZiabek</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Message.Router.Json</PackageId>
+    <Product>Message.Router.Json</Product>
+    <Version>1.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Message.Router" Version="1.0.0" />

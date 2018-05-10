@@ -12,10 +12,10 @@ Available packges
 
 | Package name         | Description                                           | Link       |
 | -------------------- | ----------------------------------------------------- | ---------- |
-| Message.Router       | A main routing package. Required.                     | [nuget](1) |
-| Message.Router.NetMQ | Support for NetMQ framework. Recommented.             | [nuget](2) |
-| Message.Router.Json  | General serializer for the JSON format. Recommented.  | [nuget](3) |
-| Message.Router.Xml   | General serializer for the Xml format.                | [nuget](4) |
+| Message.Router       | A main routing package. Required.                     | [nuget][1] |
+| Message.Router.NetMQ | Support for NetMQ framework. Recommented.             | [nuget][2] |
+| Message.Router.Json  | General serializer for the JSON format. Recommented.  | [nuget][3] |
+| Message.Router.Xml   | General serializer for the Xml format.                | [nuget][4] |
 
 Here you can find all packages available on the Nuget website: [link](https://www.nuget.org/profiles/MarcinZiabek)
 

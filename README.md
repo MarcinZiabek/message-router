@@ -98,6 +98,26 @@ class ExampleSubscriber
 }
 ```
 
+Base routes
+-----------
+
+You can annotate your class with the BaseRoute attribute to use subscribe to a specified route or family of routes.
+
+```csharp
+[BaseRoute("BaseRoute")]
+class ClassWithBaseRoute
+{
+    [Route("IncomingRoute")]
+    [ResponseRoute("OutcomingRoute")]
+    public void Handler()
+    {
+        // this endpoint will:
+        // - subscribe messages from "BaseRoute/IncomingRoute" route,
+        // - emit messages to "OutcomingRoute" route.
+    }
+}
+```
+
 Sending messages
 ----------------
 
@@ -129,24 +149,40 @@ router.RegisterSubscriber("IncomingRoute", "OutcomingRoute", () => "Hello world"
 router.RegisterSubscriber<string, string>("IncomingRoute", "OutcomingRoute", payload => "Hello " + payload);
 ```
 
-Base routes
------------
+Go well with the fluent API
+---------------------------
 
-You can annotate your class with the BaseRoute attribute to use subscribe to a specified route or family of routes.
+Fluent APIs are sexy but always comes with additional performance cost. Here you do not need to be afraid but it is always good to take into consideration during profiling sessions. Below you can find some examples how to use MessageRouter fluent API:
 
 ```csharp
-[BaseRoute("BaseRoute")]
-class ClassWithBaseRoute
-{
-    [Route("IncomingRoute")]
-    [ResponseRoute("OutcomingRoute")]
-    public void Handler()
+
+var router = NetmqMessageRouter
+    .WithPubSubConnecton(publisherSocket, subscriberSocket)
+    .RegisterGeneralSerializer(new JsonObjectSerializer()) // requires nuget package!
+    .RegisterRoute("VectorRoute", typeof(Vector))
+    .RegisterRoute("VectorLengthRoute", typeof(double));
+
+// registering a subscriber that process the data
+router
+    .Subscribe("VectorRoute")
+    .WithResponse("VectorLengthRoute")
+    .WithHandler((Vector vector) =>
     {
-        // this endpoint will:
-        // - subscribe messages from "BaseRoute/IncomingRoute" route,
-        // - emit messages to "OutcomingRoute" route.
-    }
-}
+        return Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
+    });
+
+// registering a subscriber that receives the calculation result
+router
+    .Subscribe("VectorLengthRoute")
+    .WithHandler((double x) => Console.WriteLine(x));
+
+router.StartRouting();
+
+// sending your message
+router
+    .SendMessage(new Vector() { X = 3, Y = 4 })
+    .To("VectorRoute");
+
 ```
 
 Open to communication layers
@@ -234,7 +270,16 @@ Your endpoints can return any type of message as long as the library can seriali
 ```csharp
 router.RegisterTypeSerializerFor(new RawDataTypeSerializer());
 router.RegisterTypeSerializerFor(new BasicTextTypeSerializer());
-router.RegisterGeneralSerializerFor(new JsonObjectSerializer());
+router.RegisterGeneralSerializerFor(new JsonObjectSerializer()); // requires nuget package!
+```
+
+Or use helpers provided by additional nuget packages:
+
+```
+
+router.RegisterJsonSerializer();
+router.RegisterXmlSerializer();
+
 ```
 
 Serializer per type
@@ -382,7 +427,7 @@ public class MessagesRouterTests
             .WithPubSubConnecton(publisherSocket, subscriberSocket)
             .RegisterTypeSerializer(new RawDataTypeSerializer())
             .RegisterTypeSerializer(new BasicTextTypeSerializer())
-            .RegisterGeneralSerializer(new JsonObjectSerializer())
+            .RegisterGeneralSerializer(new JsonObjectSerializer()) // requires nuget package!
             .RegisterRoute("TestRoute", typeof(CustomPayload))
             .RegisterSubscriber(subscriber)
             .StartRouting();
@@ -455,6 +500,38 @@ class ExampleSubscriber
 
 // somewhere in the code where you are sending a message
 router.SendMessage(MessageRoutes.BananaRoute, "Hello world!");
+```
+
+How it works?
+-------------
+
+This library uses a worker system in order to process messages. All workers are working in parallel in separate threads, processing data on different life stages:
+
+1.  **Receiver worker** - it is using the IConnection interface to communicate through the input socket.
+2.  **Deserialization worker** - it is getting serialized messages from the Receiver worker and deserializes it using the best matching provider.
+3.  **Handler worker** - it is getting messages and calling the subscriber's methods in order to process data.
+4.  **Serialization worker** - it is serializing all outcoming messages to the binary format.
+5.  **Sender worker** - it is queuing all outcoming messages and sending them via the IConnection interface.
+
+![Data flow chart](img/data_flow_mini.png)
+
+
+Scale your solution
+-------------------
+
+If the serialization process or message handling logic is expensive, a single worker instance (per job type) might be not enough. Scale the performance easily by increasing number of workers. You are able to change how many workers will be started when called the StartRoute method - just tune the number of serialization and handler workers individually.
+
+Default values:
+- serialization process - a single worker for the serialization process and a single worker for deserialization process,
+- handling process - 4 workers.
+
+```csharp
+router
+
+    // your router configuration goes here
+
+    .WithWorkerPool(numberOfSerializationWorkes: 2, numberOfHandlingWorkes: 6)
+    .StartRouting();
 ```
 
 Let's use it!

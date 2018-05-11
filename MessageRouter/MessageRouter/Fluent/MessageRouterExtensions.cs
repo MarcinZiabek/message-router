@@ -8,6 +8,8 @@ namespace MessageRouter.Fluent
 {
     public static class MessageRouterExtensions
     {
+        #region Subscription
+
         public static IMessageRouter RegisterSubscriber<T>(this IMessageRouter router, T subscriber)
         {
             ClassAnalyzer
@@ -32,6 +34,20 @@ namespace MessageRouter.Fluent
             return router;
         }
 
+        public static IMessageRouter RegisterSubscriber(this IMessageRouter router, string incomingRouteName, string outcomingRouteName, Action action)
+        {
+            var subscriber = Subscriber.Create(incomingRouteName, outcomingRouteName, action);
+            router.RegisterSubscriber(subscriber);
+            return router;
+        }
+
+        public static IMessageRouter RegisterSubscriber<T>(this IMessageRouter router, string incomingRouteName, string outcomingRouteName, Action<T> action)
+        {
+            var subscriber = Subscriber.Create(incomingRouteName, outcomingRouteName, action);
+            router.RegisterSubscriber(subscriber);
+            return router;
+        }
+        
         public static IMessageRouter RegisterSubscriber<T>(this IMessageRouter router, string incomingRouteName, string outcomingRouteName, Func<T> action)
         {
             var subscriber = Subscriber.Create(incomingRouteName, outcomingRouteName, action);
@@ -45,25 +61,64 @@ namespace MessageRouter.Fluent
             router.RegisterSubscriber(subscriber);
             return router;
         }
+
+        #endregion
+
+        #region Subscription - Fluent
+
+        public static SubscribeFluent Subscribe(this IMessageRouter router, string incomingRouteName)
+        {
+            return new SubscribeFluent(router, incomingRouteName);
+        }
+
+        #endregion
+
+        #region Sending Messages
+
+        public static void SendEvent(this IMessageSender sender, string routeName)
+        {
+            sender.SendMessage(new Message(routeName, null));
+        }
+
+        public static void SendMessage(this IMessageSender sender, string routeName, byte[] data)
+        {
+            sender.SendMessage(new Message(routeName, data));
+        }
+
+        public static void SendMessage(this IMessageSender sender, string routeName, string text)
+        {
+            sender.SendMessage(new Message(routeName, text));
+        }
+
+        public static void SendMessage(this IMessageSender sender, string routeName, object _object)
+        {
+            sender.SendMessage(new Message(routeName, _object));
+        }
         
-        public static void SendMessage(this IMessageRouter router, string routeName)
-        {
-            router.SendMessage(new Message(routeName, null));
-        }
+        #endregion
+        
+        #region Sending Messages - Fluent
 
-        public static void SendMessage(this IMessageRouter router, string routeName, byte[] data)
+        public static SendMessageFluent SendEvent(this IMessageSender sender)
         {
-            router.SendMessage(new Message(routeName, data));
+            return new SendMessageFluent(sender, null);
         }
-
-        public static void SendMessage(this IMessageRouter router, string routeName, string text)
+        
+        public static SendMessageFluent SendMessage(this IMessageSender sender, byte[] data)
         {
-            router.SendMessage(new Message(routeName, text));
+            return new SendMessageFluent(sender, data);
         }
-
-        public static void SendMessage(this IMessageRouter router, string routeName, object _object)
+        
+        public static SendMessageFluent SendMessage(this IMessageSender sender, string text)
         {
-            router.SendMessage(new Message(routeName, _object));
+            return new SendMessageFluent(sender, text);
         }
+        
+        public static SendMessageFluent SendMessage(this IMessageSender sender, object _object)
+        {
+            return new SendMessageFluent(sender, _object);
+        }
+        
+        #endregion
     }
 }

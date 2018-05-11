@@ -43,6 +43,30 @@ namespace MessageRouter.Models
             });
         }
 
+        internal static Subscriber Create(string incomingRouteName, string outcomingRouteName, Action action)
+        {
+            var incomingRoute = new Route(incomingRouteName, null);
+            var outcomingRoute = new Route(outcomingRouteName, null);
+
+            return new Subscriber(incomingRoute, outcomingRoute, _ =>
+            {
+                action();
+                return null;
+            });
+        }
+
+        internal static Subscriber Create<T>(string incomingRouteName, string outcomingRouteName, Action<T> action)
+        {
+            var incomingRoute = new Route(incomingRouteName, typeof(T));
+            var outcomingRoute = new Route(outcomingRouteName, null);
+
+            return new Subscriber(incomingRoute, outcomingRoute, payload =>
+            {
+                action((T) payload);
+                return null;
+            });
+        }
+        
         internal static Subscriber Create<T>(string incomingRouteName, string outcomingRouteName, Func<T> action)
         {
             var incomingRoute = new Route(incomingRouteName, null);

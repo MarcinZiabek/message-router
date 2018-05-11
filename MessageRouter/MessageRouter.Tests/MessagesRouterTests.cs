@@ -13,8 +13,6 @@ namespace NetmqRouter.Tests
     [TestFixture]
     public class MessagesRouterTests
     {
-        private const string Address = "tcp://localhost:6000";
-
         // will be serialized as JSON
         class CustomPayload
         {
@@ -45,14 +43,22 @@ namespace NetmqRouter.Tests
             }
         }
 
-        [Test]
-        public async Task RoutingTest()
+        class Vector
         {
+            public double X { get; set; }
+            public double Y { get; set; }
+        }
+
+        [Test]
+        public async Task RoutingTestForClassSubscriber()
+        {
+            var address = "tcp://localhost:6000";
+            
             var publisherSocket = new PublisherSocket();
-            publisherSocket.Bind(Address);
+            publisherSocket.Bind(address);
 
             var subscriberSocket = new SubscriberSocket();
-            subscriberSocket.Connect(Address);
+            subscriberSocket.Connect(address);
 
             var subscriber = new ExampleSubscriber();
 
@@ -72,7 +78,7 @@ namespace NetmqRouter.Tests
                 // handle any exception
             };
 
-            await Task.Delay(TimeSpan.FromSeconds(3));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             router
                 .StopRouting()
@@ -80,6 +86,52 @@ namespace NetmqRouter.Tests
 
             var expectedValue = new CustomPayload("Hellow world", 123);
             Assert.AreEqual(expectedValue, subscriber.PassedValue);
+        }
+        
+        [Test]
+        public async Task RoutingTestForCustomSubscriber()
+        {
+            var address = "tcp://localhost:6001";
+            
+            var publisherSocket = new PublisherSocket();
+            publisherSocket.Bind(address);
+
+            var subscriberSocket = new SubscriberSocket();
+            subscriberSocket.Connect(address);
+
+            var router = NetmqMessageRouter
+                .WithPubSubConnecton(publisherSocket, subscriberSocket)
+                .RegisterGeneralSerializer(new JsonObjectSerializer())
+                .RegisterRoute("VectorRoute", typeof(Vector))
+                .RegisterRoute("VectorLengthRoute", typeof(double));
+            
+            router
+                .Subscribe("VectorRoute")
+                .WithResponse("VectorLengthRoute")
+                .WithHandler((Vector vector) =>
+                {
+                    return Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
+                });
+
+            double? lengthAnswer = null;
+            
+            router
+                .Subscribe("VectorLengthRoute")
+                .WithHandler((double x) => lengthAnswer = x);
+
+            router.StartRouting();
+
+            router
+                .SendMessage(new Vector() { X = 3, Y = 4 })
+                .To("VectorRoute");
+            
+            await Task.Delay(TimeSpan.FromSeconds(2));
+
+            router
+                .StopRouting()
+                .Disconnect();
+
+            Assert.AreEqual(5d, lengthAnswer);
         }
     }
 }

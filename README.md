@@ -83,14 +83,14 @@ class ExampleSubscriber
     }
 
     [Route("TestRoute")]
-    [Route("AnotherRoute")]
+    [ResponseRoute("AnotherRoute")]
     public void Test(string text)
     {
         // event emitter
     }
 
     [Route("TestRoute")]
-    [Route("AnotherRoute")]
+    [ResponseRoute("AnotherRoute")]
     public void Test()
     {
         // event subscriber and emitter at the same time
@@ -262,7 +262,7 @@ var router = new MessageRouter(connection);
 Serialization layer: type and general serializers
 -------------------------------------------------
 
-Your endpoints can return any type of message as long as the library can serialize it to the binary format. Use any serialization library you want - you can use JSON protocol, ProtoBuf or implement your own solution. Batteries are included for types:
+Your endpoints can return any type of message as long as the library can serialize it to the binary format. Use any serialization library you want - you can use JSON or XML protocols - or implement your own solution. Batteries are included for types:
 - byte arrays,
 - text,
 - objects serialized in JSON or XML formats (please use appropriate helpers packages).
@@ -276,10 +276,8 @@ router.RegisterGeneralSerializerFor(new JsonObjectSerializer()); // requires nug
 Or use helpers provided by additional nuget packages:
 
 ```
-
 router.RegisterJsonSerializer();
 router.RegisterXmlSerializer();
-
 ```
 
 Serializer per type
@@ -432,7 +430,7 @@ public class MessagesRouterTests
             .RegisterSubscriber(subscriber)
             .StartRouting();
 
-        router.SendMessage("TestRoute", new CustomPayload("Hellow world", 123));
+        router.SendMessage("TestRoute", new CustomPayload("Hello world", 123));
 
         router.OnException += exception =>
         {    
@@ -445,16 +443,11 @@ public class MessagesRouterTests
             .StopRouting()
             .Disconnect();
 
-        var expectedValue = new CustomPayload("Hellow world", 123);
+        var expectedValue = new CustomPayload("Hello world", 123);
         Assert.AreEqual(expectedValue, subscriber.PassedValue);
     }
 }
 ```
-
-Fast and reliable
------------------
-
-This library can be used in heavy environments because does not introduce any significant performance impact. Don't worry about your message, everything is well tested :)
 
 Good practices
 --------------
@@ -515,7 +508,6 @@ This library uses a worker system in order to process messages. All workers are 
 
 ![Data flow chart](img/data_flow_mini.png)
 
-
 Scale your solution
 -------------------
 
@@ -533,6 +525,11 @@ router
     .WithWorkerPool(numberOfSerializationWorkes: 2, numberOfHandlingWorkes: 6)
     .StartRouting();
 ```
+
+Fast and reliable
+-----------------
+
+This library can be used in heavy environments because does not introduce any significant performance impact. Don't worry about your message, everything is well tested :)
 
 Let's use it!
 -------------

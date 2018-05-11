@@ -19,7 +19,7 @@ namespace MessageRouter.Json
             _encoding = encoding;
         }
 
-        public JsonObjectSerializer() : this(Encoding.UTF8)
+        public JsonObjectSerializer() : this(Encoding.ASCII)
         {
 
         }

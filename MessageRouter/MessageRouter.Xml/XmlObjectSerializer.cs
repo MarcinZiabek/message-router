@@ -20,7 +20,7 @@ namespace MessageRouter.Xml
             _encoding = encoding;
         }
 
-        public XmlObjectSerializer() : this(Encoding.UTF8)
+        public XmlObjectSerializer() : this(Encoding.ASCII)
         {
 
         }

@@ -64,6 +64,7 @@ namespace NetmqRouter.Tests
 
             var router = NetmqMessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
+                .WithWorkerPool(numberOfSerializationWorkes: 2, numberOfHandlingWorkes: 8)
                 .RegisterTypeSerializer(new RawDataTypeSerializer())
                 .RegisterTypeSerializer(new BasicTextTypeSerializer())
                 .RegisterGeneralSerializer(new JsonObjectSerializer())
@@ -101,7 +102,7 @@ namespace NetmqRouter.Tests
 
             var router = NetmqMessageRouter
                 .WithPubSubConnecton(publisherSocket, subscriberSocket)
-                .RegisterGeneralSerializer(new JsonObjectSerializer())
+                .RegisterJsonSerializer()
                 .RegisterRoute("VectorRoute", typeof(Vector))
                 .RegisterRoute("VectorLengthRoute", typeof(double));
             

@@ -69,5 +69,35 @@ namespace NetmqRouter.Tests.Models
 
             Assert.AreEqual(true, isActionCalled);
         }
+        
+        [Test]
+        public void SubscriberWithoutResponseToString()
+        {
+            // arrange
+            var inputRoute = new Route("InputRoute");
+            var subscriber = new Subscriber(inputRoute, null, _ => null);
+            
+            // act
+            var name = subscriber.ToString();
+            
+            // assert
+            Assert.AreEqual("Subscriber(Route(InputRoute, Event) -> void)", name);
+        }
+        
+        [Test]
+        public void SubscriberWithResponseToString()
+        {
+            // arrange
+            var inputRoute = new Route("InputRoute");
+            var outputRoute = new Route("OutputRoute", typeof(int));
+            
+            var subscriber = new Subscriber(inputRoute, outputRoute, _ => 4);
+            
+            // act
+            var name = subscriber.ToString();
+            
+            // assert
+            Assert.AreEqual("Subscriber(Route(InputRoute, Event) -> Route(OutputRoute, Int32))", name);
+        }
     }
 }

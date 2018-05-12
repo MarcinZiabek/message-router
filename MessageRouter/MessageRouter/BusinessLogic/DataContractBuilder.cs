@@ -40,10 +40,10 @@ namespace MessageRouter.BusinessLogic
         public void RegisterRoute(Route route)
         {
             if(!_serializers.Any(x => route.DataType.IsSameOrSubclass(x.TargetType)))
-                throw new ConfigurationException($"Can not register route with type {route.DataType} because there is no typeSerializer for it.");
+                throw new ConfigurationException($"Can not register {route.ToString()} because there is no typeSerializer for it.");
 
             if(_routes.Any(x => x.Name == route.Name))
-                throw new ConfigurationException($"Route with name {route.Name} is already registered.");
+                throw new ConfigurationException($"{route.ToString()} is already registered.");
 
             _routes.Add(route);
         }
@@ -51,10 +51,10 @@ namespace MessageRouter.BusinessLogic
         public void RegisterSubscriber(Subscriber subscriber)
         {
             if(!_routes.Contains(subscriber.Incoming))
-                throw new ConfigurationException($"Subscriber refers to not existing route (incoming) type and thereferore can not be registered.");
+                throw new ConfigurationException($"{subscriber.ToString()} refers to not existing {subscriber.Incoming.ToString()} and thereferore can not be registered.");
 
             if(subscriber.Outcoming != null && !_routes.Contains(subscriber.Outcoming))
-                throw new ConfigurationException($"Subscriber refers to not existing route type (outcoming) and thereferore can not be registered.");
+                throw new ConfigurationException($"{subscriber.ToString()} refers to not existing {subscriber.Outcoming.ToString()} and thereferore can not be registered.");
 
             _subscribers.Add(subscriber);
         }

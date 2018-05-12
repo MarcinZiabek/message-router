@@ -7,6 +7,7 @@ namespace MessageRouter.Infrastructure
     {
         IMessageRouter WithWorkerPool(int numberOfSerializationWorkes, int numberOfHandlingWorkes);
 
+        IMessageRouter RegisterEventRoute(string routeName);
         IMessageRouter RegisterRoute(string routeName, Type dataType);
 
         IMessageRouter RegisterTypeSerializer<T>(ITypeSerializer<T> typeSerializer);

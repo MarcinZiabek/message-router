@@ -19,5 +19,7 @@
                    r.RouteName == RouteName &&
                    r.Payload == Payload;
         }
+        
+        public string ToString() => $"Message({RouteName}, {Payload.GetType()})";
     }
 }

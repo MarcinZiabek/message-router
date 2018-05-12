@@ -23,7 +23,7 @@ namespace MessageRouter.Models
 
         internal static Subscriber Create(string routeName, Action action)
         {
-            var route = new Route(routeName, null);
+            var route = new Route(routeName);
 
             return new Subscriber(route, null, payload =>
             {
@@ -45,8 +45,8 @@ namespace MessageRouter.Models
 
         internal static Subscriber Create(string incomingRouteName, string outcomingRouteName, Action action)
         {
-            var incomingRoute = new Route(incomingRouteName, null);
-            var outcomingRoute = new Route(outcomingRouteName, null);
+            var incomingRoute = new Route(incomingRouteName);
+            var outcomingRoute = new Route(outcomingRouteName);
 
             return new Subscriber(incomingRoute, outcomingRoute, _ =>
             {
@@ -58,7 +58,7 @@ namespace MessageRouter.Models
         internal static Subscriber Create<T>(string incomingRouteName, string outcomingRouteName, Action<T> action)
         {
             var incomingRoute = new Route(incomingRouteName, typeof(T));
-            var outcomingRoute = new Route(outcomingRouteName, null);
+            var outcomingRoute = new Route(outcomingRouteName);
 
             return new Subscriber(incomingRoute, outcomingRoute, payload =>
             {
@@ -69,7 +69,7 @@ namespace MessageRouter.Models
         
         internal static Subscriber Create<T>(string incomingRouteName, string outcomingRouteName, Func<T> action)
         {
-            var incomingRoute = new Route(incomingRouteName, null);
+            var incomingRoute = new Route(incomingRouteName);
             var outcomingRoute = new Route(outcomingRouteName, typeof(T));
 
             return new Subscriber(incomingRoute, outcomingRoute, _ => action());
@@ -81,6 +81,12 @@ namespace MessageRouter.Models
             var outcomingRoute = new Route(outcomingRouteName, typeof(TK));
 
             return new Subscriber(incomingRoute, outcomingRoute, payload => action((T) payload));
+        }
+
+        public string ToString()
+        {
+            var outputName = Outcoming?.ToString() ?? "void";
+            return $"Subscriber({Incoming.ToString()} -> {outputName})";
         }
     }
 }

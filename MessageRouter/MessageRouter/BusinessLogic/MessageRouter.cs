@@ -83,6 +83,12 @@ namespace MessageRouter.BusinessLogic
 
         #region Routing
 
+        public IMessageRouter RegisterEventRoute(string routeName)
+        {
+            _dataContractBuilder.RegisterRoute(new Route(routeName));
+            return this;
+        }
+        
         public IMessageRouter RegisterRoute(string routeName, Type dataType)
         {
             _dataContractBuilder.RegisterRoute(new Route(routeName, dataType));

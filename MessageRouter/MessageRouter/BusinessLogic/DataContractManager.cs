@@ -98,6 +98,11 @@ namespace MessageRouter.BusinessLogic
 
         public SerializedMessage Serialize(Message message)
         {
+            var route = _routes[message.RouteName];
+            
+            if(route.DataType == typeof(void))
+                return new SerializedMessage(message.RouteName, null);
+            
             var serializer = GetSerializer(message.RouteName);
             var data = serializer.Serialize(message.Payload);
             return new SerializedMessage(message.RouteName, data);
@@ -105,6 +110,11 @@ namespace MessageRouter.BusinessLogic
 
         public Message Deserialize(SerializedMessage message)
         {
+            var route = _routes[message.RouteName];
+            
+            if(route.DataType == typeof(void))
+                return new Message(message.RouteName, null);
+            
             var serializer = GetSerializer(message.RouteName);
             var payload = serializer.Deserialize(message.Data);
             return new Message(message.RouteName, payload);

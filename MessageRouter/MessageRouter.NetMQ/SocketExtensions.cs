@@ -24,7 +24,7 @@ namespace MessageRouter.Helpers
         {
             socket
                 .SendMoreFrame(message.RouteName)
-                .SendFrame(message.Data);
+                .SendFrame(message.Data ?? new byte[0]);
         }
     }
 }

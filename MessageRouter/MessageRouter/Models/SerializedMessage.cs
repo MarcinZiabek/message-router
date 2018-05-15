@@ -10,5 +10,12 @@
             RouteName = routeName;
             Data = data;
         }
+        
+        public override bool Equals(object obj)
+        {
+            return obj is SerializedMessage r &&
+                   r.RouteName == RouteName &&
+                   r.Data == Data;
+        }
     }
 }

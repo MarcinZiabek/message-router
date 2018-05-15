@@ -72,11 +72,13 @@
     <Compile Include="BusinessLogic\ClassAnalyzerTests.cs" />
     <Compile Include="BusinessLogic\DataContractBuilderTests.cs" />
     <Compile Include="BusinessLogic\DataContractManagerTests.cs" />
-    <Compile Include="ExampleData.cs" />
+    <Compile Include="EndToEnd\Fluent.cs" />
+    <Compile Include="EndToEnd\MessagesRouterTests.cs" />
     <Compile Include="Helpers\SerializerComparerTests.cs" />
     <Compile Include="Helpers\TypeComparerTests.cs" />
     <Compile Include="Helpers\TypeExtensionsTests.cs" />
-    <Compile Include="MessagesRouterTests.cs" />
+    <Compile Include="Models\MessageTests.cs" />
+    <Compile Include="Models\RouteTests.cs" />
     <Compile Include="Models\SubscriberTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BasicTextSerializerTests.cs" />

@@ -235,5 +235,53 @@ namespace NetmqRouter.Tests.BusinessLogic
         }
 
         #endregion
+
+        #region Serialization
+
+        [Test]
+        public void EventSerialization()
+        {
+            // arrange
+            var eventRoute = new Route("EventRoute", typeof(void));
+
+            var configuration = new Mock<IDataContractAccess>();
+            configuration.Setup(x => x.Routes).Returns(new List<Route> {eventRoute});
+            configuration.Setup(x => x.Serializers).Returns(new List<Serializer>());
+            configuration.Setup(x => x.Subscribers).Returns(new List<Subscriber>());
+
+            var contract = new DataContractManager(configuration.Object);
+            var message = new Message("EventRoute", null);
+            
+            // act
+            var serializedMessage = contract.Serialize(message);
+
+            // assert
+            var expectedMessage = new SerializedMessage("EventRoute", null);
+            Assert.AreEqual(expectedMessage, serializedMessage);
+        }
+        
+        [Test]
+        public void EventDeserialization()
+        {
+            // arrange
+            var eventRoute = new Route("EventRoute", typeof(void));
+
+            var configuration = new Mock<IDataContractAccess>();
+            configuration.Setup(x => x.Routes).Returns(new List<Route> {eventRoute});
+            configuration.Setup(x => x.Serializers).Returns(new List<Serializer>());
+            configuration.Setup(x => x.Subscribers).Returns(new List<Subscriber>());
+
+            var contract = new DataContractManager(configuration.Object);
+            var serializedMessage = new SerializedMessage("EventRoute", new byte[0]);
+            
+            // act
+            var message = contract.Deserialize(serializedMessage);
+
+            // assert
+            var expectedMessage = new Message("EventRoute", null);
+            Assert.AreEqual(expectedMessage, message);
+        }
+
+        #endregion
     }
 }

@@ -8,7 +8,7 @@ using MessageRouter.Serialization;
 using NetMQ.Sockets;
 using NUnit.Framework;
 
-namespace NetmqRouter.Tests
+namespace NetmqRouter.Tests.EndToEnd
 {
     [TestFixture]
     public class MessagesRouterTests
@@ -79,7 +79,7 @@ namespace NetmqRouter.Tests
                 // handle any exception
             };
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             router
                 .StopRouting()
@@ -126,7 +126,7 @@ namespace NetmqRouter.Tests
                 .SendMessage(new Vector() { X = 3, Y = 4 })
                 .To("VectorRoute");
             
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             router
                 .StopRouting()

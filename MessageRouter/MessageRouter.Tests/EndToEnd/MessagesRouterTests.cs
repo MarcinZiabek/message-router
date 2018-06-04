@@ -28,7 +28,7 @@ namespace NetmqRouter.Tests.EndToEnd
             public override bool Equals(object obj)
             {
                 return obj is CustomPayload o &&
-                       this.Number == o.Number;
+                       Number == o.Number;
             }
         }
 

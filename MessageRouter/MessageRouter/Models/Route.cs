@@ -22,7 +22,7 @@ namespace MessageRouter.Models
             DataType = typeof(void);
         }
 
-        public string ToString()
+        public override string ToString()
         {
             var typeName = DataType == typeof(void) ? "Event" : DataType.Name;
             return $"Route({Name}, {typeName})";

@@ -83,7 +83,7 @@ namespace MessageRouter.Models
             return new Subscriber(incomingRoute, outcomingRoute, payload => action((T) payload));
         }
 
-        public string ToString()
+        public override string ToString()
         {
             var outputName = Outcoming?.ToString() ?? "void";
             return $"Subscriber({Incoming.ToString()} -> {outputName})";

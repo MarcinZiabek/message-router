@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using MessageRouter.Helpers;
 using MessageRouter.Infrastructure;
 using MessageRouter.Models;
 using NetMQ.Sockets;

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MessageRouter.Json;
 using MessageRouter.Fluent;
+using MessageRouter.Json;
 using MessageRouter.NetMQ;
 using NetMQ.Sockets;
 using NUnit.Framework;
 
-namespace NetmqRouter.Tests
+namespace NetmqRouter.Tests.EndToEnd
 {
     [TestFixture]
     public class Fluent
@@ -42,7 +42,7 @@ namespace NetmqRouter.Tests
 
             router.OnException += exp =>
             {
-                var i = 15;
+                
             };
 
             router.StartRouting();

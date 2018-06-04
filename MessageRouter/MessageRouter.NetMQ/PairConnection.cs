@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MessageRouter.Helpers;
 using MessageRouter.Infrastructure;
 using MessageRouter.Models;
 using NetMQ.Sockets;
@@ -10,7 +9,7 @@ namespace MessageRouter.NetMQ
     {
         PairSocket Socket { get; }
         private readonly object _socketLock = new object();
-
+        
         public PairConnection(PairSocket socket)
         {
             Socket = socket;

@@ -7,14 +7,14 @@
     </PackageLicenseUrl>
     <PackageProjectUrl>https://marcinziabek.github.io/message-router/</PackageProjectUrl>
     <PackageTags>netmq zeromq routing message queue messages routing serialization communication router</PackageTags>
-    <PackageReleaseNotes>Increased number of supported platforms (.NET Framework, .NET standard)</PackageReleaseNotes>
+    <PackageReleaseNotes>Increased number of supported platforms (.NET Framework, .NET standard). Improved routing for event messages.</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/MarcinZiabek/message-router/master/img/logo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/MarcinZiabek/message-router</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Product>Message.Router.NetMQ</Product>
     <PackageId>Message.Router.NetMQ</PackageId>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;netstandard1.6;netstandard1.7;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>

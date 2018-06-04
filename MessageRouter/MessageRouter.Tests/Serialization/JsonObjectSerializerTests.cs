@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using MessageRouter.Json;
-using MessageRouter.Serialization;
 using NUnit.Framework;
 
 namespace NetmqRouter.Tests.Serialization
@@ -23,7 +22,7 @@ namespace NetmqRouter.Tests.Serialization
             public override bool Equals(object obj)
             {
                 return obj is SimpleObject o &&
-                       this.Value == o.Value;
+                       Value == o.Value;
             }
         }
         
